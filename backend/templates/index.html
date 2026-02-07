@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Kiosk - Professional Healthcare Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f4f5f7;
+            --surface: #ffffff;
+            --surface-soft: #f8f9fa;
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --accent: #111827;
+            --accent-soft: rgba(17, 24, 39, 0.08);
+            --shadow: rgba(0, 0, 0, 0.12);
+            --chip: #f3f4f6;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0b0b0c;
+            --surface: #141414;
+            --surface-soft: #1b1b1b;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #2a2a2a;
+            --accent: #e5e7eb;
+            --accent-soft: rgba(229, 231, 235, 0.12);
+            --shadow: rgba(0, 0, 0, 0.5);
+            --chip: #1f1f1f;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text); }
+        
+        /* ===== GALAXY CHATBOT FAB ===== */
+        .galaxy-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .galaxy-fab:hover {
+            transform: scale(1.2) rotate(15deg);
+        }
+        
+        .galaxy-orb {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #ff147a, #8338ec, #3a86ff, #06ffa5);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(131, 56, 236, 1), 0 0 80px rgba(255, 0, 110, 0.8), inset -3px -3px 15px rgba(0, 0, 0, 0.4);
+            animation: galaxySpin 5s linear infinite, galaxyPulse 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes galaxySpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes galaxyPulse {
+            0%, 100% { box-shadow: 0 0 40px rgba(131, 56, 236, 1), 0 0 80px rgba(255, 0, 110, 0.8), inset -3px -3px 15px rgba(0, 0, 0, 0.4); }
+            50% { box-shadow: 0 0 55px rgba(131, 56, 236, 1.3), 0 0 100px rgba(255, 0, 110, 1), inset -3px -3px 15px rgba(0, 0, 0, 0.4); }
+        }
+        
+        .galaxy-orb::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 40% 50%, transparent 25%, rgba(0, 0, 0, 0.5) 100%);
+            animation: orbRotate 4s linear infinite reverse;
+        }
+        
+        @keyframes orbRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .galaxy-orb i {
+            position: relative;
+            color: #fff;
+            font-size: 40px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(131, 56, 236, 0.8), 0 0 60px rgba(255, 0, 110, 0.6);
+            z-index: 10;
+            animation: iconGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(131, 56, 236, 0.8); }
+            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 50px rgba(131, 56, 236, 1), 0 0 70px rgba(255, 0, 110, 0.8); }
+        }
+        
+        /* ===== ENHANCED CHAT MODAL ===== */
+        .chat-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 480px;
+            height: 680px;
+            background: var(--surface);
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .chat-modal.open { display: flex; }
+        .chat-modal.minimized { height: 60px; }
+        .chat-modal.minimized .chat-messages,
+        .chat-modal.minimized .chat-input-container {
+            display: none;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+        
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .chat-header-title i {
+            font-size: 22px;
+            animation: spin 4s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .chat-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .chat-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .chat-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.08);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--surface-soft);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+            display: flex;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.user .bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.2rem;
+            border-radius: 18px 18px 2px 18px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        
+        .message.bot .bubble {
+            background: var(--surface);
+            color: var(--text);
+            padding: 0.75rem 1.2rem;
+            border-radius: 18px 18px 18px 2px;
+            max-width: 85%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .chat-input-container {
+            padding: 1.2rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background: var(--surface);
+            color: var(--text);
+        }
+        
+        .chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chat-send-btn {
+            background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .chat-send-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.4);
+        }
+        
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .stat-card.blue { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        .stat-card.green { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        .stat-card.orange { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        .stat-card.purple { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px var(--shadow);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .sidebar-item {
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-item i { color: var(--accent) !important; }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            background: var(--accent-soft);
+            border-left-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .sidebar a { text-decoration: none; color: inherit; }
+        
+        .main-content { margin-left: 280px; padding: 2rem; }
+        
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
+        .hidden { display: none; }
+        
+        /* ===== NUTRITION CALCULATOR STYLES ===== */
+        .nutrition-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+        .result-card.green { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        .result-card.orange { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        .result-card.purple { background: linear-gradient(135deg, #2f2f2f 0%, #111111 100%); }
+        
+        .result-card h3 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .result-card .unit {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .calc-button {
+            background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+        
+        .nutrient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+        
+        .nutrient-item {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .nutrient-item .name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .nutrient-item .amount {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .food-card {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .food-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+        
+        .food-card .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .food-card .name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .food-card .cal {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2b2b2b 0%, #111111 100%);
+            color: white;
+        }
+
+        .main-content h1 { color: var(--text) !important; }
+
+        .emergency-card {
+            background: rgba(220, 38, 38, 0.05);
+            border-color: rgba(220, 38, 38, 0.2);
+        }
+
+        [data-theme="dark"] .emergency-card {
+            background: rgba(220, 38, 38, 0.08);
+            border-color: rgba(220, 38, 38, 0.35);
+        }
+
+        [data-theme="dark"] .main-content h1,
+        [data-theme="dark"] .main-content h2,
+        [data-theme="dark"] .main-content h3,
+        [data-theme="dark"] .main-content p,
+        [data-theme="dark"] .main-content span,
+        [data-theme="dark"] .main-content label {
+            color: var(--text) !important;
+        }
+
+        [data-theme="dark"] .main-content i {
+            color: var(--text) !important;
+        }
+
+        [data-theme="dark"] .emergency-card h2 {
+            color: #ef4444 !important;
+        }
+
+        [data-theme="dark"] .badge-success { background: #14532d; color: #bbf7d0; }
+        [data-theme="dark"] .badge-warning { background: #713f12; color: #fde68a; }
+        [data-theme="dark"] .badge-danger { background: #7f1d1d; color: #fecaca; }
+        [data-theme="dark"] .badge-info { background: #0f172a; color: #cbd5f5; }
+        
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div style="padding: 2rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+            <h1 style="font-size: 1.4rem; font-weight: 700; color: var(--text); margin: 0;">
+                <i class="fas fa-hospital"></i> Medical Kiosk
+            </h1>
+            <button id="theme-toggle" class="chat-btn" title="Toggle theme" style="background: var(--surface-soft); color: var(--text);">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-item active" data-section="dashboard">
+            <i class="fas fa-chart-line" style="color: #667eea;"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="sidebar-item" data-section="symptom-checker">
+            <i class="fas fa-stethoscope" style="color: #667eea;"></i>
+            <span>Symptom Checker</span>
+        </div>
+        <div class="sidebar-item" data-section="nutrition">
+            <i class="fas fa-apple-alt" style="color: #667eea;"></i>
+            <span>Nutrition</span>
+        </div>
+        <a class="sidebar-item" href="/chatbot">
+            <i class="fas fa-robot" style="color: #667eea;"></i>
+            <span>Advanced Chatbot</span>
+        </a>
+        <div class="sidebar-item" data-section="first-aid">
+            <i class="fas fa-first-aid" style="color: #667eea;"></i>
+            <span>First Aid</span>
+        </div>
+        <div class="sidebar-item" data-section="health-tips">
+            <i class="fas fa-heart" style="color: #667eea;"></i>
+            <span>Health Tips</span>
+        </div>
+        <div class="sidebar-item" data-section="appointments">
+            <i class="fas fa-calendar-alt" style="color: #667eea;"></i>
+            <span>Appointments</span>
+        </div>
+        <div class="sidebar-item" data-section="emergency">
+            <i class="fas fa-exclamation-circle" style="color: #667eea;"></i>
+            <span>Emergency</span>
+        </div>
+        <div class="sidebar-item" data-section="records">
+            <i class="fas fa-file-medical" style="color: #667eea;"></i>
+            <span>Health Records</span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard -->
+        <div id="dashboard-section" class="content-section active">
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem; color: white;">Welcome to Medical Kiosk</h1>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="stat-card blue">
+                    <i class="fas fa-user-clock" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3 style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Last Checkup</h3>
+                    <p style="font-size: 1.5rem; font-weight: 700;">30 Jan 2026</p>
+                </div>
+                <div class="stat-card green">
+                    <i class="fas fa-heartbeat" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3 style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Heart Rate</h3>
+                    <p style="font-size: 1.5rem; font-weight: 700;">72 BPM</p>
+                </div>
+                <div class="stat-card orange">
+                    <i class="fas fa-weight" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3 style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">BMI</h3>
+                    <p style="font-size: 1.5rem; font-weight: 700;">22.5</p>
+                </div>
+                <div class="stat-card purple">
+                    <i class="fas fa-pills" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3 style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Medications</h3>
+                    <p style="font-size: 1.5rem; font-weight: 700;">3</p>
+                </div>
+            </div>
+            
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;">Quick Features</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <div class="feature-card" onclick="showSection('symptom-checker')">
+                        <div class="feature-icon"><i class="fas fa-stethoscope"></i></div>
+                        <h3 style="font-weight: 600; color: #333;">Symptom Checker</h3>
+                        <p style="color: #999; font-size: 0.9rem;">Quick assessment</p>
+                    </div>
+                    <div class="feature-card" onclick="toggleChatModal()">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h3 style="font-weight: 600; color: #333;">AI Assistant</h3>
+                        <p style="color: #999; font-size: 0.9rem;">Ask questions</p>
+                    </div>
+                    <div class="feature-card" onclick="showSection('nutrition')">
+                        <div class="feature-icon"><i class="fas fa-apple-alt"></i></div>
+                        <h3 style="font-weight: 600; color: #333;">Nutrition</h3>
+                        <p style="color: #999; font-size: 0.9rem;">Calculate intake</p>
+                    </div>
+                    <div class="feature-card" onclick="showSection('emergency')">
+                        <div class="feature-icon"><i class="fas fa-ambulance"></i></div>
+                        <h3 style="font-weight: 600; color: #333;">Emergency</h3>
+                        <p style="color: #999; font-size: 0.9rem;">Quick contact</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Symptom Checker -->
+        <div id="symptom-checker-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;"><i class="fas fa-stethoscope" style="color: #667eea; margin-right: 0.5rem;"></i>Symptom Checker</h2>
+                <input type="text" id="symptom-input" placeholder="Describe your symptom..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; margin-bottom: 1rem;">
+                <button onclick="checkSymptom()" class="btn btn-primary" style="width: 100%;">Check Symptoms</button>
+                <div id="symptom-result" class="hidden" style="margin-top: 2rem;"></div>
+            </div>
+        </div>
+        
+        <!-- Nutrition Calculator -->
+        <div id="nutrition-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #333;"><i class="fas fa-apple-alt" style="color: #667eea; margin-right: 0.5rem;"></i>Nutrition & Calorie Calculator</h2>
+                <p style="color: #666; margin-bottom: 2rem;">Calculate your BMI, daily calorie needs, and personalized nutrition recommendations</p>
+                
+                <form class="nutrition-form" onsubmit="calculateNutrition(event)">
+                    <div class="form-group">
+                        <label>Age (years)</label>
+                        <input type="number" id="age" min="1" max="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender" required>
+                            <option value="">Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Height (cm)</label>
+                        <input type="number" id="height" min="50" max="250" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="weight" min="20" max="300" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Activity Level</label>
+                        <select id="activity" required>
+                            <option value="">Select...</option>
+                            <option value="sedentary">Sedentary (No Exercise)</option>
+                            <option value="light">Light (1-3 days/week)</option>
+                            <option value="moderate">Moderate (3-5 days/week)</option>
+                            <option value="active">Active (6-7 days/week)</option>
+                            <option value="very_active">Very Active (2x per day)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Goal</label>
+                        <select id="goal" required>
+                            <option value="">Select...</option>
+                            <option value="loss">Weight Loss</option>
+                            <option value="maintain">Maintain</option>
+                            <option value="gain">Weight Gain</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="calc-button"><i class="fas fa-calculator"></i> Calculate</button>
+                </form>
+                
+                <div id="nutrition-results" class="hidden" style="margin-top: 2rem;">
+                    <div class="results-grid" id="results-cards"></div>
+                    <div class="glass-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 700; color: #333; margin-bottom: 1rem;">Daily Macronutrients</h3>
+                        <div class="nutrient-grid" id="macros-grid"></div>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 700; color: #333; margin-bottom: 1rem;">Key Micronutrients</h3>
+                        <div class="nutrient-grid" id="micros-grid"></div>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h3 style="font-weight: 700; color: #333; margin-bottom: 1rem;">Recommended Foods</h3>
+                        <div class="food-grid" id="foods-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- First Aid -->
+        <div id="first-aid-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;"><i class="fas fa-first-aid" style="color: #667eea; margin-right: 0.5rem;"></i>First Aid Guide</h2>
+                <div id="first-aid-content"></div>
+            </div>
+        </div>
+        
+        <!-- Health Tips -->
+        <div id="health-tips-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;"><i class="fas fa-heart" style="color: #667eea; margin-right: 0.5rem;"></i>Health Tips</h2>
+                <div id="health-tips-content"></div>
+            </div>
+        </div>
+        
+        <!-- Appointments -->
+        <div id="appointments-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;"><i class="fas fa-calendar-alt" style="color: #667eea; margin-right: 0.5rem;"></i>Appointments</h2>
+                <div id="appointments-content"></div>
+            </div>
+        </div>
+        
+        <!-- Emergency -->
+        <div id="emergency-section" class="content-section">
+            <div class="glass-card emergency-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #dc2626;"><i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>Emergency Contacts</h2>
+                <div id="emergency-content"></div>
+            </div>
+        </div>
+        
+        <!-- Records -->
+        <div id="records-section" class="content-section">
+            <div class="glass-card" style="padding: 2rem;">
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: #333;"><i class="fas fa-file-medical" style="color: #667eea; margin-right: 0.5rem;"></i>Health Records</h2>
+                <div id="records-content"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Galaxy Chatbot FAB -->
+    <div class="galaxy-fab" id="galaxy-fab" onclick="toggleChatModal()">
+        <div class="galaxy-orb">
+            <i class="fas fa-sparkles"></i>
+        </div>
+    </div>
+    
+    <!-- Enhanced Chat Modal -->
+    <div class="chat-modal" id="chat-modal">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <i class="fas fa-sparkles"></i>
+                <div>
+                    <div style="font-weight: 600;">AI Health Assistant</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9;">Online • Biology & Health Expert</div>
+                </div>
+            </div>
+            <div class="chat-controls">
+                <button class="chat-btn" onclick="maximizeChat()" title="Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="chat-btn" onclick="minimizeChat()" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="chat-btn" onclick="toggleChatModal()" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                <div class="bubble">Hello! 👋 I'm your AI Health & Biology Assistant. I can help with anatomy, diseases, nutrition, genetics, and much more. What would you like to know?</div>
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Ask about health, biology, nutrition..." onkeypress="handleChatKeyPress(event)">
+            <button class="chat-send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const rootEl = document.documentElement;
+
+        function applyTheme(theme) {
+            rootEl.setAttribute('data-theme', theme);
+            localStorage.setItem('mk-theme', theme);
+            if (themeToggleBtn) {
+                themeToggleBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('mk-theme');
+            if (saved) {
+                applyTheme(saved);
+            } else {
+                applyTheme('light');
+            }
+        }
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                const current = rootEl.getAttribute('data-theme') || 'light';
+                applyTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId + '-section').classList.add('active');
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            if (history.replaceState) {
+                history.replaceState(null, '', `#${sectionId}`);
+            }
+        }
+        
+        function toggleChatModal() {
+            const modal = document.getElementById('chat-modal');
+            modal.classList.toggle('open');
+            if (modal.classList.contains('open')) {
+                document.getElementById('chat-input').focus();
+            }
+        }
+        
+        function minimizeChat() {
+            document.getElementById('chat-modal').classList.toggle('minimized');
+        }
+        
+        function maximizeChat() {
+            const modal = document.getElementById('chat-modal');
+            modal.style.width = 'calc(100vw - 40px)';
+            modal.style.height = 'calc(100vh - 40px)';
+            modal.style.bottom = '20px';
+            modal.style.right = '20px';
+            modal.style.borderRadius = '30px';
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML += `<div class="message user"><div class="bubble">${escapeHtml(message)}</div></div>`;
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                messagesDiv.innerHTML += `<div class="message bot"><div class="bubble">${escapeHtml(data.reply).replace(/\n/g, '<br>')}</div></div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function calculateNutrition(e) {
+            e.preventDefault();
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const activity = document.getElementById('activity').value;
+            const goal = document.getElementById('goal').value;
+            
+            const bmi = weight / ((height / 100)   ** 2);
+            let bmr = gender === 'male' ? 10 * weight + 6.25 * height - 5 * age + 5 : 10 * weight + 6.25 * height - 5 * age - 161;
+            const actMult = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 };
+            let tdee = bmr * actMult[activity];
+            let dailyCalories = tdee * (goal === 'loss' ? 0.85 : goal === 'gain' ? 1.15 : 1);
+            
+            const protein = weight * 2.2;
+            const fat = (dailyCalories * 0.25) / 9;
+            const carbs = (dailyCalories - (protein * 4) - (fat * 9)) / 4;
+            
+            const bmiCat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
+            
+            document.getElementById('results-cards').innerHTML = `
+                <div class="result-card"><h3>BMI</h3><div class="value">${bmi.toFixed(1)}</div><div class="unit">${bmiCat}</div></div>
+                <div class="result-card green"><h3>Daily Calories</h3><div class="value">${Math.round(dailyCalories)}</div><div class="unit">kcal/day</div></div>
+                <div class="result-card orange"><h3>Protein</h3><div class="value">${Math.round(protein)}</div><div class="unit">grams/day</div></div>
+                <div class="result-card purple"><h3>Water</h3><div class="value">${Math.round(weight * 35 / 1000)}</div><div class="unit">liters/day</div></div>
+            `;
+            
+            document.getElementById('macros-grid').innerHTML = `
+                <div class="nutrient-item"><div class="name">🥚 Protein</div><div class="amount">${Math.round(protein)}g</div></div>
+                <div class="nutrient-item"><div class="name">🧈 Fats</div><div class="amount">${Math.round(fat)}g</div></div>
+                <div class="nutrient-item"><div class="name">🍞 Carbs</div><div class="amount">${Math.round(carbs)}g</div></div>
+                <div class="nutrient-item"><div class="name">💧 Water</div><div class="amount">${Math.round(weight * 35 / 1000)}L</div></div>
+            `;
+            
+            document.getElementById('micros-grid').innerHTML = `
+                <div class="nutrient-item"><div class="name">Vitamin D</div><div class="amount">800-2000 IU</div></div>
+                <div class="nutrient-item"><div class="name">Iron</div><div class="amount">${gender === 'male' ? '8' : '18'}mg</div></div>
+                <div class="nutrient-item"><div class="name">Calcium</div><div class="amount">1000mg</div></div>
+                <div class="nutrient-item"><div class="name">Zinc</div><div class="amount">${gender === 'male' ? '11' : '8'}mg</div></div>
+                <div class="nutrient-item"><div class="name">Potassium</div><div class="amount">2600mg</div></div>
+                <div class="nutrient-item"><div class="name">Magnesium</div><div class="amount">${gender === 'male' ? '400' : '310'}mg</div></div>
+            `;
+            
+            document.getElementById('foods-grid').innerHTML = `
+                <div class="food-card"><div class="icon">🥚</div><div class="name">Eggs</div><div class="cal">155 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🐔</div><div class="name">Chicken</div><div class="cal">165 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🐟</div><div class="name">Salmon</div><div class="cal">208 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🥬</div><div class="name">Broccoli</div><div class="cal">34 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🥕</div><div class="name">Carrots</div><div class="cal">41 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🍎</div><div class="name">Apple</div><div class="cal">52 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🥑</div><div class="name">Avocado</div><div class="cal">160 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🥛</div><div class="name">Milk</div><div class="cal">61 cal/100ml</div></div>
+                <div class="food-card"><div class="icon">🍌</div><div class="name">Banana</div><div class="cal">89 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🥜</div><div class="name">Almonds</div><div class="cal">579 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🍚</div><div class="name">Brown Rice</div><div class="cal">111 cal/100g</div></div>
+                <div class="food-card"><div class="icon">🌽</div><div class="name">Sweet Potato</div><div class="cal">86 cal/100g</div></div>
+            `;
+            
+            document.getElementById('nutrition-results').classList.remove('hidden');
+        }
+        
+        async function checkSymptom() {
+            const input = document.getElementById('symptom-input');
+            const symptom = input.value.trim();
+            if (!symptom) { alert('Enter a symptom'); return; }
+            
+            try {
+                const response = await fetch('/api/symptom_check/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ symptom })
+                });
+                const data = await response.json();
+                const resultDiv = document.getElementById('symptom-result');
+                
+                if (data.warning) {
+                    resultDiv.innerHTML = `<div style="background: #fee; border-left: 4px solid #c33; padding: 1rem; border-radius: 8px;"><h3 style="color: #c33; font-weight: 700; margin-bottom: 0.5rem;">${data.warning}</h3><p style="color: #a22;">${data.immediate_action}</p></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="glass-card" style="padding: 1rem;"><p>${data.suggestions ? 'Try: ' + data.suggestions.join(', ') : 'Please describe your symptom more specifically.'}</p></div>`;
+                }
+                resultDiv.classList.remove('hidden');
+            } catch (error) { console.error('Error:', error); }
+        }
+        
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                if (!section) return;
+                showSection(section);
+            });
+        });
+        
+        async function loadContent() {
+            try {
+                const firstAidRes = await fetch('/api/first_aid');
+                if (firstAidRes.ok) {
+                    const data = await firstAidRes.json();
+                    document.getElementById('first-aid-content').innerHTML = data.first_aid.map(item => `<div class="glass-card" style="padding: 1rem; margin-bottom: 1rem;"><h3 style="font-weight: 600; margin-bottom: 0.5rem;">${item.title}</h3><p style="color: #666; font-size: 0.9rem;">${item.steps.join('. ')}</p></div>`).join('');
+                }
+            } catch (error) { console.error('Error loading content:', error); }
+        }
+        
+        function handleHashNavigation() {
+            const hash = window.location.hash.replace('#', '').trim();
+            if (!hash) return;
+            const section = document.querySelector(`[data-section="${hash}"]`);
+            if (section) {
+                showSection(hash);
+            }
+        }
+
+        initTheme();
+        loadContent();
+        handleHashNavigation();
+    </script>
+</body>
+</html>

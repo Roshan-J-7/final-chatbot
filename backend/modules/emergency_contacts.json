@@ -1,0 +1,14 @@
+{
+  "contacts": [
+    {"name": "Ambulance / Medical Emergency", "number": "108", "description": "24/7 emergency medical services"},
+    {"name": "Fire Department", "number": "101", "description": "Fire and rescue services"},
+    {"name": "Police Emergency", "number": "100", "description": "Law enforcement emergency"},
+    {"name": "Women Helpline", "number": "1091", "description": "24/7 support for women in distress"},
+    {"name": "Child Helpline", "number": "1098", "description": "Support for children in need"},
+    {"name": "Poison Control", "number": "1066", "description": "Information for poisoning emergencies"},
+    {"name": "Mental Health Helpline", "number": "9152987821", "description": "COHA mental health support"},
+    {"name": "Disaster Management", "number": "1078", "description": "Natural disaster emergency"},
+    {"name": "Local Hospital - Emergency", "number": "+91-1234567890", "description": "Local hospital emergency department"},
+    {"name": "Blood Bank", "number": "+91-1234567891", "description": "Blood donation and requirements"}
+  ]
+}

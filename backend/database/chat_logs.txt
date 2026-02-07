@@ -1,0 +1,382 @@
+[2026-02-02 19:39:55] USER: fever
+BOT: If you have a fever, rest, drink fluids, and monitor your temperature. Seek medical help if it lasts more than 3 days.
+
+[2026-02-02 19:40:13] USER: helo
+BOT: I'm not sure about that. Please consult a healthcare professional if symptoms persist.
+
+[2026-02-02 19:40:24] USER: hey i have fever
+BOT: If you have a fever, rest, drink fluids, and monitor your temperature. Seek medical help if it lasts more than 3 days.
+
+[2026-02-02 19:40:32] USER: i have flu
+BOT: I'm not sure about that. Please consult a healthcare professional if symptoms persist.
+
+[2026-02-02 19:49:19] USER: i have cancer
+BOT: I'm not sure about that. Please consult a healthcare professional if symptoms persist.
+
+[2026-02-02 21:59:21] USER: i have high temperature
+BOT: If you have a fever, rest, drink fluids, and monitor your temperature. Seek medical help if it lasts more than 3 days.
+
+[2026-02-02 21:59:27] USER: i have fever
+BOT: If you have a fever, rest, drink fluids, and monitor your temperature. Seek medical help if it lasts more than 3 days.
+
+[2026-02-02 21:59:41] USER: i have cold
+BOT: For cough or cold, drink warm fluids and rest. If you have difficulty breathing, seek medical attention.
+
+[2026-02-02 21:59:53] USER: i have headache
+BOT: For mild headaches, rest in a quiet place and stay hydrated. If severe or frequent, consult a doctor.
+
+[2026-02-02 22:29:14] USER: how to check if am having cancer
+BOT: I don't have specific information about that. For accurate medical advice, please consult a qualified healthcare professional. You can also try rephrasing your question or asking about: symptoms, first aid, preventive care, chronic conditions, or emergency situations.
+
+[2026-02-02 22:46:10] USER: i have cancer
+BOT: Chronic diseases are long-lasting conditions that typically develop gradually and persist over time. Type 2 diabetes, affecting millions worldwide, involves insulin resistance causing high blood sugar - management includes diet modifications, regular exercise, weight loss, and medications like metformin or insulin. Hypertension (high blood pressure) often has no symptoms but silently damages blood vessels and heart - lifestyle changes (reducing sodium, exercise, stress management) and antihypertensive medications help control it. Heart disease encompasses coronary artery disease (blocked arteries), heart failure, and arrhythmias - it's the leading cause of death globally. Cancer involves uncontrolled cell growth due to accumulated genetic mutations - treatment options include surgery, chemotherapy, radiation, immunotherapy, and targeted therapy depending on cancer type and stage. COPD (chronic obstructive pulmonary disease) causes breathing difficulties, often from smoking. Arthritis involves joint inflammation and pain, with osteoarthritis (wear and tear) and rheumatoid arthritis (autoimmune) being most common. Research shows that 80% of heart disease, stroke, and type 2 diabetes cases are preventable through healthy lifestyle choices! Which specific condition interests you, or would you like to know about prevention strategies?
+
+This connects to disease management, risk factors, prevention strategies?
+
+MEDICAL DISCLAIMER: This information is for educational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare providers for medical concerns. In emergencies, call emergency services (108) immediately.
+
+
+[2026-02-02 23:03:51] USER: its hard to breathe
+BOT: That's outside my current knowledge base, but I can help with general health, anatomy, diseases, nutrition, or the immune system. Could you rephrase your question?
+
+[2026-02-02 23:04:01] USER: breathing issue
+BOT: Good day! I'm here to help you understand the human body, diseases, biological processes, and medical science. Think of me as your friendly biology tutor. What's on your mind?
+
+[2026-02-02 23:04:09] USER: idiot
+BOT: I don't have specific information about that particular topic, but I can tell you about related subjects like general health, anatomy, diseases, nutrition, or the immune system. Could you rephrase your question?
+
+[2026-02-02 23:14:14] USER: fever
+BOT: That's outside my current knowledge base, but I can help with general health, anatomy, diseases, nutrition, or the immune system. Could you rephrase your question?
+
+[2026-02-02 23:15:00] USER: headachce
+BOT: That's a bit outside my expertise, but let me tell you about related topics general health, anatomy, diseases, nutrition, or the immune system. Could you rephrase your question?
+
+[2026-02-06 12:09:36] USER: fever
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 12:09:44] USER: i have cancer
+BOT: Cancer = uncontrolled cell growth. Many types: lung, breast, colon, skin, blood (leukemia), etc. Early detection improves outcomes.
+
+ Warning signs (vary by type):  New lump, persistent cough, blood in stool/urine, unusual bleeding, rapid weight loss, extreme fatigue.
+
+ Risk factors:  Smoking, alcohol, sun exposure, family history, obesity.
+
+ Prevention:  Don't smoke, limit alcohol, sun protection, healthy diet, exercise, regular screenings after recommended age.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 12:10:30] USER: i have headache what to do
+BOT: Headaches are very common and usually not serious. Causes: tension/stress, dehydration, poor sleep, hunger, caffeine withdrawal, sinus issues, or migraines.
+
+ What helps:  Drink water, rest in a dark room, OTC pain relief, cold/warm compress, manage stress.
+
+ See a doctor if:  Sudden severe headache, fever + stiff neck, confusion, vision changes, or after a head injury.
+
+[2026-02-06 12:17:06] USER: my head pains
+BOT: Headaches are very common and usually not serious. Causes: tension/stress, dehydration, poor sleep, hunger, caffeine withdrawal, sinus issues, or migraines.
+
+ What helps:  Drink water, rest in a dark room, OTC pain relief, cold/warm compress, manage stress.
+
+ See a doctor if:  Sudden severe headache, fever + stiff neck, confusion, vision changes, or after a head injury.
+
+[2026-02-06 12:17:31] USER: leg pain and head pain
+BOT: Headaches are very common and usually not serious. Causes: tension/stress, dehydration, poor sleep, hunger, caffeine withdrawal, sinus issues, or migraines.
+
+ What helps:  Drink water, rest in a dark room, OTC pain relief, cold/warm compress, manage stress.
+
+ See a doctor if:  Sudden severe headache, fever + stiff neck, confusion, vision changes, or after a head injury.
+
+[2026-02-06 12:17:37] USER: leg pain
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 12:18:09] USER: no proper sleep
+BOT: Adults need 7ï¿½9 hours sleep. Sleep consolidates memory, repairs cells, regulates hormones. Poor sleep impairs focus, mood, and immunity.
+
+ Better sleep:  Consistent bedtime, cool dark room, no screens 1hr before bed, exercise during day (not evening), limit caffeine after 2pm, don't use bed for work.
+
+ If insomnia persists:  Try relaxation techniques, sleep hygiene habits. See a doctor if it doesn't improve.
+
+[2026-02-06 13:47:16] USER: i have fever
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:47:23] USER: Explain anxiety and stress symptoms.
+BOT: Stress triggers 'fight or flight' ï¿½ increased heart rate, tension, rapid breathing. Chronic stress weakens immunity and increases disease risk.
+
+ What helps:  Deep breathing (in 4, hold 4, out 4), exercise, meditation, time in nature, talk to someone, limit caffeine.
+
+ Panic attacks:  Intense but temporary. Breathe slowly, ground yourself (5 things you see, 4 hear, 3 touch...). If anxiety severely affects daily life, talk to a therapist or doctor.
+
+[2026-02-06 13:47:55] USER: Explain hydration and electrolytes.
+
+Use bullet points.
+BOT: Your body is 60% water. Water carries nutrients, removes waste, regulates temperature, lubricates joints. Aim for 8ï¿½10 cups (2ï¿½3 liters) daily, more if exercising or hot weather. Check urine: light yellow = hydrated, dark = drink more. Dehydration causes headaches, fatigue, dizziness, poor concentration. All fluids count ï¿½ tea, coffee, milk, soup, fruits.
+
+[2026-02-06 13:48:02] USER: How to lower fever?
+
+Use bullet points. Ask one follow-up question.
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:48:13] USER: What are common causes of cough?
+
+Give a detailed answer.
+BOT: Coughs clear your airways. Causes: cold, flu, bronchitis, pneumonia, allergies, asthma, acid reflux, or smoke. Dry cough = scratchy. Wet cough = produces mucus.
+
+ What helps:  Water, honey, avoid irritants, cough medicine.
+
+ See a doctor if:  Lasts 3+ weeks, brings up blood, severe pain, high fever, or trouble breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:48:19] USER: What are common causes of cough?
+
+Ask one follow-up question.
+BOT: Coughs clear your airways. Causes: cold, flu, bronchitis, pneumonia, allergies, asthma, acid reflux, or smoke. Dry cough = scratchy. Wet cough = produces mucus.
+
+ What helps:  Water, honey, avoid irritants, cough medicine.
+
+ See a doctor if:  Lasts 3+ weeks, brings up blood, severe pain, high fever, or trouble breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:48:26] USER: Tell me about the nervous system.
+
+Ask one follow-up question.
+BOT: Your brain has ~86 billion neurons communicating via electrical signals and chemicals. Regions: frontal lobe (decisions, personality), temporal (memory, language), parietal (sensation), occipital (vision), cerebellum (balance/coordination), brainstem (breathing, heart rate). Uses 20% of your energy! Sleep consolidates memory. Exercise and good diet improve brain health. Protect it from injury and substance abuse.
+
+[2026-02-06 13:51:44] USER: i have fever
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:51:50] USER: How to lower fever?
+
+Use bullet points.
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:52:21] USER: what is IBD
+
+Use bullet points.
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:54:33] USER: i have depression
+BOT: Depression is more than sadness ï¿½ it's persistent low mood, loss of interest, fatigue, sleep changes, appetite changes, difficulty concentrating, feelings of worthlessness.
+
+ What helps:  Regular exercise, social connection, routine, sunlight, adequate sleep, limit alcohol.
+
+ Important:  Depression is treatable with therapy, medication, or both. If you or someone you know is struggling, please reach out to a mental health professional. You are not alone.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:54:53] USER: i have depression
+
+Use bullet points.
+BOT: Depression is more than sadness ï¿½ it's persistent low mood, loss of interest, fatigue, sleep changes, appetite changes, difficulty concentrating, feelings of worthlessness.
+
+ What helps:  Regular exercise, social connection, routine, sunlight, adequate sleep, limit alcohol.
+
+ Important:  Depression is treatable with therapy, medication, or both. If you or someone you know is struggling, please reach out to a mental health professional. You are not alone.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 13:55:14] USER: give me weight loss time
+
+Use bullet points.
+BOT: Healthy weight reduces disease risk. BMI = weight(kg)/height(m)ï¿½: <18.5 underweight, 18.5ï¿½24.9 normal, 25ï¿½29.9 overweight, 30+ obese.
+
+ Healthy weight loss:  0.5ï¿½1 kg/week. Eat whole foods, vegetables, lean protein; limit processed food, sugar, alcohol. Exercise burns calories and improves health.
+
+ Key:  Sustainable lifestyle change beats crash diets. If struggling despite effort, see a doctor for possible underlying causes.
+
+[2026-02-06 14:02:22] USER: df
+BOT: I don't have specific information about that yet. For accurate medical advice, please consult a qualified healthcare professional. I can help with symptoms, anatomy systems, diseases, nutrition, hormones, medications, and prevention. Try asking in natural language, like 'Why do I feel dizzy?' or 'How does digestion work?'
+
+[2026-02-06 14:02:27] USER: How to lower fever?
+BOT: Fever means your body is fighting an infection. Normal is ~98.6ï¿½F (37ï¿½C). Over 100.4ï¿½F (38ï¿½C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3ï¿½7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103ï¿½F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 14:04:14] USER: What is diabetes and how can I prevent it?
+BOT: Diabetes = body can't control blood sugar. Type 1 (autoimmune, childhood). Type 2 (insulin resistance, develops over time ï¿½ most common).
+
+ Symptoms:  Increased thirst, frequent urination, fatigue, blurred vision, slow-healing wounds.
+
+ Management:  Healthy diet (low sugar), regular exercise, maintain weight, monitor blood sugar, medication if needed. Type 2 is often preventable with lifestyle changes.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 14:18:38] USER: Explain the immune system.
+BOT: Your immune system fights invaders (bacteria, viruses). White blood cells patrol your blood. B cells make antibodies that tag invaders. T cells kill infected cells. The system remembers pathogens ï¿½ that's why vaccines work! Sleep, nutrition, exercise, and stress management strengthen immunity. Chronic stress and poor sleep weaken it.
+
+[2026-02-06 14:18:41] USER: Tell me about vitamins and minerals.
+BOT: Key vitamins:  A  (vision, immune) ï¿½ carrots, sweet potato;  C  (immunity, healing) ï¿½ citrus, berries, peppers;  D  (bones, immunity) ï¿½ sunlight, fish, eggs;  E  (antioxidant) ï¿½ nuts, seeds;  B vitamins  (energy) ï¿½ whole grains, meat, eggs;  K  (blood clotting) ï¿½ leafy greens. A varied diet usually provides all needed vitamins. Deficiencies cause problems (scurvy from no C, weak bones from no D).
+
+[2026-02-06 14:28:04] USER: good morning
+BOT: Hi there! I can help with health questions — symptoms, conditions, how body works, nutrition, and more. What's on your mind?
+
+[2026-02-06 14:28:12] USER: am having cancer
+BOT: Cancer = uncontrolled cell growth. Many types: lung, breast, colon, skin, blood (leukemia), etc. Early detection improves outcomes.
+
+ Warning signs (vary by type):  New lump, persistent cough, blood in stool/urine, unusual bleeding, rapid weight loss, extreme fatigue.
+
+ Risk factors:  Smoking, alcohol, sun exposure, family history, obesity.
+
+ Prevention:  Don't smoke, limit alcohol, sun protection, healthy diet, exercise, regular screenings after recommended age.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 14:28:25] USER: i have cancer
+
+Use bullet points.
+BOT: Cancer = uncontrolled cell growth. Many types: lung, breast, colon, skin, blood (leukemia), etc. Early detection improves outcomes.
+
+ Warning signs (vary by type):  New lump, persistent cough, blood in stool/urine, unusual bleeding, rapid weight loss, extreme fatigue.
+
+ Risk factors:  Smoking, alcohol, sun exposure, family history, obesity.
+
+ Prevention:  Don't smoke, limit alcohol, sun protection, healthy diet, exercise, regular screenings after recommended age.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-06 14:30:51] USER: hii
+
+Use bullet points. Ask one follow-up question.
+BOT: Hello! I'm your health assistant. Ask me about symptoms, diseases, body systems, nutrition, first aid, or anything medical!
+
+[2026-02-07 20:06:12] USER: How to build a healthy diet?
+BOT: A balanced diet includes: vegetables (lots of colors), fruits, whole grains, lean protein, healthy fats, and water. Limit: processed foods, added sugar, excess salt, trans fats. Eat regular meals, don't skip breakfast. Fill half your plate with vegetables, quarter with protein, quarter with whole grains. Eating well prevents obesity, diabetes, heart disease, and many other conditions.
+
+[2026-02-07 20:06:22] USER: i have fever
+BOT: Fever means your body is fighting an infection. Normal is ~98.6°F (37°C). Over 100.4°F (38°C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3–7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103°F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-07 20:06:51] USER: Explain hydration and electrolytes.
+
+Use bullet points.
+BOT: Your body is 60% water. Water carries nutrients, removes waste, regulates temperature, lubricates joints. Aim for 8–10 cups (2–3 liters) daily, more if exercising or hot weather. Check urine: light yellow = hydrated, dark = drink more. Dehydration causes headaches, fatigue, dizziness, poor concentration. All fluids count — tea, coffee, milk, soup, fruits.
+
+[2026-02-07 20:06:55] USER: How to lower fever?
+
+Use bullet points.
+BOT: Fever means your body is fighting an infection. Normal is ~98.6°F (37°C). Over 100.4°F (38°C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3–7 days.
+
+ What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.
+
+ See a doctor if:  Fever above 103°F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-07 20:12:21] USER: How to build a healthy diet?
+BOT: A balanced diet includes: vegetables (lots of colors), fruits, whole grains, lean protein, healthy fats, and water. Limit: processed foods, added sugar, excess salt, trans fats. Eat regular meals, don't skip breakfast. Fill half your plate with vegetables, quarter with protein, quarter with whole grains. Eating well prevents obesity, diabetes, heart disease, and many other conditions.
+
+[2026-02-07 20:12:29] USER: am bleeding
+BOT:  For bleeding:  (1) Call emergency if severe. (2) Apply direct pressure with clean cloth — hold firmly, don't remove. (3) Elevate wound if possible. (4) Once stopped, clean with soap and water. (5) Small cuts: antibiotic ointment + bandage.
+
+ Seek care if:  Won't stop after 10 min, deep wound, edges gaping, dirty wound, animal/human bite, or puncture wound.
+
+[2026-02-07 20:12:34] USER: 1
+BOT:  For bleeding:  (1) Call emergency if severe. (2) Apply direct pressure with clean cloth — hold firmly, don't remove. (3) Elevate wound if possible. (4) Once stopped, clean with soap and water. (5) Small cuts: antibiotic ointment + bandage.
+
+ Seek care if:  Won't stop after 10 min, deep wound, edges gaping, dirty wound, animal/human bite, or puncture wound.
+
+[2026-02-07 20:13:27] USER: I am not feeling well
+BOT: I am sorry you are not feeling well. Can you describe what you are experiencing? For example: Do you have pain somewhere? Fever? Nausea? Fatigue? The more details you share, the better I can help point you in the right direction. If symptoms are severe or sudden, please seek medical attention right away.
+
+[2026-02-07 20:14:14] USER: How much water should I drink?
+BOT: Your body is 60% water. Water carries nutrients, removes waste, regulates temperature, lubricates joints. Aim for 8–10 cups (2–3 liters) daily, more if exercising or hot weather. Check urine: light yellow = hydrated, dark = drink more. Dehydration causes headaches, fatigue, dizziness, poor concentration. All fluids count — tea, coffee, milk, soup, fruits.
+
+[2026-02-07 20:14:44] USER: What is ADHD?
+BOT: ADHD (Attention Deficit Hyperactivity Disorder) = neurodevelopmental condition affecting focus, impulse control, and activity level.
+
+Types: Inattentive (difficulty focusing), hyperactive-impulsive (restlessness, impulsivity), or combined.
+
+Symptoms: Difficulty concentrating, easily distracted, forgetfulness, losing things, fidgeting, talking excessively, difficulty waiting, acting without thinking.
+
+Treatment: Behavioral strategies + medication (stimulants like methylphenidate, or non-stimulants). Structure, routines, exercise, adequate sleep all help.
+
+Important: ADHD is real, neurological, and not laziness. Proper diagnosis and treatment dramatically improve quality of life. Affects adults too.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-07 20:14:51] USER: First aid for burns
+BOT:  Burns:  1st degree (red, painful) = minor. 2nd degree (blistering) = moderate. 3rd degree (charred, numb) = emergency.
+
+ Treatment:  (1) Remove from heat. (2) Cool with cool water 10–20 min (NO ice). (3) Remove tight items. (4) Cover with clean cloth. (5) Pain relief.  Don't use butter or oil. 
+
+ Seek care if:  Large area, 2nd/3rd degree, face/hands/genitals, or chemical/electrical burn.
+
+[2026-02-07 20:15:13] USER: am choking
+BOT:  If someone is choking  (can't cough/speak): (1) Call emergency. (2) Stand behind person, fist above navel, press inward + upward forcefully (Heimlich). Repeat until object dislodges. (3) If unconscious: begin CPR.
+
+ For infants:  Back blows + chest thrusts (different from Heimlich).
+
+ Prevention:  Chew food well, don't talk with full mouth, supervise kids with small foods/toys.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-07 20:15:33] USER: What is COVID-19?
+BOT: COVID-19 is a viral respiratory illness. Symptoms appear 2–5 days after exposure: fever, dry cough, fatigue, loss of taste/smell, shortness of breath in severe cases.
+
+ What helps:  Rest, hydration, fever reducers. Most recover at home in 1–2 weeks. Vaccination reduces severe illness.
+
+ Seek care if:  High fever, severe shortness of breath, confusion, chest pain, or symptoms worsen despite home care.
+
+This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number.
+
+[2026-02-07 20:16:04] USER: When should I see a doctor?
+BOT:  Call emergency for:  Severe chest pain, can't breathe, unconscious, uncontrolled bleeding, choking, stroke signs, severe allergic reaction.
+
+ ER visit:  High fever (>103°F), severe belly pain, meningitis signs, poisoning.
+
+ Same-day doctor:  Persistent cough 3+ weeks, coughing blood, persistent fever, severe vomiting/diarrhea.
+
+ Scheduled visit:  Ongoing concerns, checkups, chronic disease management. When in doubt, call — better safe than sorry.
+

@@ -1,0 +1,2295 @@
+{
+  "intents": {
+    "greeting": [
+      "hello",
+      "hi",
+      "hey",
+      "good morning",
+      "good afternoon",
+      "greetings",
+      "howdy",
+      "welcome"
+    ],
+    "farewell": [
+      "bye",
+      "goodbye",
+      "see you",
+      "take care", 
+      "farewell",
+      "later",
+      "quit"
+    ],
+    "thanks": [
+      "thank",
+      "thanks",
+      "appreciate",
+      "grateful",
+      "thx",
+      "thank you"
+    ],
+    "help": [
+      "help",
+      "assist",
+      "support",
+      "guide",
+      "confused",
+      "not sure",
+      "what can you"
+    ],
+    "how_are_you": [
+      "how are you",
+      "how do you do",
+      "what's up",
+      "how's it going"
+    ]
+  },
+  "response_templates": {
+    "greeting": [
+      "Hello! I'm your health assistant. Ask me about symptoms, diseases, body systems, nutrition, first aid, or anything medical!",
+      "Hi there! I can help with health questions — symptoms, conditions, how body works, nutrition, and more. What's on your mind?",
+      "Welcome! Ask me anything about health, the human body, diseases, or wellness."
+    ],
+    "farewell": [
+      "Take care! For serious concerns, always see a doctor. Come back anytime!",
+      "Goodbye! Stay healthy and feel free to return with more questions.",
+      "See you! Remember — for emergencies, call your local emergency number."
+    ],
+    "thanks": [
+      "You're welcome! Anything else you'd like to know?",
+      "Happy to help! Any other health questions?",
+      "My pleasure! Feel free to ask more."
+    ]
+  },
+  "rules": [
+    {
+      "category": "greeting_help",
+      "keywords": [
+        "what can you do",
+        "what do you know",
+        "help me",
+        "your topics",
+        "what topics"
+      ],
+      "response": "I can answer questions about: symptoms (fever, cough, pain, nausea), diseases (diabetes, heart disease, asthma), how the body works (heart, lungs, brain, digestion), nutrition and diet, medications, prevention and wellness, stress and mental health, first aid, and when to see a doctor. Just ask in your own words!",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_fever",
+      "keywords": [
+        "fever",
+        "temperature",
+        "hot",
+        "warm body",
+        "sweating",
+        "high temperature",
+        "chills"
+      ],
+      "response": "Fever means your body is fighting an infection. Normal is ~98.6°F (37°C). Over 100.4°F (38°C) is a fever. It helps your immune system fight germs. Most fevers resolve in 3–7 days.\n\n What helps:  Drink lots of water, rest, cool compresses, acetaminophen or ibuprofen.\n\n See a doctor if:  Fever above 103°F, lasts 5+ days, or comes with confusion, stiff neck, severe headache, or difficulty breathing.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_cough",
+      "keywords": [
+        "cough",
+        "coughing",
+        "persistent cough",
+        "dry cough",
+        "wet cough",
+        "chest cough",
+        "phlegm",
+        "mucus cough"
+      ],
+      "response": "Coughs clear your airways. Causes: cold, flu, bronchitis, pneumonia, allergies, asthma, acid reflux, or smoke. Dry cough = scratchy. Wet cough = produces mucus.\n\n What helps:  Water, honey, avoid irritants, cough medicine.\n\n See a doctor if:  Lasts 3+ weeks, brings up blood, severe pain, high fever, or trouble breathing.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_headache",
+      "keywords": [
+        "headache",
+        "migraine",
+        "head pain",
+        "throbbing",
+        "pressure in head",
+        "head hurts"
+      ],
+      "response": "Headaches are very common and usually not serious. Causes: tension/stress, dehydration, poor sleep, hunger, caffeine withdrawal, sinus issues, or migraines.\n\n What helps:  Drink water, rest in a dark room, OTC pain relief, cold/warm compress, manage stress.\n\n See a doctor if:  Sudden severe headache, fever + stiff neck, confusion, vision changes, or after a head injury.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_nausea",
+      "keywords": [
+        "nausea",
+        "nauseous",
+        "feeling sick",
+        "want to vomit",
+        "queasy",
+        "sick stomach"
+      ],
+      "response": "Nausea can be caused by: stomach virus, food poisoning, motion sickness, migraines, medication side effects, anxiety, or pregnancy.\n\n What helps:  Bland food (crackers, rice, broth), ginger tea, rest, avoid strong smells.\n\n See a doctor if:  Severe abdominal pain, can't keep fluids down for 6+ hours, signs of dehydration (dark urine, dizziness), or chest pain.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_vomiting",
+      "keywords": [
+        "vomiting",
+        "vomit",
+        "throw up",
+        "throwing up",
+        "puking"
+      ],
+      "response": "Vomiting can be caused by food poisoning, viral infection, medication, migraines, pregnancy, or alcohol.\n\n What helps:  Don't eat for a few hours, sip clear fluids slowly, then try bland foods.\n\n See a doctor if:  Lasts many hours, blood in vomit, severe belly pain, dehydration signs (no urination 8+ hrs), or after head injury.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_sore_throat",
+      "keywords": [
+        "sore throat",
+        "throat pain",
+        "throat hurt",
+        "swallowing pain",
+        "scratchy throat"
+      ],
+      "response": "Sore throat causes: viral infection (cold, flu), strep throat (bacterial — needs antibiotics), allergies, acid reflux, or dry air. Viral sore throats resolve in 5–7 days.\n\n What helps:  Salt water gargles, throat lozenges, warm tea with honey, pain relievers, stay hydrated.\n\n See a doctor if:  Lasts 10+ days, high fever, white patches in throat, difficulty swallowing, rash, or breathing issues.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_stomach_pain",
+      "keywords": [
+        "stomach ache",
+        "stomach pain",
+        "abdominal pain",
+        "belly pain",
+        "cramps",
+        "stomach cramp",
+        "tummy",
+        "stomach hurts",
+        "tummy hurts",
+        "belly hurts"
+      ],
+      "response": "Stomach pain causes: indigestion, gas, food poisoning, constipation, diarrhea, stomach virus, period cramps, stress, or serious issues like appendicitis or ulcers.\n\n What helps:  Rest, heat pad, bland foods, hydration.\n\n Urgent care if:  Severe unbearable pain, lower right pain (appendicitis), vomiting blood, very dark stool, or pain lasting 6+ hours.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_diarrhea",
+      "keywords": [
+        "diarrhea",
+        "loose stool",
+        "runny stool",
+        "watery stool"
+      ],
+      "response": "Diarrhea (loose/watery stools) causes: viral infection, food poisoning, medication, food intolerance, stress, or bacterial infection. Usually lasts 2–3 days.\n\n What helps:  Stay hydrated (water, electrolytes), eat bland (rice, crackers, bananas), avoid dairy and fatty foods.\n\n See a doctor if:  Lasts 4+ days, blood in stool, severe pain, dehydration (dark urine, dizziness), or high fever.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_cold",
+      "keywords": [
+        "cold",
+        "common cold",
+        "runny nose",
+        "congestion",
+        "sneezing",
+        "stuffy nose",
+        "blocked nose"
+      ],
+      "response": "The common cold is viral — antibiotics don't help. Symptoms: runny/stuffy nose, sneezing, sore throat, mild cough, low fever, fatigue. Lasts 7–10 days.\n\n What helps:  Rest, fluids, saline nasal drops, vitamin C foods, honey for cough. Contagious for first 3 days — stay home.\n\nMost people recover fully without complications.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_dizziness",
+      "keywords": [
+        "dizzy",
+        "dizziness",
+        "vertigo",
+        "lightheaded",
+        "room spinning",
+        "balance problem",
+        "faint"
+      ],
+      "response": "Dizziness causes: inner ear problems (vertigo), dehydration, low blood sugar, low blood pressure, anemia, medication side effects, anxiety, or migraines.\n\n What helps:  Sit down, drink water, eat something, avoid sudden position changes.\n\n See a doctor if:  Severe, lasts days, comes with chest pain, shortness of breath, neurological symptoms, or after head injury.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_fatigue",
+      "keywords": [
+        "fatigue",
+        "tired",
+        "exhaustion",
+        "lack energy",
+        "very tired",
+        "always tired",
+        "no energy",
+        "exhausted"
+      ],
+      "response": "Persistent tiredness can result from: poor sleep, stress, depression, anemia, thyroid problems, diabetes, chronic illness, medication, or overwork.\n\n What helps:  Prioritize 7–9 hrs sleep, exercise, manage stress, eat balanced meals, stay hydrated, get sunlight.\n\n See a doctor if:  Fatigue is unexplained, persistent despite rest, or comes with other symptoms like weight loss or pain.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_back_pain",
+      "keywords": [
+        "back pain",
+        "low back pain",
+        "upper back pain",
+        "back ache",
+        "spine pain",
+        "back hurts"
+      ],
+      "response": "Back pain causes: muscle strain, poor posture, heavy lifting, sedentary lifestyle, herniated disc, arthritis, or serious conditions.\n\n What helps:  Rest (but keep moving gently), ice first 48hrs then heat, OTC pain relief, gentle stretching, good posture.\n\n See a doctor if:  Severe, numbness/weakness in legs, loss of bladder/bowel control, or after injury.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_rash",
+      "keywords": [
+        "rash",
+        "skin rash",
+        "itchy",
+        "itch",
+        "hives",
+        "red skin",
+        "skin irritation",
+        "bumps skin"
+      ],
+      "response": "Rash causes: allergic reactions, contact dermatitis, infections (viral/bacterial/fungal), autoimmune conditions, or medications.\n\n What helps:  Avoid triggers, gentle soaps, moisturize, don't scratch, antihistamines for itching.\n\n See a doctor if:  Widespread, blistering, painful, comes with fever, or difficulty breathing (allergic reaction).",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_joint_pain",
+      "keywords": [
+        "joint pain",
+        "arthritis",
+        "knee pain",
+        "shoulder pain",
+        "joint ache",
+        "stiff joints",
+        "swollen joint"
+      ],
+      "response": "Joint pain causes: osteoarthritis (wear & tear), rheumatoid arthritis (autoimmune), injury, overuse, inflammation, or infection.\n\n What helps:  Rest joint, ice then heat, gentle movement, OTC pain relief, weight loss if needed, physical therapy.\n\n See a doctor if:  Severe pain, joint red/hot/swollen (infection sign), fever, or after injury.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_chest_pain",
+      "keywords": [
+        "chest pain",
+        "chest discomfort",
+        "pressure in chest",
+        "pain in chest",
+        "tight chest"
+      ],
+      "response": "⚠️  CHEST PAIN CAN BE LIFE-THREATENING.  Call emergency services immediately if you have: chest pressure/pain, pain spreading to arm/jaw/back, shortness of breath, nausea, cold sweat, dizziness.\n\nWhile waiting: sit down, stay calm, chew aspirin if not allergic. It could be heart attack, but also heartburn, muscle pain, or anxiety.  Always get checked — don't risk it. ",
+      "severity": "emergency"
+    },
+    {
+      "category": "symptom_breathing",
+      "keywords": [
+        "difficulty breathing",
+        "shortness of breath",
+        "breathless",
+        "can't breathe",
+        "hard to breathe",
+        "gasping"
+      ],
+      "response": "⚠️  DIFFICULTY BREATHING IS A MEDICAL EMERGENCY.  Call emergency services if: can't catch breath, blue lips/nails, can't speak in sentences, wheezing with chest pain.\n\nWhile waiting: sit upright, breathe slowly, remove tight clothing.\n\nCauses: asthma attack, pneumonia, heart problem, allergic reaction, or anxiety. If asthmatic: use rescue inhaler. If no relief in 15 min, call for help.",
+      "severity": "emergency"
+    },
+    {
+      "category": "symptom_ear_pain",
+      "keywords": [
+        "ear pain",
+        "earache",
+        "ear infection",
+        "ear hurt",
+        "ear ache"
+      ],
+      "response": "Ear pain causes: ear infection (otitis media — common in children), swimmer's ear, earwax buildup, sinus infection, or jaw problems.\n\n What helps:  Warm compress, OTC pain relief, keep ear dry.\n\n See a doctor if:  High fever, discharge from ear, sudden hearing loss, severe pain, or symptoms last 2+ days.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_eye_problems",
+      "keywords": [
+        "eye pain",
+        "red eye",
+        "eye infection",
+        "blurry vision",
+        "eye hurt",
+        "pink eye",
+        "conjunctivitis"
+      ],
+      "response": "Eye problems: pink eye/conjunctivitis (bacterial=discharge, viral=watery, allergic=itchy), stye, dry eyes, or serious issues like glaucoma.\n\n What helps:  Don't touch/rub eyes, warm compress, artificial tears, wash hands often.\n\n See a doctor if:  Severe pain, sudden vision changes, light sensitivity, discharge, or after eye injury.",
+      "severity": "information"
+    },
+    {
+      "category": "disease_flu",
+      "keywords": [
+        "flu",
+        "influenza",
+        "seasonal flu",
+        "flu like symptoms"
+      ],
+      "response": "The flu is more serious than a cold. It hits suddenly: high fever (103–104°F), severe body aches, fatigue, cough, sometimes nausea. Lasts 7–14 days. Can cause pneumonia.\n\n What helps:  Rest, lots of fluids, fever reducers, antiviral meds if started within 48 hrs.\n\n Prevention:  Annual flu vaccine.\n\n Urgent care if:  High fever, difficulty breathing, chest pain, confusion, or severe weakness.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_diabetes",
+      "keywords": [
+        "diabetes",
+        "blood sugar",
+        "glucose",
+        "diabetic",
+        "insulin",
+        "type 2",
+        "type 1"
+      ],
+      "response": "Diabetes = body can't control blood sugar. Type 1 (autoimmune, childhood). Type 2 (insulin resistance, develops over time — most common).\n\n Symptoms:  Increased thirst, frequent urination, fatigue, blurred vision, slow-healing wounds.\n\n Management:  Healthy diet (low sugar), regular exercise, maintain weight, monitor blood sugar, medication if needed. Type 2 is often preventable with lifestyle changes.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_hypertension",
+      "keywords": [
+        "high blood pressure",
+        "hypertension",
+        "blood pressure",
+        "bp high",
+        "bp problem"
+      ],
+      "response": "High blood pressure (hypertension) = blood pushes too hard on artery walls. Often NO symptoms — 'silent killer.' Increases heart attack and stroke risk. Normal: below 120/80 mmHg.\n\n Causes:  Salt, stress, obesity, genetics, age, inactivity.\n\n Management:  Reduce salt, exercise, lose weight, reduce stress, limit alcohol, eat fruits/vegetables. Many need medication.  Check BP regularly. ",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_asthma",
+      "keywords": [
+        "asthma",
+        "wheezing",
+        "asthmatic",
+        "asthma attack",
+        "inhaler"
+      ],
+      "response": "Asthma inflames airways making breathing difficult. Symptoms: wheezing, coughing (especially at night), shortness of breath, chest tightness.\n\n Triggers:  Allergies, cold air, exercise, smoke, pollution, infections, stress.\n\n Management:  Rescue inhaler for attacks, controller inhaler daily, avoid triggers.\n\n Emergency:  Gasping, can't speak sentences, blue lips, inhaler not helping — call for help immediately.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_heart",
+      "keywords": [
+        "heart disease",
+        "heart attack",
+        "cardiac",
+        "heart condition",
+        "coronary"
+      ],
+      "response": "Heart disease is the #1 killer worldwide. Includes: coronary artery disease, heart attack, heart failure, arrhythmia.\n\n Risk factors:  High BP, high cholesterol, smoking, diabetes, obesity, stress, inactivity.\n\n Warning signs:  Chest pain, arm/jaw pain, shortness of breath, nausea, cold sweats.  Call emergency immediately if experiencing these. \n\n Prevention:  Don't smoke, exercise, eat healthy, manage stress, control BP/cholesterol.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_pneumonia",
+      "keywords": [
+        "pneumonia",
+        "lung infection"
+      ],
+      "response": "Pneumonia = lung infection where air sacs fill with fluid. Serious.\n\n Symptoms:  Cough with mucus, fever, chills, shortness of breath, chest pain when breathing.\n\n Causes:  Bacteria, viruses, or fungi. Can develop from untreated cold/flu.\n\n Urgent care if:  High fever, severe breathing difficulty, chest pain, confusion, coughing blood. Bacterial pneumonia needs antibiotics.\n\n Prevention:  Pneumonia vaccine, flu vaccine, don't smoke, wash hands.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_cancer",
+      "keywords": [
+        "cancer",
+        "tumor",
+        "malignant",
+        "chemotherapy",
+        "oncology"
+      ],
+      "response": "Cancer = uncontrolled cell growth. Many types: lung, breast, colon, skin, blood (leukemia), etc. Early detection improves outcomes.\n\n Warning signs (vary by type):  New lump, persistent cough, blood in stool/urine, unusual bleeding, rapid weight loss, extreme fatigue.\n\n Risk factors:  Smoking, alcohol, sun exposure, family history, obesity.\n\n Prevention:  Don't smoke, limit alcohol, sun protection, healthy diet, exercise, regular screenings after recommended age.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_allergy",
+      "keywords": [
+        "allergy",
+        "allergies",
+        "allergic",
+        "hay fever",
+        "pollen",
+        "dust allergy",
+        "food allergy"
+      ],
+      "response": "Allergies = immune system overreacts to harmless substances (allergens). Types: seasonal (pollen, grass), food (peanuts, shellfish, dairy), dust, pet dander, insect stings, medication.\n\n Symptoms:  Sneezing, runny nose, itchy eyes, rash/hives, swelling. Severe = anaphylaxis (life-threatening).\n\n What helps:  Avoid allergens, antihistamines, nasal sprays, allergy shots. For food allergies: read labels carefully.\n\n Emergency:  Difficulty breathing, face/throat swelling = use EpiPen if available, call emergency.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_uti",
+      "keywords": [
+        "uti",
+        "urinary tract infection",
+        "bladder infection",
+        "burning urination",
+        "painful urination"
+      ],
+      "response": "UTI = bacterial infection in urinary tract. More common in women.\n\n Symptoms:  Burning during urination, frequent urge to urinate, cloudy/strong-smelling urine, pelvic pain, sometimes blood in urine.\n\n What helps:  Drink plenty of water, cranberry juice may help prevent.\n\n See a doctor:  UTIs usually need antibiotics. Untreated UTI can spread to kidneys (more serious — fever, back pain, nausea). Don't delay treatment.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_anemia",
+      "keywords": [
+        "anemia",
+        "low iron",
+        "iron deficiency",
+        "pale",
+        "low hemoglobin"
+      ],
+      "response": "Anemia = not enough healthy red blood cells to carry oxygen. Most common cause: iron deficiency.\n\n Symptoms:  Fatigue, weakness, pale skin, shortness of breath, dizziness, cold hands/feet, brittle nails.\n\n Causes:  Low iron intake, blood loss (heavy periods), chronic disease, vitamin B12/folate deficiency.\n\n Treatment:  Iron-rich foods (red meat, spinach, legumes, fortified cereals), vitamin C helps iron absorption, iron supplements if needed. See a doctor for proper diagnosis.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_covid",
+      "keywords": [
+        "covid",
+        "coronavirus",
+        "covid-19",
+        "pandemic",
+        "covid symptoms"
+      ],
+      "response": "COVID-19 is a viral respiratory illness. Symptoms appear 2–5 days after exposure: fever, dry cough, fatigue, loss of taste/smell, shortness of breath in severe cases.\n\n What helps:  Rest, hydration, fever reducers. Most recover at home in 1–2 weeks. Vaccination reduces severe illness.\n\n Seek care if:  High fever, severe shortness of breath, confusion, chest pain, or symptoms worsen despite home care.",
+      "severity": "moderate"
+    },
+    {
+      "category": "body_heart",
+      "keywords": [
+        "heart",
+        "heartbeat",
+        "pump blood",
+        "heart anatomy",
+        "how heart works"
+      ],
+      "response": "Your heart is a fist-sized muscular pump beating 60–100 times/minute. It has 4 chambers: right atrium (receives used blood) → right ventricle (pumps to lungs) → left atrium (receives oxygenated blood) → left ventricle (pumps to entire body). Arteries carry blood away, veins bring it back, capillaries exchange oxygen/nutrients. Your heart beats ~100,000 times daily, pumping blood through 60,000+ miles of vessels!",
+      "severity": "information"
+    },
+    {
+      "category": "body_lungs",
+      "keywords": [
+        "lungs",
+        "breathing",
+        "respiratory",
+        "oxygen",
+        "airways",
+        "how lungs work"
+      ],
+      "response": "Your lungs exchange oxygen for carbon dioxide. Air flows: nose/mouth → trachea → bronchi → tiny air sacs (alveoli, ~300 million of them) where oxygen enters blood and CO2 exits. The diaphragm controls breathing automatically. You breathe ~20,000 times daily. Exercise strengthens lungs. Smoking, pollution, and infections damage them. Healthy lungs are vital for delivering oxygen to every cell.",
+      "severity": "information"
+    },
+    {
+      "category": "body_brain",
+      "keywords": [
+        "brain",
+        "nervous system",
+        "neurons",
+        "memory",
+        "thinking",
+        "how brain works"
+      ],
+      "response": "Your brain has ~86 billion neurons communicating via electrical signals and chemicals. Regions: frontal lobe (decisions, personality), temporal (memory, language), parietal (sensation), occipital (vision), cerebellum (balance/coordination), brainstem (breathing, heart rate). Uses 20% of your energy! Sleep consolidates memory. Exercise and good diet improve brain health. Protect it from injury and substance abuse.",
+      "severity": "information"
+    },
+    {
+      "category": "body_digestive",
+      "keywords": [
+        "digestion",
+        "stomach",
+        "digestive system",
+        "gut",
+        "intestines",
+        "how digestion works"
+      ],
+      "response": "Digestion breaks food into nutrients. Path: mouth (chewing + saliva) → esophagus → stomach (acid breaks proteins, 2–4 hrs) → small intestine (20 ft, absorbs 90% of nutrients) → large intestine/colon (absorbs water, forms stool). Liver makes bile for fat. Pancreas makes enzymes + insulin. Total journey: 24–72 hours. Fiber, water, and movement help digestion.",
+      "severity": "information"
+    },
+    {
+      "category": "body_immune",
+      "keywords": [
+        "immune system",
+        "immunity",
+        "white blood cells",
+        "antibodies",
+        "defense",
+        "how immune works"
+      ],
+      "response": "Your immune system fights invaders (bacteria, viruses). White blood cells patrol your blood. B cells make antibodies that tag invaders. T cells kill infected cells. The system remembers pathogens — that's why vaccines work! Sleep, nutrition, exercise, and stress management strengthen immunity. Chronic stress and poor sleep weaken it.",
+      "severity": "information"
+    },
+    {
+      "category": "body_kidneys",
+      "keywords": [
+        "kidneys",
+        "urinary system",
+        "urine",
+        "filtration",
+        "how kidneys work"
+      ],
+      "response": "Your two kidneys filter waste from blood to make urine. Each has ~1 million nephrons (tiny filters). They filter 50 gallons of blood daily, producing 1–2 liters of urine. Kidneys also regulate blood pressure, electrolytes, and make hormones for red blood cells and vitamin D. Diabetes and high BP are leading causes of kidney disease. Stay hydrated to keep kidneys healthy.",
+      "severity": "information"
+    },
+    {
+      "category": "body_bones",
+      "keywords": [
+        "bones",
+        "skeleton",
+        "skeletal system",
+        "bone",
+        "joints",
+        "how bones work"
+      ],
+      "response": "Adults have 206 bones providing structure, protecting organs, making blood cells, and storing minerals. Two parts: axial skeleton (skull, spine, ribs) and appendicular (limbs). Bones are living tissue that constantly remodel. Calcium and vitamin D keep them strong. Weight-bearing exercise builds bone density. Osteoporosis (weak bones) risk increases with age, especially in women.",
+      "severity": "information"
+    },
+    {
+      "category": "body_muscles",
+      "keywords": [
+        "muscles",
+        "muscular system",
+        "muscle",
+        "how muscles work",
+        "muscle pain",
+        "cramp"
+      ],
+      "response": "You have 600+ muscles. Three types: skeletal (voluntary movement), smooth (organs, involuntary), cardiac (heart). Muscles contract when protein filaments (actin/myosin) slide past each other, using ATP energy. They work in pairs — when biceps contracts, triceps relaxes. Exercise builds muscle. Cramps can come from dehydration, overuse, or mineral deficiency (potassium, magnesium).",
+      "severity": "information"
+    },
+    {
+      "category": "body_skin",
+      "keywords": [
+        "skin",
+        "skin health",
+        "largest organ",
+        "dermis",
+        "epidermis",
+        "skin care"
+      ],
+      "response": "Skin is your largest organ — about 20 sq ft! Three layers: epidermis (outer barrier), dermis (collagen, nerves, blood vessels), subcutaneous (fat insulation). Skin protects from infection, UV, and dehydration. It regulates temperature via sweat and blood flow. Skin constantly regenerates — new surface every 2–3 weeks. Protect it: sunscreen, hydration, gentle cleansing, avoid smoking.",
+      "severity": "information"
+    },
+    {
+      "category": "body_blood",
+      "keywords": [
+        "blood",
+        "red blood cells",
+        "white blood cells",
+        "platelets",
+        "plasma",
+        "blood types"
+      ],
+      "response": "Blood = red blood cells (carry oxygen), white blood cells (fight infection), platelets (stop bleeding), and plasma (liquid carrying nutrients/waste). You have ~5 liters. Red cells live ~120 days; bone marrow makes new ones constantly. Blood types: A, B, AB, O, each + or – (Rh factor). Type O– is universal donor. Type AB+ is universal recipient. Blood carries oxygen, nutrients, hormones, and waste throughout your body.",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_water",
+      "keywords": [
+        "water",
+        "hydration",
+        "dehydration",
+        "drink water",
+        "how much water"
+      ],
+      "response": "Your body is 60% water. Water carries nutrients, removes waste, regulates temperature, lubricates joints. Aim for 8–10 cups (2–3 liters) daily, more if exercising or hot weather. Check urine: light yellow = hydrated, dark = drink more. Dehydration causes headaches, fatigue, dizziness, poor concentration. All fluids count — tea, coffee, milk, soup, fruits.",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_protein",
+      "keywords": [
+        "protein",
+        "amino acids",
+        "protein source",
+        "meat",
+        "chicken",
+        "fish",
+        "eggs"
+      ],
+      "response": "Protein builds and repairs muscles, organs, and tissues. Made of amino acids — 9 are essential (must eat them). Complete proteins: meat, fish, eggs, dairy, soy. Incomplete: legumes, nuts, grains (combine for all aminos). Need ~0.8g per kg body weight daily (more if active). Best sources: chicken, fish, eggs, yogurt, legumes, nuts, tofu.",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_vitamins",
+      "keywords": [
+        "vitamin",
+        "vitamin c",
+        "vitamin d",
+        "vitamin b",
+        "vitamins",
+        "supplements"
+      ],
+      "response": "Key vitamins:  A  (vision, immune) — carrots, sweet potato;  C  (immunity, healing) — citrus, berries, peppers;  D  (bones, immunity) — sunlight, fish, eggs;  E  (antioxidant) — nuts, seeds;  B vitamins  (energy) — whole grains, meat, eggs;  K  (blood clotting) — leafy greens. A varied diet usually provides all needed vitamins. Deficiencies cause problems (scurvy from no C, weak bones from no D).",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_minerals",
+      "keywords": [
+        "mineral",
+        "calcium",
+        "iron",
+        "zinc",
+        "magnesium",
+        "potassium"
+      ],
+      "response": "Key minerals:  Calcium  (bones, muscles) — dairy, leafy greens;  Iron  (oxygen transport) — red meat, spinach, legumes;  Zinc  (immunity) — meat, seeds;  Magnesium  (muscles, energy) — nuts, whole grains;  Potassium  (heart, BP) — bananas, potatoes, beans. Iron deficiency → anemia. Calcium deficiency → weak bones. Eat varied diet to cover all minerals.",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_diet",
+      "keywords": [
+        "diet",
+        "healthy eating",
+        "balanced diet",
+        "meal",
+        "food",
+        "eat healthy",
+        "nutrition"
+      ],
+      "response": "A balanced diet includes: vegetables (lots of colors), fruits, whole grains, lean protein, healthy fats, and water. Limit: processed foods, added sugar, excess salt, trans fats. Eat regular meals, don't skip breakfast. Fill half your plate with vegetables, quarter with protein, quarter with whole grains. Eating well prevents obesity, diabetes, heart disease, and many other conditions.",
+      "severity": "information"
+    },
+    {
+      "category": "health_sleep",
+      "keywords": [
+        "sleep",
+        "insomnia",
+        "can't sleep",
+        "sleep quality",
+        "sleep better",
+        "rest"
+      ],
+      "response": "Adults need 7–9 hours sleep. Sleep consolidates memory, repairs cells, regulates hormones. Poor sleep impairs focus, mood, and immunity.\n\n Better sleep:  Consistent bedtime, cool dark room, no screens 1hr before bed, exercise during day (not evening), limit caffeine after 2pm, don't use bed for work.\n\n If insomnia persists:  Try relaxation techniques, sleep hygiene habits. See a doctor if it doesn't improve.",
+      "severity": "information"
+    },
+    {
+      "category": "health_exercise",
+      "keywords": [
+        "exercise",
+        "workout",
+        "physical activity",
+        "fitness",
+        "sport",
+        "gym"
+      ],
+      "response": "Exercise is one of the best things for health. Benefits: stronger heart/lungs, healthy weight, better mood, better sleep, longer life.\n\n Recommendations:  150 min moderate aerobic (brisk walking, cycling, swimming) per week + strength training 2x/week. Stretching/yoga prevents injury.\n\nStart slowly if inactive. Consistency > intensity. Exercise reduces anxiety and depression too. Find activities you enjoy!",
+      "severity": "information"
+    },
+    {
+      "category": "health_stress",
+      "keywords": [
+        "stress",
+        "anxiety",
+        "anxious",
+        "worried",
+        "overwhelmed",
+        "panic",
+        "panic attack",
+        "mental health"
+      ],
+      "response": "Stress triggers 'fight or flight' — increased heart rate, tension, rapid breathing. Chronic stress weakens immunity and increases disease risk.\n\n What helps:  Deep breathing (in 4, hold 4, out 4), exercise, meditation, time in nature, talk to someone, limit caffeine.\n\n Panic attacks:  Intense but temporary. Breathe slowly, ground yourself (5 things you see, 4 hear, 3 touch...). If anxiety severely affects daily life, talk to a therapist or doctor.",
+      "severity": "information"
+    },
+    {
+      "category": "health_depression",
+      "keywords": [
+        "depression",
+        "depressed",
+        "sad",
+        "hopeless",
+        "no motivation",
+        "mood",
+        "mental illness"
+      ],
+      "response": "Depression is more than sadness — it's persistent low mood, loss of interest, fatigue, sleep changes, appetite changes, difficulty concentrating, feelings of worthlessness.\n\n What helps:  Regular exercise, social connection, routine, sunlight, adequate sleep, limit alcohol.\n\n Important:  Depression is treatable with therapy, medication, or both. If you or someone you know is struggling, please reach out to a mental health professional. You are not alone.",
+      "severity": "serious"
+    },
+    {
+      "category": "health_smoking",
+      "keywords": [
+        "smoking",
+        "cigarette",
+        "tobacco",
+        "nicotine",
+        "quit smoking",
+        "lung cancer"
+      ],
+      "response": "Smoking damages lungs (COPD, cancer), heart, blood vessels, and fertility. Secondhand smoke harms others. Quitting is hard but worth it — benefits start immediately: BP drops in minutes, heart attack risk drops within 1 year, lung cancer risk drops 50% in 10 years.\n\n Quitting methods:  Cold turkey, nicotine patches/gum, prescription meds, counseling, apps. Most people need several attempts. Ask your doctor for help.",
+      "severity": "serious"
+    },
+    {
+      "category": "health_weight",
+      "keywords": [
+        "weight",
+        "lose weight",
+        "obesity",
+        "overweight",
+        "bmi",
+        "calories",
+        "weight loss"
+      ],
+      "response": "Healthy weight reduces disease risk. BMI = weight(kg)/height(m)²: <18.5 underweight, 18.5–24.9 normal, 25–29.9 overweight, 30+ obese.\n\n Healthy weight loss:  0.5–1 kg/week. Eat whole foods, vegetables, lean protein; limit processed food, sugar, alcohol. Exercise burns calories and improves health.\n\n Key:  Sustainable lifestyle change beats crash diets. If struggling despite effort, see a doctor for possible underlying causes.",
+      "severity": "information"
+    },
+    {
+      "category": "health_dental",
+      "keywords": [
+        "teeth",
+        "tooth",
+        "dental",
+        "cavity",
+        "gum",
+        "toothache",
+        "brush teeth"
+      ],
+      "response": "Dental health matters — mouth bacteria can affect your heart and overall health.\n\n Prevention:  Brush 2x daily (2 min, fluoride toothpaste), floss daily, limit sugary food/drinks, see dentist every 6 months.\n\n Problems:  Cavities (need filling), gingivitis (gum inflammation, reversible), periodontitis (bone damage, serious). Toothache? Could be cavity, abscess, or grinding — see a dentist.",
+      "severity": "information"
+    },
+    {
+      "category": "health_alcohol",
+      "keywords": [
+        "alcohol",
+        "drinking",
+        "beer",
+        "wine",
+        "drunk",
+        "hangover",
+        "alcoholism"
+      ],
+      "response": "Moderate limits: men ≤2 drinks/day, women ≤1. Excessive drinking damages liver (cirrhosis), brain, increases cancer risk, raises BP, causes weight gain.\n\n Binge drinking  (4–5 drinks in 2 hrs) is especially harmful — can cause alcohol poisoning.\n\n If drinking causes problems  (health, relationships, work): seek help — counseling, support groups, medications, rehabilitation. Alcohol dependence is treatable.",
+      "severity": "information"
+    },
+    {
+      "category": "first_aid_bleeding",
+      "keywords": [
+        "bleeding",
+        "wound",
+        "cut",
+        "hemorrhage",
+        "blood loss"
+      ],
+      "response": " For bleeding:  (1) Call emergency if severe. (2) Apply direct pressure with clean cloth — hold firmly, don't remove. (3) Elevate wound if possible. (4) Once stopped, clean with soap and water. (5) Small cuts: antibiotic ointment + bandage.\n\n Seek care if:  Won't stop after 10 min, deep wound, edges gaping, dirty wound, animal/human bite, or puncture wound.",
+      "severity": "information"
+    },
+    {
+      "category": "first_aid_burns",
+      "keywords": [
+        "burn",
+        "burnt",
+        "burned",
+        "scald",
+        "sunburn"
+      ],
+      "response": " Burns:  1st degree (red, painful) = minor. 2nd degree (blistering) = moderate. 3rd degree (charred, numb) = emergency.\n\n Treatment:  (1) Remove from heat. (2) Cool with cool water 10–20 min (NO ice). (3) Remove tight items. (4) Cover with clean cloth. (5) Pain relief.  Don't use butter or oil. \n\n Seek care if:  Large area, 2nd/3rd degree, face/hands/genitals, or chemical/electrical burn.",
+      "severity": "information"
+    },
+    {
+      "category": "first_aid_choking",
+      "keywords": [
+        "choking",
+        "airway blocked",
+        "can't breathe food",
+        "heimlich",
+        "swallowed"
+      ],
+      "response": " If someone is choking  (can't cough/speak): (1) Call emergency. (2) Stand behind person, fist above navel, press inward + upward forcefully (Heimlich). Repeat until object dislodges. (3) If unconscious: begin CPR.\n\n For infants:  Back blows + chest thrusts (different from Heimlich).\n\n Prevention:  Chew food well, don't talk with full mouth, supervise kids with small foods/toys.",
+      "severity": "emergency"
+    },
+    {
+      "category": "first_aid_fracture",
+      "keywords": [
+        "fracture",
+        "broken bone",
+        "sprain",
+        "strain",
+        "twisted ankle"
+      ],
+      "response": " Suspected broken bone:  (1) Don't move injured area — immobilize it. (2) Apply ice (wrapped) 15–20 min. (3) Elevate. (4) Pain relief. (5) Get X-ray.\n\n Fracture signs:  Severe pain, swelling, deformity, can't use limb, numbness.\n\n Sprains  (ligament tears) are similar but less severe — treat with  RICE:  Rest, Ice, Compression, Elevation. Most heal in weeks.",
+      "severity": "moderate"
+    },
+    {
+      "category": "emergency_stroke",
+      "keywords": [
+        "stroke",
+        "brain attack",
+        "facial drooping",
+        "arm weakness",
+        "slurred speech"
+      ],
+      "response": "⚠️  STROKE = MEDICAL EMERGENCY.  Call emergency immediately!\n\n Remember FAST: \n•  F ace drooping on one side\n•  A rm weakness (one drifts down)\n•  S peech difficulty/slurred\n•  T ime to call emergency!\n\nOther signs: sudden severe headache, vision loss, dizziness, loss of balance. Every minute matters — delays cause permanent brain damage.",
+      "severity": "emergency"
+    },
+    {
+      "category": "emergency_allergic",
+      "keywords": [
+        "anaphylaxis",
+        "severe allergic",
+        "allergic shock",
+        "epipen",
+        "throat swelling"
+      ],
+      "response": "⚠️  ANAPHYLAXIS IS LIFE-THREATENING.  Symptoms: breathing difficulty, face/throat swelling, rapid weak pulse, dizziness, hives.\n\n ACT FAST:  (1) Call emergency. (2) Use EpiPen if available — inject outer thigh. (3) Lie down, legs elevated. (4) Don't give food/drink.\n\n Prevention:  Avoid known allergens, carry EpiPen if prescribed, wear medical alert bracelet.",
+      "severity": "emergency"
+    },
+    {
+      "category": "cells_biology",
+      "keywords": [
+        "cells",
+        "cell",
+        "organelles",
+        "mitochondria",
+        "nucleus",
+        "cell membrane"
+      ],
+      "response": "Your body has ~37 trillion cells. Key parts:  nucleus  (DNA, control center),  mitochondria  (energy/ATP powerhouses),  ribosomes  (make proteins),  ER  (processes proteins/lipids),  Golgi  (packages/ships proteins),  lysosomes  (break down waste),  cell membrane  (controls entry/exit). Over 200 cell types exist — each specialized for its job!",
+      "severity": "information"
+    },
+    {
+      "category": "genetics_dna",
+      "keywords": [
+        "dna",
+        "genes",
+        "genetics",
+        "heredity",
+        "chromosomes",
+        "genome",
+        "rna",
+        "genetic"
+      ],
+      "response": "DNA contains your genetic blueprint — ~3 billion base pairs in 23 chromosome pairs (46 total). You inherit one set from each parent. ~20,000–25,000 genes code for proteins. DNA → RNA → Protein (central dogma). Genes can be dominant or recessive. Mutations can be beneficial, neutral, or harmful. The Human Genome Project mapped our entire genetic code. Epigenetics shows environment can affect gene expression.",
+      "severity": "information"
+    },
+    {
+      "category": "microbiology",
+      "keywords": [
+        "bacteria",
+        "virus",
+        "germs",
+        "microbes",
+        "pathogens",
+        "fungi",
+        "microorganism"
+      ],
+      "response": "Microbes include bacteria (single-celled), viruses (need host cells), fungi, and parasites. Some bacteria are beneficial — your gut has trillions aiding digestion! Others cause disease. Bacteria reproduce every 20 min. Viruses are simpler — just genetic material in protein coat.  Antibiotics kill bacteria but NOT viruses.  Overuse creates resistant superbugs (like MRSA). Handwashing is one of the best defenses!",
+      "severity": "information"
+    },
+    {
+      "category": "medicine_antibiotics",
+      "keywords": [
+        "antibiotic",
+        "antibiotics",
+        "penicillin",
+        "amoxicillin"
+      ],
+      "response": "Antibiotics kill bacteria (not viruses!). Types: penicillins, cephalosporins, macrolides, fluoroquinolones.  Important rules:  Take the FULL course even if you feel better. Don't use leftover antibiotics. Don't demand them for colds/flu (viral). Side effects: nausea, diarrhea, rash, allergic reactions. Antibiotic resistance is a major global threat — use only when prescribed.",
+      "severity": "information"
+    },
+    {
+      "category": "medicine_painkillers",
+      "keywords": [
+        "painkiller",
+        "pain relief",
+        "acetaminophen",
+        "ibuprofen",
+        "aspirin",
+        "tylenol",
+        "advil"
+      ],
+      "response": " Acetaminophen (Tylenol):  Pain + fever relief. Safe for most. High doses damage liver.\n Ibuprofen (Advil/Motrin):  Pain + fever + inflammation. Can upset stomach.\n Aspirin:  Pain + fever + inflammation + blood thinner.\n Opioids:  For severe pain only. Highly addictive.\n\nFor mild pain: acetaminophen or ibuprofen. Don't exceed recommended doses. See doctor for persistent pain.",
+      "severity": "information"
+    },
+    {
+      "category": "prevention_vaccine",
+      "keywords": [
+        "vaccine",
+        "vaccination",
+        "immunization",
+        "shot",
+        "vaccinated"
+      ],
+      "response": "Vaccines train your immune system against diseases WITHOUT getting sick. They contain weakened/inactive pathogens or instructions for pathogen parts. Your immune system learns + remembers = immunity. Vaccines prevented millions of deaths (smallpox, polio). Modern vaccines: COVID, flu, measles, tetanus, HPV. Side effects are usually mild (sore arm, low fever). Serious reactions are extremely rare. Benefits far outweigh risks.",
+      "severity": "information"
+    },
+    {
+      "category": "prevention_hygiene",
+      "keywords": [
+        "hygiene",
+        "handwashing",
+        "wash hands",
+        "clean",
+        "sanitizer",
+        "germs prevention"
+      ],
+      "response": "Good hygiene prevents infections.  Handwashing  is #1 defense — wash with soap 20+ seconds, especially before eating, after bathroom, after coughing/sneezing. Cover coughs/sneezes with elbow. Shower regularly. Brush teeth 2x daily. Clean wounds promptly. Cook food thoroughly. Wash fruits/vegetables. Keep surfaces clean. Hand sanitizer (60%+ alcohol) works when soap isn't available.",
+      "severity": "information"
+    },
+    {
+      "category": "when_to_see_doctor",
+      "keywords": [
+        "doctor",
+        "hospital",
+        "emergency room",
+        "urgent care",
+        "when see doctor",
+        "need doctor"
+      ],
+      "response": " Call emergency for:  Severe chest pain, can't breathe, unconscious, uncontrolled bleeding, choking, stroke signs, severe allergic reaction.\n\n ER visit:  High fever (>103°F), severe belly pain, meningitis signs, poisoning.\n\n Same-day doctor:  Persistent cough 3+ weeks, coughing blood, persistent fever, severe vomiting/diarrhea.\n\n Scheduled visit:  Ongoing concerns, checkups, chronic disease management. When in doubt, call — better safe than sorry.",
+      "severity": "information"
+    },
+    {
+      "category": "disease_thyroid",
+      "keywords": [
+        "thyroid",
+        "hypothyroidism",
+        "hyperthyroidism",
+        "goiter",
+        "thyroid gland",
+        "TSH",
+        "thyroxine"
+      ],
+      "response": "The thyroid (butterfly-shaped gland in your neck) controls metabolism via hormones T3 and T4.\n\nHypothyroidism (underactive): fatigue, weight gain, cold sensitivity, dry skin, depression, constipation. Treated with levothyroxine.\n\nHyperthyroidism (overactive): weight loss, rapid heartbeat, anxiety, tremors, heat sensitivity, sweating. Treated with medication, radioactive iodine, or surgery.\n\nDiagnosis: TSH blood test. Both conditions are manageable with proper treatment.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_kidney",
+      "keywords": [
+        "kidney disease",
+        "kidney failure",
+        "renal",
+        "dialysis",
+        "kidney stones",
+        "kidney problem"
+      ],
+      "response": "Chronic kidney disease (CKD) = kidneys gradually lose function. Leading causes: diabetes and high blood pressure.\n\nStages 1-5: From mild damage to kidney failure (stage 5 = needs dialysis or transplant).\n\nSymptoms (late stages): Fatigue, swelling (legs/ankles), nausea, trouble concentrating, decreased urination, itching.\n\nKidney stones: Mineral deposits causing severe flank pain, blood in urine. Drink plenty of water to prevent them.\n\nProtection: Control blood sugar, manage BP, don't overuse NSAIDs, stay hydrated.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_liver",
+      "keywords": [
+        "liver disease",
+        "liver",
+        "cirrhosis",
+        "fatty liver",
+        "hepatitis",
+        "jaundice",
+        "liver damage"
+      ],
+      "response": "Your liver detoxifies blood, produces bile, stores nutrients, and makes proteins. It can regenerate!\n\nCommon liver diseases: Fatty liver (alcohol or metabolic), hepatitis (A/B/C — viral), cirrhosis (scarring from chronic damage).\n\nSigns of liver problems: Jaundice (yellow skin/eyes), dark urine, pale stool, abdominal swelling, fatigue, easy bruising.\n\nPrevention: Limit alcohol, maintain healthy weight, get hepatitis vaccines, avoid sharing needles, don't mix alcohol with medications.\n\nSee a doctor if: Persistent jaundice, abdominal swelling, or unexplained fatigue.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_epilepsy",
+      "keywords": [
+        "epilepsy",
+        "seizure",
+        "convulsion",
+        "fits",
+        "seizure disorder"
+      ],
+      "response": "Epilepsy = brain disorder causing recurrent seizures (abnormal electrical activity). Types: generalized (whole brain — tonic-clonic/grand mal) or focal (one area).\n\nDuring a seizure: (1) Clear area of hazards. (2) Cushion head. (3) Turn on side. (4) Time it. (5) Do NOT put anything in mouth. (6) Stay until fully conscious.\n\nCall emergency if: First seizure, lasts >5 min, no recovery, injury, or in water.\n\nTreatment: Anti-epileptic medications control seizures in ~70% of patients. Regular medication adherence is crucial.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_parkinsons",
+      "keywords": [
+        "parkinsons",
+        "parkinson",
+        "tremor",
+        "shaking hands",
+        "movement disorder"
+      ],
+      "response": "Parkinson's disease = progressive neurological disorder. Dopamine-producing brain cells gradually die.\n\nSymptoms: Resting tremor (shaking), slow movement (bradykinesia), muscle rigidity, balance problems, shuffling walk, reduced facial expressions, soft speech.\n\nTreatment: Levodopa/carbidopa (main medication), dopamine agonists, physical therapy, exercise (very important), sometimes deep brain stimulation (DBS) surgery.\n\nLiving with Parkinson's: Regular exercise improves mobility, occupational therapy helps daily tasks. Early treatment improves quality of life.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_alzheimers",
+      "keywords": [
+        "alzheimer",
+        "alzheimers",
+        "dementia",
+        "memory loss",
+        "forgetfulness",
+        "cognitive decline"
+      ],
+      "response": "Alzheimer's is the most common form of dementia — progressive brain cell death affecting memory, thinking, and behavior.\n\nStages: Early (forgetting recent events, misplacing things) → Middle (confusion, mood changes, needing help) → Late (loss of communication, full-time care needed).\n\nRisk factors: Age (65+), family history, head injuries, cardiovascular health.\n\nNo cure yet, but medications can slow progression. Exercise, social engagement, mental stimulation, and managing heart health may reduce risk.\n\nFor caregivers: Seek support groups, respite care, and professional guidance.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_ms",
+      "keywords": [
+        "multiple sclerosis",
+        "ms disease",
+        "myelin",
+        "autoimmune nerve"
+      ],
+      "response": "Multiple Sclerosis (MS) = autoimmune disease where the immune system attacks myelin (nerve coating), disrupting brain-body communication.\n\nSymptoms: Numbness/tingling, vision problems, fatigue, muscle weakness, balance issues, bladder problems, cognitive changes. Symptoms come and go (relapsing-remitting).\n\nDiagnosis: MRI, spinal fluid analysis, neurological exam.\n\nTreatment: Disease-modifying therapies slow progression, steroids for flare-ups, physical therapy, symptom management. Early treatment is important.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_lupus",
+      "keywords": [
+        "lupus",
+        "autoimmune disease",
+        "butterfly rash",
+        "systemic lupus"
+      ],
+      "response": "Lupus (SLE) = autoimmune disease where your body attacks its own tissues. Affects skin, joints, kidneys, brain, and other organs.\n\nSymptoms: Butterfly-shaped facial rash, joint pain/swelling, fatigue, fever, photosensitivity, hair loss, kidney problems.\n\nDiagnosis: Blood tests (ANA, anti-dsDNA), clinical symptoms.\n\nTreatment: NSAIDs, antimalarials (hydroxychloroquine), steroids, immunosuppressants. Flares and remissions are common. Sun protection is essential. Lupus requires ongoing monitoring.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_ibs",
+      "keywords": [
+        "ibs",
+        "irritable bowel",
+        "bowel syndrome",
+        "bloating",
+        "gas",
+        "constipation",
+        "bowel problems"
+      ],
+      "response": "IBS (Irritable Bowel Syndrome) = chronic digestive disorder. NOT the same as IBD (inflammatory bowel disease).\n\nSymptoms: Abdominal pain, bloating, gas, diarrhea, constipation, or alternating between both. Triggered by food, stress, or hormones.\n\nManagement: Food diary to identify triggers, low-FODMAP diet may help, fiber for constipation, probiotics, stress reduction, regular meals.\n\nCommon triggers: Dairy, gluten, caffeine, alcohol, fatty foods, artificial sweeteners.\n\nSee a doctor if: Blood in stool, unexplained weight loss, or worsening symptoms.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_gerd",
+      "keywords": [
+        "gerd",
+        "acid reflux",
+        "heartburn",
+        "reflux",
+        "stomach acid",
+        "esophagus burn"
+      ],
+      "response": "GERD = stomach acid frequently flows back into esophagus, causing irritation.\n\nSymptoms: Heartburn (burning chest), acid taste, difficulty swallowing, chronic cough, hoarseness.\n\nManagement: (1) Elevate head of bed. (2) Don't eat 3 hrs before bed. (3) Avoid triggers: spicy, fatty, citrus, chocolate, caffeine, alcohol. (4) Eat smaller meals. (5) Lose weight if needed. (6) Antacids, H2 blockers, or PPIs (proton pump inhibitors).\n\nSee a doctor if: Symptoms despite medication, difficulty swallowing, weight loss, or vomiting blood.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_appendicitis",
+      "keywords": [
+        "appendicitis",
+        "appendix",
+        "lower right pain",
+        "appendix burst"
+      ],
+      "response": "⚠️ Appendicitis requires urgent surgery. The appendix (small pouch on large intestine) becomes inflamed and can burst.\n\nSymptoms: Pain starting around belly button → moving to lower right abdomen, worsening over 12-24 hrs, nausea, vomiting, low fever, loss of appetite, pain worse with movement/coughing.\n\nWarning: A burst appendix causes peritonitis (life-threatening infection).\n\nAction: Go to ER immediately if you suspect appendicitis. DO NOT take laxatives or apply heat. Surgery (appendectomy) is the standard treatment.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_meningitis",
+      "keywords": [
+        "meningitis",
+        "brain infection",
+        "spinal infection",
+        "stiff neck fever",
+        "meningococcal"
+      ],
+      "response": "⚠️ Meningitis = inflammation of brain/spinal cord membranes. Can be life-threatening.\n\nSymptoms: Severe headache, stiff neck, high fever, sensitivity to light, nausea/vomiting, confusion, rash (doesn't fade under pressure — glass test).\n\nBacterial meningitis: Medical emergency — needs IV antibiotics immediately. Can kill in hours.\n\nViral meningitis: Usually less severe, resolves on its own.\n\nPrevention: Meningococcal vaccine, good hygiene. If you suspect meningitis, go to ER immediately.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_sepsis",
+      "keywords": [
+        "sepsis",
+        "blood poisoning",
+        "septic shock",
+        "septicemia",
+        "infection blood"
+      ],
+      "response": "⚠️ Sepsis = life-threatening emergency. Body's extreme response to infection that damages its own organs.\n\nSigns (think TIME):\n• Temperature: very high or very low\n• Infection: signs of infection present\n• Mental decline: confused, drowsy\n• Extremely ill: severe pain, breathless, sweaty\n\nOther signs: Rapid heartbeat, rapid breathing, mottled/discolored skin, low urine output.\n\nAction: Call emergency immediately. Sepsis needs IV antibiotics and fluids ASAP. Every hour of delay increases death risk.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_malaria",
+      "keywords": [
+        "malaria",
+        "mosquito disease",
+        "plasmodium",
+        "antimalarial"
+      ],
+      "response": "Malaria = parasitic infection (Plasmodium) transmitted by infected mosquitoes. Common in tropical/subtropical regions.\n\nSymptoms: Cycles of high fever + chills + sweating, headache, muscle pain, nausea, fatigue. Symptoms appear 7-30 days after bite.\n\nSevere malaria: Confusion, seizures, organ failure — life-threatening.\n\nPrevention: Antimalarial medication when traveling, insect repellent, bed nets, cover exposed skin at dusk/dawn.\n\nTreatment: Antimalarial drugs (artemisinin-based combination therapy). Seek treatment early — delays can be fatal.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_tuberculosis",
+      "keywords": [
+        "tuberculosis",
+        "tb",
+        "tb disease",
+        "mycobacterium"
+      ],
+      "response": "TB = bacterial infection (Mycobacterium tuberculosis) mainly affecting lungs. Spreads through air when infected person coughs/sneezes.\n\nLatent TB: Infected but not sick, not contagious. Can become active.\n\nActive TB symptoms: Persistent cough (3+ weeks), coughing blood, night sweats, fever, weight loss, fatigue, chest pain.\n\nDiagnosis: Skin test (PPD/Mantoux), blood test (IGRA), chest X-ray, sputum test.\n\nTreatment: 6-9 months of antibiotics (isoniazid, rifampicin, etc.). MUST complete full course — stopping early creates drug-resistant TB.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_hiv",
+      "keywords": [
+        "hiv",
+        "aids",
+        "hiv positive",
+        "hiv test",
+        "antiretroviral",
+        "immune deficiency virus"
+      ],
+      "response": "HIV attacks the immune system (CD4 cells). Without treatment, progresses to AIDS.\n\nTransmission: Unprotected sex, shared needles, mother to child, blood contact. NOT by touching, hugging, sharing food.\n\nEarly symptoms: Flu-like illness 2-4 weeks after exposure (fever, rash, sore throat).\n\nTesting: Blood test — recommended for everyone at least once. Window period: 2-12 weeks.\n\nTreatment: Antiretroviral therapy (ART) can make HIV undetectable = untransmittable. People with HIV on treatment live long, healthy lives.\n\nPrevention: Condoms, PrEP (pre-exposure prophylaxis), don't share needles.",
+      "severity": "serious"
+    },
+    {
+      "category": "disease_std",
+      "keywords": [
+        "std",
+        "sti",
+        "sexually transmitted",
+        "chlamydia",
+        "gonorrhea",
+        "syphilis",
+        "herpes",
+        "genital warts",
+        "hpv"
+      ],
+      "response": "STIs (Sexually Transmitted Infections) are common and many have no symptoms initially.\n\nCommon STIs: Chlamydia, gonorrhea (both curable with antibiotics), syphilis (curable), genital herpes (manageable, not curable), HPV (can cause warts/cancer, vaccine available), HIV.\n\nSymptoms (when present): Unusual discharge, burning urination, sores, itching, pain.\n\nPrevention: Condoms, HPV vaccine, regular testing if sexually active, limiting partners.\n\nImportant: Many STIs are treatable/curable. Get tested — no shame in protecting your health. Untreated STIs cause serious complications.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_pcos",
+      "keywords": [
+        "pcos",
+        "polycystic ovary",
+        "ovarian cysts",
+        "irregular periods hormonal"
+      ],
+      "response": "PCOS (Polycystic Ovary Syndrome) is a common hormonal disorder in women of reproductive age.\n\nSymptoms: Irregular/missed periods, excess hair growth (face/body), acne, weight gain, difficulty getting pregnant, thinning scalp hair, darkened skin patches.\n\nCauses: Hormonal imbalance (excess androgens), insulin resistance, genetics.\n\nManagement: Healthy diet + exercise (improves insulin), birth control pills (regulate periods), metformin (insulin), spironolactone (excess hair). Weight loss of even 5-10% can significantly improve symptoms.\n\nSee a doctor: For proper diagnosis (blood tests + ultrasound) and personalized treatment.",
+      "severity": "moderate"
+    },
+    {
+      "category": "women_pregnancy",
+      "keywords": [
+        "pregnant",
+        "pregnancy",
+        "expecting",
+        "prenatal",
+        "trimester",
+        "morning sickness",
+        "baby development"
+      ],
+      "response": "Pregnancy lasts ~40 weeks (3 trimesters).\n\n1st trimester (weeks 1-12): Morning sickness, fatigue, breast tenderness. Major organs forming — critical period.\n\n2nd trimester (13-26): Often feel better, baby movements felt, belly grows.\n\n3rd trimester (27-40): Baby gains weight, Braxton Hicks contractions, fatigue returns.\n\nEssential care: Prenatal vitamins (folic acid!), regular checkups, balanced diet, avoid alcohol/smoking/raw fish, stay active.\n\nSeek immediate care if: Heavy bleeding, severe abdominal pain, sudden swelling, severe headache, reduced baby movement.",
+      "severity": "moderate"
+    },
+    {
+      "category": "women_menstruation",
+      "keywords": [
+        "period",
+        "menstruation",
+        "menstrual",
+        "period pain",
+        "irregular period",
+        "heavy period",
+        "pms",
+        "cramps period"
+      ],
+      "response": "The menstrual cycle averages 28 days (21-35 is normal). Periods last 3-7 days.\n\nPMS: Bloating, mood changes, cramps, breast tenderness, fatigue — 1-2 weeks before period.\n\nCramp relief: Heat pad, ibuprofen, exercise, magnesium.\n\nSee a doctor if: Periods suddenly irregular, extremely heavy (soaking pad/tampon hourly), severe pain disrupting daily life, periods stop (not pregnant), bleeding between periods, or post-menopausal bleeding.",
+      "severity": "information"
+    },
+    {
+      "category": "women_menopause",
+      "keywords": [
+        "menopause",
+        "hot flashes",
+        "perimenopause",
+        "hormone replacement"
+      ],
+      "response": "Menopause = end of menstrual periods (confirmed after 12 months without period). Average age: 51. Perimenopause (transition) can start years earlier.\n\nSymptoms: Hot flashes, night sweats, mood changes, sleep problems, vaginal dryness, weight gain, decreased bone density.\n\nManagement: Hormone replacement therapy (HRT — discuss risks/benefits with doctor), lifestyle changes (exercise, healthy diet, cooling techniques), calcium + vitamin D for bones.\n\nImportant: Regular health screenings become even more important — bone density, heart health, cancer screenings.",
+      "severity": "information"
+    },
+    {
+      "category": "women_breast",
+      "keywords": [
+        "breast",
+        "breast cancer",
+        "breast exam",
+        "mammogram",
+        "breast lump",
+        "breast pain"
+      ],
+      "response": "Breast health awareness is important for early detection.\n\nBreast self-exam: Monthly — look for changes in size/shape, skin dimpling, nipple discharge, lumps, or redness.\n\nMammograms: Recommended starting age 40-50 (varies by guidelines), every 1-2 years.\n\nBreast cancer signs: New lump, shape change, skin changes (dimpling, redness), nipple discharge, inverted nipple.\n\nImportant: Most breast lumps are NOT cancer (cysts, fibroadenomas). But ALWAYS get a new lump checked. Early-stage breast cancer has 90%+ survival rate.",
+      "severity": "moderate"
+    },
+    {
+      "category": "children_health",
+      "keywords": [
+        "child health",
+        "pediatric",
+        "baby sick",
+        "infant",
+        "toddler health",
+        "children illness"
+      ],
+      "response": "Common childhood concerns:\n\nFever in children: Under 3 months with fever >100.4°F — seek immediate care. Older kids: manage with fluids, rest, acetaminophen/ibuprofen (NO aspirin under 18).\n\nCommon illnesses: Ear infections, croup, hand-foot-mouth disease, RSV, stomach bugs.\n\nWarning signs (seek care): Difficulty breathing, not drinking fluids, inconsolable crying, rash with fever, lethargy, dehydration (no tears, dry mouth, fewer wet diapers).\n\nPrevention: Keep vaccines on schedule, hand hygiene, balanced nutrition, adequate sleep.",
+      "severity": "moderate"
+    },
+    {
+      "category": "children_vaccines",
+      "keywords": [
+        "child vaccine",
+        "childhood immunization",
+        "baby shots",
+        "vaccination schedule",
+        "pediatric vaccine"
+      ],
+      "response": "Childhood vaccines protect against serious diseases:\n\nStandard schedule:\n• Birth: Hepatitis B\n• 2-6 months: DTaP, IPV (polio), Hib, PCV13, rotavirus, HepB\n• 12-15 months: MMR, varicella (chickenpox), HepA\n• 4-6 years: Boosters (DTaP, IPV, MMR, varicella)\n• 11-12 years: Tdap, HPV, meningococcal\n\nSide effects: Mild — sore arm, low fever, fussiness. Serious reactions are extremely rare. Vaccines prevent millions of deaths worldwide annually.",
+      "severity": "information"
+    },
+    {
+      "category": "elderly_health",
+      "keywords": [
+        "elderly",
+        "aging",
+        "old age",
+        "senior health",
+        "geriatric",
+        "elderly care"
+      ],
+      "response": "Healthy aging tips:\n\nStay active: Walking, swimming, tai chi, balance exercises — reduces fall risk and maintains independence.\n\nNutrition: Adequate protein, calcium, vitamin D, B12 (often deficient). Smaller frequent meals if appetite decreases.\n\nMental health: Social connections, hobbies, mental stimulation reduce depression and cognitive decline.\n\nKey screenings: Blood pressure, cholesterol, diabetes, cancer screenings, bone density, vision/hearing, cognitive assessments.\n\nFall prevention: Remove tripping hazards, good lighting, non-slip mats, assistive devices, medication review (some cause dizziness).",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_vital_signs",
+      "keywords": [
+        "vital signs",
+        "vitals",
+        "pulse",
+        "heart rate",
+        "blood pressure reading",
+        "body temperature",
+        "respiratory rate",
+        "oxygen saturation"
+      ],
+      "response": "The 5 vital signs:\n\n• Heart rate: 60-100 bpm (resting adult). Athletes may be lower.\n• Blood pressure: Normal <120/80 mmHg. High ≥130/80. Low <90/60.\n• Temperature: Normal ~98.6°F (37°C). Fever >100.4°F (38°C).\n• Respiratory rate: 12-20 breaths/min (adult). Faster = concerning.\n• Oxygen saturation (SpO2): 95-100% normal. Below 90% = emergency.\n\nVitals help detect problems early. Learn to check your own pulse and BP at home — especially if you have heart/BP conditions.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_blood_test",
+      "keywords": [
+        "blood test",
+        "blood work",
+        "lab test",
+        "cbc",
+        "complete blood count",
+        "blood panel",
+        "lab results"
+      ],
+      "response": "Common blood tests:\n\n• CBC (Complete Blood Count): Red/white blood cells, platelets, hemoglobin. Detects anemia, infection, blood disorders.\n• BMP/CMP (Metabolic Panel): Glucose, electrolytes, kidney/liver function.\n• Lipid Panel: Cholesterol (total, HDL, LDL), triglycerides — heart disease risk.\n• Thyroid Panel: TSH, T3, T4.\n• HbA1c: Average blood sugar over 3 months (diabetes monitoring).\n• Vitamin D, B12, Iron: Deficiency screening.\n\nFasting: Some tests require 8-12 hours fasting. Your doctor will advise.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_imaging",
+      "keywords": [
+        "x-ray",
+        "xray",
+        "mri",
+        "ct scan",
+        "ultrasound",
+        "imaging",
+        "radiology",
+        "scan"
+      ],
+      "response": "Medical imaging explained:\n\n• X-ray: Quick, uses radiation. Good for: bones, chest, dental. Low radiation dose.\n• CT scan: Detailed X-ray slices. Good for: internal injuries, tumors, bleeding. More radiation but very informative.\n• MRI: Magnetic fields (no radiation). Best for: soft tissues, brain, spine, joints, ligaments. Takes 30-60 min, loud machine.\n• Ultrasound: Sound waves (no radiation, safe in pregnancy). Good for: pregnancy, organs, blood vessels, real-time imaging.\n• PET scan: Uses radioactive tracer. Detects cancer activity.\n\nYour doctor chooses based on what they need to see.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_ecg",
+      "keywords": [
+        "ecg",
+        "ekg",
+        "electrocardiogram",
+        "heart test",
+        "heart monitor",
+        "heart rhythm test"
+      ],
+      "response": "An ECG/EKG records your heart's electrical activity using small electrode patches on your skin. Quick, painless, takes ~10 minutes.\n\nWhat it detects: Irregular heartbeat (arrhythmia), heart attack (current or past), enlarged heart, electrolyte imbalances, medication effects.\n\nTypes: Standard 12-lead (in clinic), Holter monitor (wearable 24-48 hrs), event monitor (days to weeks).\n\nWhen needed: Chest pain, palpitations, dizziness, shortness of breath, pre-surgery, or routine if you have heart risk factors.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_biopsy",
+      "keywords": [
+        "biopsy",
+        "tissue sample",
+        "pathology",
+        "tissue test"
+      ],
+      "response": "A biopsy removes a small tissue sample for lab examination under microscope — the definitive way to diagnose or rule out cancer and other conditions.\n\nTypes: Needle biopsy (thin needle extracts cells), core biopsy (larger needle), excisional (removes entire lump), endoscopic (during scope procedure), skin biopsy (punch or shave).\n\nWhat to expect: Local anesthesia, mild discomfort, results in days to weeks. Small risk of bleeding/infection.\n\nImportant: A biopsy being ordered does NOT mean you have cancer — it's often done to rule things out.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_surgery",
+      "keywords": [
+        "surgery",
+        "operation",
+        "surgical",
+        "pre surgery",
+        "post surgery",
+        "anesthesia",
+        "going under"
+      ],
+      "response": "Before surgery: Follow fasting instructions (usually nothing after midnight), list all medications, arrange ride home, ask about stopping blood thinners.\n\nAnesthesia types: General (fully asleep), regional (area numbed — spinal/epidural), local (small area), sedation (twilight).\n\nAfter surgery: Follow wound care instructions, take medications as prescribed, watch for infection signs (redness, swelling, fever, discharge). Don't rush recovery.\n\nQuestions to ask your surgeon: Success rate, risks, recovery time, alternatives, what to expect.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_medication_safety",
+      "keywords": [
+        "drug interaction",
+        "medication interaction",
+        "side effects",
+        "medication safety",
+        "medicine mixing"
+      ],
+      "response": "Medication safety rules:\n\n(1) Tell every doctor ALL medications you take (including supplements/herbs). (2) Read labels and follow dosing. (3) Don't crush/split unless told OK. (4) Store properly (some need refrigeration). (5) Check expiration dates.\n\nDangerous combinations: Blood thinners + aspirin/NSAIDs, certain antibiotics + birth control, statins + grapefruit juice, multiple sedating medications.\n\nSide effects: Report unusual symptoms to your doctor. Don't stop prescribed medications without asking. Use ONE pharmacy for all prescriptions — they cross-check interactions.",
+      "severity": "moderate"
+    },
+    {
+      "category": "clinical_medication_adherence",
+      "keywords": [
+        "take medicine",
+        "forget medicine",
+        "medication schedule",
+        "compliance",
+        "adherence",
+        "skip medication"
+      ],
+      "response": "Taking medications correctly is crucial — studies show ~50% of people don't take medications as prescribed.\n\nTips for adherence:\n• Use pill organizers (daily/weekly)\n• Set phone alarms\n• Link to daily routine (with breakfast, before bed)\n• Use pharmacy auto-refills\n• Keep a medication list in your wallet\n\nIf you forget a dose: Take it when remembered — unless it's close to next dose (then skip, never double). Some medications have specific rules.\n\nNever stop: Antibiotics early, blood pressure meds, or psychiatric medications without doctor guidance.",
+      "severity": "information"
+    },
+    {
+      "category": "patient_hospital_stay",
+      "keywords": [
+        "hospital stay",
+        "admitted",
+        "hospitalization",
+        "inpatient",
+        "hospital what to expect"
+      ],
+      "response": "Preparing for a hospital stay:\n\nBring: ID, insurance card, medication list, comfortable clothes, phone charger, advance directives if applicable.\n\nWhat to expect: Admission paperwork, vital signs checks, IV line possibly, meals provided, doctor rounds (usually morning).\n\nYour rights: Ask questions about every procedure/medication, request pain management, ask for interpreter if needed, have a support person present.\n\nTips: Write down questions, know your nurse's name, speak up if something seems wrong, ask about discharge plan early.",
+      "severity": "information"
+    },
+    {
+      "category": "patient_recovery",
+      "keywords": [
+        "recovery",
+        "healing",
+        "rest after illness",
+        "getting better",
+        "rehabilitation",
+        "rehab"
+      ],
+      "response": "Recovery tips after illness or surgery:\n\n• Rest: Your body heals during sleep — prioritize 8+ hrs.\n• Nutrition: Protein for tissue repair, vitamin C for healing, plenty of fluids.\n• Follow instructions: Take medications as prescribed, attend follow-up appointments, do prescribed exercises.\n• Gradual return: Don't rush back to work/exercise. Listen to your body.\n• Wound care: Keep clean and dry, watch for infection signs.\n• Mental health: Recovery can be frustrating — be patient with yourself. Seek support if feeling anxious or depressed.\n\nCall doctor if: Worsening symptoms, fever, excessive pain, wound problems.",
+      "severity": "information"
+    },
+    {
+      "category": "patient_chronic_management",
+      "keywords": [
+        "chronic disease",
+        "chronic illness",
+        "long term condition",
+        "managing condition",
+        "living with disease"
+      ],
+      "response": "Living with a chronic condition (diabetes, heart disease, asthma, arthritis, etc.):\n\nSelf-management is key:\n• Learn about your condition thoroughly\n• Take medications consistently\n• Monitor symptoms and vital signs\n• Keep all doctor appointments\n• Maintain healthy lifestyle (diet, exercise, sleep)\n• Know your emergency action plan\n\nEmotional well-being: Chronic illness causes frustration, anxiety, depression. Join support groups, talk to loved ones, consider counseling.\n\nBe your own advocate: Ask questions, seek second opinions, keep organized health records.",
+      "severity": "information"
+    },
+    {
+      "category": "patient_second_opinion",
+      "keywords": [
+        "second opinion",
+        "another doctor",
+        "misdiagnosis",
+        "diagnosis wrong",
+        "get another opinion"
+      ],
+      "response": "Getting a second opinion is your RIGHT and often recommended — especially for:\n\n• Serious diagnoses (cancer, major surgery)\n• When treatment isn't working\n• Rare or complex conditions\n• Before major procedures\n• If something doesn't feel right\n\nHow: Ask your doctor for referral (good doctors welcome it), bring all records/test results/imaging. Many insurances cover second opinions.\n\nNot disrespectful — it's responsible healthcare. Different specialists may have different approaches or catch something missed.",
+      "severity": "information"
+    },
+    {
+      "category": "patient_rights",
+      "keywords": [
+        "patient rights",
+        "informed consent",
+        "medical rights",
+        "refuse treatment",
+        "privacy medical"
+      ],
+      "response": "Your key patient rights:\n\n• Informed consent: Full explanation of procedures, risks, alternatives before agreeing.\n• Refuse treatment: You can say no to any treatment.\n• Privacy: Medical records are confidential (HIPAA in US).\n• Access records: Right to see and get copies of your medical records.\n• Second opinion: Always your right.\n• Interpreter: Free language services if needed.\n• Complain: File complaints without retaliation.\n• Emergency care: ERs must treat you regardless of ability to pay (EMTALA in US).\n\nAdvocate for yourself — ask questions, understand your care plan.",
+      "severity": "information"
+    },
+    {
+      "category": "mental_ptsd",
+      "keywords": [
+        "ptsd",
+        "post traumatic",
+        "trauma",
+        "flashback",
+        "traumatic event",
+        "traumatized"
+      ],
+      "response": "PTSD (Post-Traumatic Stress Disorder) develops after experiencing or witnessing traumatic events (violence, accident, disaster, abuse, combat).\n\nSymptoms: Flashbacks, nightmares, severe anxiety, avoidance of triggers, emotional numbness, hypervigilance, sleep problems, irritability. Symptoms persist >1 month.\n\nTreatment: Trauma-focused therapy (CBT, EMDR) is most effective. Medications (SSRIs) can help. Support groups provide community.\n\nImportant: PTSD is NOT weakness — it's a brain response to overwhelming experience. Recovery is possible with professional help. If you or someone you know is struggling, reach out.",
+      "severity": "serious"
+    },
+    {
+      "category": "mental_ocd",
+      "keywords": [
+        "ocd",
+        "obsessive compulsive",
+        "obsession",
+        "compulsion",
+        "intrusive thoughts",
+        "repetitive behavior"
+      ],
+      "response": "OCD (Obsessive-Compulsive Disorder) = unwanted intrusive thoughts (obsessions) leading to repetitive behaviors (compulsions) to reduce anxiety.\n\nCommon types: Contamination/cleaning, checking (locks, stove), symmetry/ordering, harm obsessions, hoarding.\n\nExamples: Excessive handwashing, repeated checking, counting, needing things \"just right.\"\n\nTreatment: ERP therapy (Exposure and Response Prevention) — gold standard. SSRIs can help. Combination is most effective.\n\nImportant: Everyone has odd thoughts sometimes. OCD is when they cause significant distress and interfere with daily life. It's treatable.",
+      "severity": "moderate"
+    },
+    {
+      "category": "mental_adhd",
+      "keywords": [
+        "adhd",
+        "attention deficit",
+        "hyperactivity",
+        "can't focus",
+        "concentration problem",
+        "attention disorder"
+      ],
+      "response": "ADHD (Attention Deficit Hyperactivity Disorder) = neurodevelopmental condition affecting focus, impulse control, and activity level.\n\nTypes: Inattentive (difficulty focusing), hyperactive-impulsive (restlessness, impulsivity), or combined.\n\nSymptoms: Difficulty concentrating, easily distracted, forgetfulness, losing things, fidgeting, talking excessively, difficulty waiting, acting without thinking.\n\nTreatment: Behavioral strategies + medication (stimulants like methylphenidate, or non-stimulants). Structure, routines, exercise, adequate sleep all help.\n\nImportant: ADHD is real, neurological, and not laziness. Proper diagnosis and treatment dramatically improve quality of life. Affects adults too.",
+      "severity": "moderate"
+    },
+    {
+      "category": "mental_bipolar",
+      "keywords": [
+        "bipolar",
+        "manic",
+        "mania",
+        "mood swings extreme",
+        "bipolar disorder"
+      ],
+      "response": "Bipolar disorder = extreme mood episodes alternating between mania (highs) and depression (lows).\n\nMania: Elevated mood, reduced sleep need, racing thoughts, rapid speech, risky behavior, grandiosity, increased energy.\n\nDepression: Deep sadness, fatigue, hopelessness, sleep changes, withdrawal.\n\nTypes: Bipolar I (full mania), Bipolar II (hypomania + depression).\n\nTreatment: Mood stabilizers (lithium), anticonvulsants, antipsychotics, therapy. Medication consistency is essential — stopping causes relapse.\n\nLiving with bipolar: Regular sleep schedule, stress management, avoid alcohol/drugs, track moods, maintain treatment team.",
+      "severity": "serious"
+    },
+    {
+      "category": "mental_eating_disorders",
+      "keywords": [
+        "eating disorder",
+        "anorexia",
+        "bulimia",
+        "binge eating",
+        "not eating",
+        "purging"
+      ],
+      "response": "Eating disorders are serious mental illnesses:\n\nAnorexia: Severe food restriction, intense fear of weight gain, distorted body image. Can cause organ failure.\n\nBulimia: Binge eating followed by purging (vomiting, laxatives). Damages teeth, esophagus, electrolytes.\n\nBinge Eating Disorder: Recurring episodes of eating large amounts, feeling out of control, guilt.\n\nTreatment: Therapy (CBT, family-based for teens), nutritional counseling, sometimes medication. Medical monitoring essential — eating disorders have the highest mortality of any mental illness.\n\nIf you're struggling: You deserve help. Reach out to a professional.",
+      "severity": "serious"
+    },
+    {
+      "category": "mental_addiction",
+      "keywords": [
+        "addiction",
+        "substance abuse",
+        "drug abuse",
+        "alcoholism",
+        "withdrawal",
+        "rehab addiction",
+        "dependence"
+      ],
+      "response": "Addiction is a chronic brain disease — not a moral failing. Substances change brain chemistry, making quitting extremely difficult.\n\nSigns: Loss of control, continued use despite harm, cravings, tolerance (needing more), withdrawal symptoms, neglecting responsibilities.\n\nTreatment: Detox (medical supervision for safety), rehabilitation programs, counseling/therapy, support groups (AA, NA), medications (methadone, buprenorphine, naltrexone).\n\nRecovery is possible: Many people recover and lead fulfilling lives. Relapse doesn't mean failure — it's part of the journey.\n\nSeeking help is strength. Talk to a doctor, call a helpline, or reach out to someone you trust.",
+      "severity": "serious"
+    },
+    {
+      "category": "first_aid_cpr",
+      "keywords": [
+        "cpr",
+        "cardiopulmonary resuscitation",
+        "heart stopped",
+        "no pulse",
+        "not breathing",
+        "cardiac arrest"
+      ],
+      "response": "⚠️ CPR saves lives. If someone is unresponsive and not breathing normally:\n\n(1) Call emergency immediately.\n(2) Push hard, push fast on center of chest — 100-120 compressions/min, 2 inches deep.\n(3) 30 compressions : 2 rescue breaths (if trained). Hands-only CPR (no breaths) is also effective and recommended if untrained.\n(4) Use AED if available — follow voice prompts. It's designed for anyone to use.\n(5) Don't stop until paramedics arrive or person responds.\n\nEveryone should learn CPR — it doubles or triples survival from cardiac arrest.",
+      "severity": "emergency"
+    },
+    {
+      "category": "first_aid_poisoning",
+      "keywords": [
+        "poisoning",
+        "poison",
+        "swallowed poison",
+        "toxic",
+        "overdose",
+        "ingested"
+      ],
+      "response": "⚠️ If poisoning is suspected:\n\n(1) Call Poison Control (1-800-222-1222 in US) or emergency services.\n(2) Do NOT induce vomiting unless told to by professionals.\n(3) Identify the substance — keep container/label if possible.\n(4) Note: What was taken, how much, when, person's age/weight.\n\nIf unconscious: Place in recovery position, call emergency, begin CPR if needed.\n\nPrevention: Lock up medications/chemicals, use child-proof caps, never mix cleaning products, label all containers, keep medications in original packaging.",
+      "severity": "emergency"
+    },
+    {
+      "category": "first_aid_heatstroke",
+      "keywords": [
+        "heatstroke",
+        "heat stroke",
+        "heat exhaustion",
+        "overheating",
+        "sunstroke"
+      ],
+      "response": "⚠️ Heat stroke is a medical emergency (body temp >104°F/40°C).\n\nHeat exhaustion → heat stroke progression:\n• Heavy sweating → sweating STOPS (danger sign)\n• Nausea, weakness → confusion, seizures, unconsciousness\n\nFirst aid for heat stroke:\n(1) Call emergency. (2) Move to shade/AC. (3) Cool aggressively — ice packs on neck/armpits/groin, wet sheets, fan. (4) Do NOT give fluids if confused/unconscious.\n\nPrevention: Hydrate before thirst, avoid peak sun (10am-4pm), wear light clothing, take breaks, never leave anyone in a hot car.",
+      "severity": "emergency"
+    },
+    {
+      "category": "first_aid_hypothermia",
+      "keywords": [
+        "hypothermia",
+        "freezing",
+        "frostbite",
+        "too cold",
+        "exposure cold"
+      ],
+      "response": "Hypothermia = body temp drops below 95°F (35°C). Can be fatal.\n\nSymptoms: Shivering (stops in severe cases!), confusion, slurred speech, drowsiness, weak pulse, loss of coordination.\n\nFirst aid: (1) Call emergency. (2) Move indoors/shelter. (3) Remove wet clothing. (4) Warm gradually — blankets, warm (not hot) drinks if conscious, body heat. (5) Do NOT rub skin or use direct heat.\n\nFrostbite: Numb, waxy skin on extremities. Warm in lukewarm water (not hot). Don't rub. Seek medical care.\n\nPrevention: Layer clothing, stay dry, limit exposure, recognize early signs.",
+      "severity": "emergency"
+    },
+    {
+      "category": "clinical_triage",
+      "keywords": [
+        "triage",
+        "er waiting",
+        "emergency priority",
+        "who gets seen first"
+      ],
+      "response": "Triage = prioritizing patients by severity, not arrival time.\n\nLevels:\n• 1 - Resuscitation: Life-threatening (cardiac arrest, major trauma) — immediate\n• 2 - Emergent: Potentially life-threatening (chest pain, stroke symptoms) — <15 min\n• 3 - Urgent: Serious but stable (high fever, fracture) — <30 min\n• 4 - Less urgent: Minor (sprain, earache) — <60 min\n• 5 - Non-urgent: (cold, rash) — may wait hours\n\nLonger waits in ER often mean your condition is less critical — which is actually good news. Be honest about symptoms so you're triaged correctly.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_diagnosis",
+      "keywords": [
+        "diagnosis",
+        "diagnosed",
+        "what is my condition",
+        "how is it diagnosed",
+        "differential diagnosis"
+      ],
+      "response": "How doctors diagnose:\n\n(1) History: Your symptoms, timeline, medical history, family history, medications.\n(2) Physical exam: Checking vitals, looking, listening, feeling.\n(3) Tests: Blood work, imaging (X-ray, MRI, CT), urine/stool tests, biopsies, cultures.\n(4) Differential diagnosis: List of possible conditions, narrowed down through evidence.\n\nHelp your doctor: Be specific about symptoms (when, where, how severe, what makes it better/worse), bring a medication list, mention family health history.\n\nNo test is 100% — sometimes multiple tests or follow-ups are needed.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_prognosis",
+      "keywords": [
+        "prognosis",
+        "outlook",
+        "will i recover",
+        "survival rate",
+        "life expectancy",
+        "chance of recovery"
+      ],
+      "response": "Prognosis = expected course and outcome of a disease.\n\nPrognosis depends on: type/stage of disease, your overall health, age, response to treatment, and individual factors.\n\nImportant to know:\n• Statistics describe populations, not individuals\n• Early detection almost always improves prognosis\n• Treatment advances happen constantly\n• Lifestyle changes can significantly affect outcomes\n• Mental attitude and support systems matter\n\nAsk your doctor: What's the typical course? What can I do to improve my outcome? What are the treatment options? Don't be afraid to ask — it's your health.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_organ_donation",
+      "keywords": [
+        "organ donation",
+        "organ donor",
+        "transplant",
+        "organ transplant",
+        "donate organ"
+      ],
+      "response": "Organ donation saves lives — one donor can save up to 8 lives and help 75+ through tissue donation.\n\nDonated organs: Heart, lungs, liver, kidneys, pancreas, intestines.\n\nDonated tissues: Corneas, skin, bone, tendons, heart valves.\n\nLiving donation: You can donate a kidney or part of your liver while alive.\n\nFacts: Doctors ALWAYS try to save your life first. Most religions support donation. Age/medical history don't automatically disqualify you.\n\nHow to register: Sign up through your country's organ donor registry. Tell your family your wishes.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_blood_donation",
+      "keywords": [
+        "blood donation",
+        "donate blood",
+        "blood bank",
+        "blood transfusion",
+        "give blood"
+      ],
+      "response": "Blood donation saves lives. One donation can help up to 3 people.\n\nRequirements: Generally 17+ years old, at least 110 lbs, good health. Restrictions: recent tattoo/piercing (varies), certain medications, recent travel to malaria areas.\n\nThe process: Registration → health screening → donation (~10 min for whole blood) → snack/rest.\n\nTypes: Whole blood (every 56 days), platelets (every 7 days), plasma (every 28 days).\n\nAfter donating: Eat iron-rich foods, drink extra fluids, avoid heavy exercise for 24 hrs. Your body replaces the blood within weeks.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_numbness",
+      "keywords": [
+        "numbness",
+        "tingling",
+        "pins and needles",
+        "numb hands",
+        "numb feet",
+        "loss of sensation",
+        "paresthesia"
+      ],
+      "response": "Numbness/tingling causes: compressed nerve (sleeping on arm, carpal tunnel), poor circulation, diabetes (peripheral neuropathy), vitamin B12 deficiency, pinched nerve in spine, multiple sclerosis, or anxiety.\n\nTemporary: Usually positional — shake it out, move.\n\nSee a doctor if: Persistent, spreading, one-sided (could indicate stroke — check for face drooping, arm weakness), affects balance, or comes with weakness.\n\n⚠️ Sudden numbness on one side of body = possible stroke. Call emergency immediately.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_swelling",
+      "keywords": [
+        "swelling",
+        "swollen",
+        "edema",
+        "puffy",
+        "water retention",
+        "swollen legs",
+        "swollen ankles"
+      ],
+      "response": "Swelling (edema) causes: standing/sitting too long, high salt intake, pregnancy, medications, injury, heart failure, kidney disease, liver disease, blood clot (DVT), or lymphatic problems.\n\nWhat helps: Elevate legs, reduce salt, compression stockings, gentle movement, drink water (counterintuitive but helps).\n\nSee a doctor if: Sudden swelling (especially one leg — could be blood clot), swelling with shortness of breath (heart failure), persistent pitting edema, or swelling with pain and redness.",
+      "severity": "moderate"
+    },
+    {
+      "category": "symptom_hair_loss",
+      "keywords": [
+        "hair loss",
+        "hair falling",
+        "bald",
+        "balding",
+        "alopecia",
+        "thinning hair"
+      ],
+      "response": "Losing 50-100 hairs daily is normal. Excessive hair loss causes:\n\nTemporary: Stress (telogen effluvium — 3 months after stress event), pregnancy/postpartum, crash dieting, medication, surgery.\n\nMedical: Thyroid problems, iron deficiency, PCOS, autoimmune (alopecia areata), hormonal changes.\n\nGenetic: Male/female pattern baldness (androgenetic alopecia) — most common.\n\nTreatment options: Minoxidil (topical), finasteride (oral), treat underlying cause, platelet-rich plasma, hair transplant.\n\nSee a doctor if: Sudden, patchy, or accompanied by other symptoms.",
+      "severity": "information"
+    },
+    {
+      "category": "disease_osteoporosis",
+      "keywords": [
+        "osteoporosis",
+        "bone loss",
+        "brittle bones",
+        "bone density",
+        "weak bones"
+      ],
+      "response": "Osteoporosis = bones become weak and brittle, breaking easily. Often called 'silent disease' — no symptoms until a fracture.\n\nRisk factors: Female, post-menopause, family history, small frame, low calcium, inactive lifestyle, smoking, excessive alcohol, corticosteroid use.\n\nPrevention & treatment:\n• Calcium: 1000-1200mg daily (dairy, leafy greens, fortified foods)\n• Vitamin D: 600-800 IU daily (sunlight, supplements)\n• Weight-bearing exercise (walking, dancing, climbing)\n• Bone density test (DEXA scan) recommended for women 65+\n• Medications if needed (bisphosphonates, etc.)",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_gallstones",
+      "keywords": [
+        "gallstones",
+        "gallbladder",
+        "biliary",
+        "gallbladder attack",
+        "gallbladder pain"
+      ],
+      "response": "Gallstones = hardened deposits in the gallbladder (stores bile). Common — many people have them without symptoms.\n\nSymptoms (when problematic): Sudden intense pain in upper right abdomen (after fatty meals), pain radiating to right shoulder/back, nausea, vomiting. Attacks can last minutes to hours.\n\nRisk factors: Female, 40+, overweight, rapid weight loss, family history, high-fat diet.\n\nTreatment: If no symptoms — usually watch and wait. For recurring attacks: surgery (cholecystectomy — gallbladder removal, very common, safe). You can live well without a gallbladder.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_celiac",
+      "keywords": [
+        "celiac",
+        "gluten intolerance",
+        "gluten free",
+        "gluten sensitivity",
+        "celiac disease"
+      ],
+      "response": "Celiac disease = autoimmune condition where gluten (protein in wheat, barley, rye) triggers immune attack on small intestine lining.\n\nSymptoms: Diarrhea, bloating, gas, fatigue, weight loss, anemia, bone pain, skin rash (dermatitis herpetiformis), and in children: growth problems.\n\nDiagnosis: Blood test (tTG-IgA antibody) → confirmed by intestinal biopsy. Must be eating gluten during testing.\n\nTreatment: Strict lifelong gluten-free diet. Even small amounts cause damage. Read all food labels carefully. Intestine heals in weeks to months on GF diet.\n\nNote: Celiac is different from gluten sensitivity (less severe, no intestinal damage).",
+      "severity": "moderate"
+    },
+    {
+      "category": "clinical_preventive_screening",
+      "keywords": [
+        "screening",
+        "checkup",
+        "health screening",
+        "preventive care",
+        "annual physical",
+        "regular checkup"
+      ],
+      "response": "Recommended preventive screenings:\n\nEveryone: Blood pressure (annually), cholesterol (every 4-6 yrs from age 20), diabetes (every 3 yrs from 45), dental checkup (every 6 months), vision/hearing.\n\nWomen: Pap smear (21-65, every 3 yrs), mammogram (40-50+, every 1-2 yrs), bone density (65+).\n\nMen: Prostate discussion with doctor (50+), abdominal aortic aneurysm (one-time at 65 if smoker).\n\nCancer screenings: Colorectal (45+), lung CT (heavy smokers 50+), skin checks.\n\nVaccines: Flu (annual), COVID boosters, shingles (50+), pneumonia (65+), Tdap (every 10 yrs).",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_first_responder",
+      "keywords": [
+        "first responder",
+        "how to help someone",
+        "emergency help",
+        "someone collapsed",
+        "someone fainted"
+      ],
+      "response": "If someone collapses or needs emergency help:\n\n(1) Check safety — ensure the scene is safe for you.\n(2) Check responsiveness — tap shoulder and shout 'Are you OK?'\n(3) Call emergency (or ask someone to).\n(4) Check breathing — look for chest rise for 10 seconds.\n(5) Not breathing? Start CPR (push hard/fast on chest center).\n(6) Breathing but unconscious? Recovery position (on side).\n(7) Severe bleeding? Apply direct pressure.\n(8) Stay until help arrives.\n\nGolden rules: Don't move them (unless danger), don't give food/water to unconscious person, stay calm.",
+      "severity": "emergency"
+    },
+    {
+      "category": "clinical_pain_management",
+      "keywords": [
+        "chronic pain",
+        "pain management",
+        "pain clinic",
+        "long term pain",
+        "pain control",
+        "living with pain"
+      ],
+      "response": "Chronic pain (lasting 3+ months) affects every aspect of life. It's real and valid.\n\nTreatment approaches:\n• Medications: NSAIDs, acetaminophen, nerve pain drugs (gabapentin, pregabalin), antidepressants (duloxetine), opioids only as last resort.\n• Physical therapy: Exercises, stretching, manual therapy.\n• Mind-body: CBT for pain, meditation, biofeedback, yoga, tai chi.\n• Procedures: Nerve blocks, injections, spinal cord stimulation.\n• Lifestyle: Regular gentle exercise, sleep hygiene, stress management, anti-inflammatory diet.\n\nImportant: Pain clinics offer multidisciplinary approaches. You don't have to suffer in silence.",
+      "severity": "moderate"
+    },
+    {
+      "category": "clinical_telehealth",
+      "keywords": [
+        "telehealth",
+        "online doctor",
+        "video consultation",
+        "telemedicine",
+        "virtual visit",
+        "remote doctor"
+      ],
+      "response": "Telehealth = medical consultations via video, phone, or messaging.\n\nGood for: Follow-ups, medication management, mental health, skin conditions (with photos), minor illnesses, chronic disease monitoring, getting specialist advice when far from clinics.\n\nNot suitable for: Emergencies, conditions needing physical exam, procedures, imaging.\n\nTips: Good internet connection, quiet private room, have medication list ready, prepare questions, have vitals if possible (home BP monitor, thermometer).\n\nBenefits: Saves travel time, reduces exposure to illness, increases access to specialists, convenient scheduling.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_antibiotics_resistance",
+      "keywords": [
+        "antibiotic resistance",
+        "superbugs",
+        "mrsa",
+        "drug resistant",
+        "antimicrobial resistance"
+      ],
+      "response": "Antibiotic resistance = bacteria evolve to survive antibiotics. A growing global health crisis.\n\nWhy it happens: Overuse (taking for viral infections), not finishing prescribed courses, agricultural overuse, poor infection control.\n\nSuperbugs: MRSA, C. difficile, drug-resistant TB, CRE — these infections are very difficult to treat.\n\nWhat YOU can do:\n• Only take antibiotics when prescribed\n• Complete the full course — always\n• Never share or use leftover antibiotics\n• Don't pressure doctors for antibiotics\n• Prevent infections (handwashing, vaccines)\n\nWithout action, common infections could become untreatable.",
+      "severity": "serious"
+    },
+    {
+      "category": "wellness_meditation",
+      "keywords": [
+        "meditation",
+        "mindfulness",
+        "breathing exercises",
+        "relaxation technique",
+        "calm mind"
+      ],
+      "response": "Meditation reduces stress, anxiety, blood pressure, and improves focus, sleep, and emotional well-being. Even 5 minutes daily helps.\n\nSimple techniques:\n• Breathing: In for 4 counts, hold 4, out for 6. Repeat 5 min.\n• Body scan: Focus attention slowly from toes to head, relaxing each area.\n• Mindfulness: Focus on present moment — sounds, sensations, breath. When mind wanders, gently return.\n• Guided meditation: Use apps (Headspace, Calm, Insight Timer).\n\nTips: Start small (5 min), be consistent, don't judge yourself for wandering thoughts — that's normal and part of the practice.",
+      "severity": "information"
+    },
+    {
+      "category": "wellness_posture",
+      "keywords": [
+        "posture",
+        "sitting posture",
+        "ergonomic",
+        "desk setup",
+        "back straight",
+        "neck pain computer"
+      ],
+      "response": "Poor posture causes back pain, neck pain, headaches, fatigue, and long-term spinal problems.\n\nDesk ergonomics:\n• Screen at eye level, arm's length away\n• Shoulders relaxed, elbows at 90°\n• Feet flat on floor or footrest\n• Lower back supported\n• Take breaks every 30-60 minutes — stand, stretch, walk\n\nStanding posture: Ears over shoulders, shoulders over hips, weight even on both feet.\n\nStrengthening: Core exercises, yoga, and stretching improve posture naturally. The best posture is your next posture — keep moving!",
+      "severity": "information"
+    },
+    {
+      "category": "disease_diabetes_management",
+      "keywords": [
+        "blood sugar monitor",
+        "glucose monitor",
+        "insulin injection",
+        "diabetes management",
+        "a1c",
+        "diabetic diet"
+      ],
+      "response": "Daily diabetes management:\n\n• Monitor blood sugar: Fasting goal: 80-130 mg/dL. After meals: <180 mg/dL. Track patterns.\n• HbA1c: Target usually <7% (reflects 3-month average). Test every 3-6 months.\n• Diet: Count carbs, eat fiber, avoid sugary drinks, consistent meal times.\n• Exercise: 150 min/week — lowers blood sugar naturally.\n• Medications: Take as prescribed. Insulin users: proper injection technique, rotate sites, store correctly.\n\nHypoglycemia (low sugar <70): Shakiness, sweating, confusion. Treat with 15g fast carbs (juice, glucose tablets). Recheck in 15 min.\n\nRegular checkups: Eye exam, foot exam, kidney function, dental — annually.",
+      "severity": "moderate"
+    },
+    {
+      "category": "first_aid_snake_bite",
+      "keywords": [
+        "snake bite",
+        "snakebite",
+        "bitten by snake",
+        "venomous bite"
+      ],
+      "response": "If bitten by a snake:\n\n(1) Call emergency immediately.\n(2) Stay calm — rapid heartbeat spreads venom faster.\n(3) Keep bitten limb below heart level.\n(4) Remove rings/watches (swelling will occur).\n(5) Note snake's appearance (for antivenom selection).\n\nDo NOT: Cut the wound, suck out venom, apply tourniquet, apply ice, drink alcohol.\n\nAt hospital: Antivenom is the definitive treatment for venomous bites. Even if unsure if snake was venomous — always seek medical care.",
+      "severity": "emergency"
+    },
+    {
+      "category": "first_aid_drowning",
+      "keywords": [
+        "drowning",
+        "near drowning",
+        "water rescue",
+        "underwater",
+        "not swimming"
+      ],
+      "response": "⚠️ Drowning is a leading cause of death. Act fast:\n\n(1) Call emergency.\n(2) Reach or throw — use a pole, rope, or flotation device. Don't jump in unless trained.\n(3) If out of water and not breathing: Start CPR immediately — 30 compressions, 2 breaths.\n(4) If breathing: Recovery position (on side), keep warm.\n\nImportant: Drowning is often silent — no splashing or yelling. Watch children constantly near water.\n\nPrevention: Supervision, swim lessons, fencing around pools, life jackets on boats, learn CPR.",
+      "severity": "emergency"
+    },
+    {
+      "category": "clinical_palliative_care",
+      "keywords": [
+        "palliative care",
+        "hospice",
+        "end of life",
+        "comfort care",
+        "terminal illness",
+        "dying"
+      ],
+      "response": "Palliative care focuses on comfort, quality of life, and symptom relief for serious illness — at ANY stage, alongside curative treatment.\n\nPalliative care provides: Pain management, symptom control (nausea, breathing, fatigue), emotional/spiritual support, help with decisions, family support.\n\nHospice: Specialized palliative care when cure is no longer the goal (typically prognosis of 6 months or less). Focuses on dignity and comfort.\n\nImportant: Choosing palliative care is NOT giving up — it's prioritizing quality of life. Patients often live longer and better with palliative support. Discuss goals of care with your healthcare team and loved ones.",
+      "severity": "information"
+    },
+    {
+      "category": "clinical_infection_control",
+      "keywords": [
+        "infection control",
+        "hospital infection",
+        "nosocomial",
+        "healthcare infection",
+        "prevent infection hospital"
+      ],
+      "response": "Healthcare-associated infections (HAIs) affect millions annually but are largely preventable.\n\nCommon HAIs: Catheter-associated UTIs, surgical site infections, central line bloodstream infections, ventilator-associated pneumonia, C. difficile.\n\nHow to protect yourself in hospital:\n• Ask staff to wash hands before touching you (it's your right!)\n• Keep wounds clean and dry\n• Ask daily if catheters/IVs are still needed\n• Report any signs of infection immediately\n\nPrevention measures: Hand hygiene, proper sterilization, antibiotic stewardship, isolation precautions, vaccination of healthcare workers.",
+      "severity": "information"
+    },
+    {
+      "category": "nutrition_gut_health",
+      "keywords": [
+        "gut health",
+        "probiotics",
+        "prebiotics",
+        "microbiome",
+        "gut bacteria",
+        "fermented food"
+      ],
+      "response": "Your gut contains trillions of bacteria (microbiome) affecting digestion, immunity, mood, and overall health.\n\nFor a healthy gut:\n• Probiotics (live good bacteria): yogurt, kefir, sauerkraut, kimchi, kombucha, miso.\n• Prebiotics (food for good bacteria): garlic, onion, bananas, oats, asparagus.\n• Fiber: Fruits, vegetables, whole grains, legumes — aim for 25-30g daily.\n• Limit: Processed foods, artificial sweeteners, excessive alcohol, unnecessary antibiotics.\n\nGut-brain connection: Your gut produces 95% of serotonin. Poor gut health is linked to anxiety, depression, and autoimmune conditions.",
+      "severity": "information"
+    },
+    {
+      "category": "symptom_night_sweats",
+      "keywords": [
+        "night sweats",
+        "sweating at night",
+        "waking up sweating",
+        "drenching sweat sleep"
+      ],
+      "response": "Night sweats (drenching, requiring sheet changes) differ from just being warm.\n\nCauses: Infections (TB, HIV, endocarditis), menopause, medications (antidepressants, fever reducers), hypoglycemia, hormone disorders (thyroid, pheochromocytoma), anxiety, lymphoma, or simply a warm room.\n\nWhen to worry: Persistent, unexplained weight loss, fever, fatigue, or swollen lymph nodes accompanying the sweats.\n\nWhat helps: Cool sleeping environment, moisture-wicking fabrics, avoid spicy food/alcohol before bed.\n\nSee a doctor if: Recurring, disrupting sleep, or accompanied by other symptoms.",
+      "severity": "moderate"
+    },
+    {
+      "category": "disease_pneumothorax",
+      "keywords": [
+        "collapsed lung",
+        "pneumothorax",
+        "air in chest",
+        "lung collapse"
+      ],
+      "response": "⚠️ Pneumothorax (collapsed lung) = air leaks into space between lung and chest wall, causing lung to collapse.\n\nSymptoms: Sudden sharp chest pain, shortness of breath, rapid breathing, rapid heartbeat. One side of chest may not move during breathing.\n\nCauses: Chest injury, medical procedures, lung disease, or spontaneous (tall thin young males at higher risk).\n\nTreatment: Small ones may resolve with monitoring + oxygen. Large ones need chest tube to remove air. Tension pneumothorax = life-threatening emergency.\n\nSeek emergency care if you have sudden chest pain with breathing difficulty.",
+      "severity": "emergency"
+    },
+    {
+      "category": "disease_dvt",
+      "keywords": [
+        "blood clot",
+        "dvt",
+        "deep vein thrombosis",
+        "pulmonary embolism",
+        "clot in leg",
+        "pe"
+      ],
+      "response": "⚠️ DVT (Deep Vein Thrombosis) = blood clot in deep veins, usually legs. Can break loose → pulmonary embolism (PE) = life-threatening.\n\nDVT symptoms: Leg swelling (usually one leg), pain/tenderness, warm skin, redness.\n\nPE symptoms: Sudden shortness of breath, chest pain (worse with breathing), rapid heartbeat, coughing blood, dizziness.\n\nRisk factors: Long immobility (flights, bed rest), surgery, pregnancy, birth control pills, cancer, obesity, smoking.\n\nPrevention: Move during long travel, stay hydrated, compression stockings, early mobilization after surgery.\n\nSeek immediate care if you suspect DVT or PE.",
+      "severity": "emergency"
+    },
+    {
+      "category": "wellness_eye_health",
+      "keywords": [
+        "eye health",
+        "vision care",
+        "glasses",
+        "contact lens",
+        "eye strain",
+        "screen time eyes"
+      ],
+      "response": "Protecting your vision:\n\n20-20-20 rule for screen use: Every 20 min, look at something 20 feet away for 20 seconds.\n\nEye strain relief: Adjust screen brightness, reduce glare, blink often, use artificial tears.\n\nEye exams: Every 1-2 years (annually if wearing corrective lenses, diabetic, or 60+).\n\nProtection: Sunglasses (UV protection), safety glasses for hazards, don't rub eyes.\n\nContact lens care: Wash hands before handling, follow replacement schedule, never sleep in lenses (unless designed for it), replace case regularly.\n\nWarning signs: Sudden vision changes, flashes/floaters, eye pain, halos around lights — see an eye doctor promptly.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_feeling_unwell",
+      "keywords": [
+        "not feeling well",
+        "feel unwell",
+        "feeling sick",
+        "something wrong",
+        "dont feel good",
+        "not feeling good",
+        "feel off",
+        "feel weird"
+      ],
+      "response": "I am sorry you are not feeling well. Can you describe what you are experiencing? For example: Do you have pain somewhere? Fever? Nausea? Fatigue? The more details you share, the better I can help point you in the right direction. If symptoms are severe or sudden, please seek medical attention right away.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_scared_of_doctor",
+      "keywords": [
+        "scared of doctor",
+        "afraid of doctor",
+        "nervous appointment",
+        "doctor anxiety",
+        "hate hospitals",
+        "scared of hospital",
+        "white coat syndrome"
+      ],
+      "response": "It is completely normal to feel anxious about doctor visits or hospitals. Many people experience this  it is called white coat syndrome when it affects blood pressure too. Tips: bring a friend or family member for support, write down your questions beforehand, tell your doctor you are nervous  they hear it every day and will help you feel comfortable. Remember, doctors are there to help, not judge.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_needle_fear",
+      "keywords": [
+        "scared of needles",
+        "needle phobia",
+        "afraid of injection",
+        "hate needles",
+        "fear of blood draw",
+        "trypanophobia"
+      ],
+      "response": "Fear of needles is very common  up to 25% of adults experience it. Tips that help: tell the nurse beforehand, look away during the procedure, take slow deep breaths, squeeze a stress ball, apply numbing cream (ask your doctor). For blood draws, stay hydrated  it makes veins easier to find. The poke lasts just seconds. You can do it!",
+      "severity": "information"
+    },
+    {
+      "category": "casual_how_long_wait",
+      "keywords": [
+        "how long wait",
+        "waiting room",
+        "wait time",
+        "how long appointment",
+        "doctor running late"
+      ],
+      "response": "Wait times vary by setting: doctor office visits typically take 15-30 minutes once seen, but waits of 15-45 minutes are common. ER waits depend on severity  critical patients go first, less urgent cases may wait hours. Tips: bring something to read, arrive on time, call ahead to check delays. If your wait seems unreasonably long, politely ask the front desk for an update.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_what_eat_sick",
+      "keywords": [
+        "what to eat when sick",
+        "food when sick",
+        "eat when ill",
+        "sick diet",
+        "soup when sick",
+        "feed a cold"
+      ],
+      "response": "When you are sick, your body needs easy-to-digest nutrition and hydration. Good choices: chicken soup or broth (truly helps  anti-inflammatory), crackers, toast, rice, bananas, applesauce, ginger tea (nausea), honey with warm water (sore throat), clear fluids. Avoid heavy, greasy, or very spicy foods. Stay hydrated  water, herbal tea, electrolyte drinks. Eat small amounts frequently rather than big meals.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_exercise_sick",
+      "keywords": [
+        "exercise when sick",
+        "workout when sick",
+        "gym when sick",
+        "can I exercise cold",
+        "run with fever"
+      ],
+      "response": "The neck check rule: symptoms above the neck (runny nose, mild sore throat, sneezing)  light exercise is usually OK. Symptoms below the neck (chest congestion, body aches, fever, fatigue, stomach issues)  rest instead. Never exercise with a fever  it raises body temperature further and stresses your heart. Listen to your body. When recovering, ease back in gradually. Rest IS part of getting better.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_is_it_contagious",
+      "keywords": [
+        "is it contagious",
+        "can I spread",
+        "contagious",
+        "catching",
+        "infectious",
+        "stay home sick",
+        "go to work sick"
+      ],
+      "response": "General contagious periods: Common cold  most contagious first 2-3 days. Flu  1 day before symptoms to 5-7 days after. COVID  can spread 2 days before symptoms. Stomach virus  contagious while symptomatic and 2+ days after. Rule of thumb: if you have a fever, stay home until fever-free for 24 hours without medication. If you must go out while sick, wear a mask, wash hands frequently, and avoid close contact.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_home_remedies",
+      "keywords": [
+        "home remedy",
+        "home remedies",
+        "natural remedy",
+        "natural treatment",
+        "herbal remedy",
+        "grandmother remedy",
+        "home cure"
+      ],
+      "response": "Some home remedies have real evidence behind them: Honey for coughs (not for children under 1), ginger for nausea, salt water gargle for sore throat, chicken soup for colds (anti-inflammatory), peppermint tea for digestion, turmeric for inflammation, aloe vera for minor burns, cool compresses for headaches. However, home remedies have limits  they help mild symptoms but do not replace medical treatment for serious conditions. If symptoms persist or worsen, see a doctor.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_googled_symptoms",
+      "keywords": [
+        "googled symptoms",
+        "internet diagnosis",
+        "webmd",
+        "self diagnosis",
+        "looked up symptoms online",
+        "dr google"
+      ],
+      "response": "It is natural to search your symptoms online, but be careful  the internet tends to show worst-case scenarios, which causes unnecessary anxiety. Tips for health research: use reliable sources (Mayo Clinic, WHO, CDC, NHS), do not jump to the worst diagnosis, symptoms overlap between many conditions (serious and mild), online info cannot replace a physical examination. Use your research to have informed conversations with your doctor, not to replace them.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_symptoms_come_go",
+      "keywords": [
+        "symptoms come and go",
+        "on and off",
+        "intermittent",
+        "sometimes feel",
+        "comes and goes",
+        "flare up"
+      ],
+      "response": "Many conditions cause intermittent symptoms  this is actually useful diagnostic information. Track your symptoms: when do they happen (time of day, after eating, during stress), how long they last, what makes them better or worse, and any patterns. A symptom diary helps your doctor enormously. Conditions with flare-ups include: IBS, migraines, arthritis, asthma, eczema, allergies, and many autoimmune diseases. Intermittent does not mean unimportant  still worth discussing with a doctor.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_am_i_overreacting",
+      "keywords": [
+        "am I overreacting",
+        "being dramatic",
+        "is this serious",
+        "should I worry",
+        "am I ok",
+        "nothing to worry about",
+        "just being paranoid"
+      ],
+      "response": "You are not overreacting by paying attention to your health. Trust your instincts  you know your body best. It is always better to check something out and have it be nothing, than to ignore something important. Doctors would rather see you for a false alarm than miss something real. No good doctor will judge you for seeking care. If something does not feel right, get it checked. Your health concerns are valid.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_er_vs_urgent",
+      "keywords": [
+        "er or urgent care",
+        "emergency or clinic",
+        "should I go to er",
+        "urgent care vs er",
+        "which doctor to go",
+        "where should I go"
+      ],
+      "response": "ER (Emergency Room)  for life-threatening situations: chest pain, difficulty breathing, severe bleeding, stroke symptoms, serious injuries, loss of consciousness, severe allergic reactions, high fever with confusion.\n\nUrgent Care  for non-life-threatening but needs same-day attention: minor fractures, sprains, cuts needing stitches, ear/sinus infections, UTI symptoms, mild-moderate fever, rashes.\n\nDoctor Office  for ongoing issues, checkups, chronic disease management, non-urgent concerns.\n\nWhen unsure, call your doctor or a nurse hotline  they can advise where to go.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_generic_vs_brand",
+      "keywords": [
+        "generic medicine",
+        "generic vs brand",
+        "brand name drug",
+        "cheaper medicine",
+        "same medicine cheaper"
+      ],
+      "response": "Generic medications contain the same active ingredient, dosage, and effectiveness as brand-name drugs  they are required by law to be bioequivalent. They cost 30-80% less because manufacturers do not have the original research costs. The FDA (and equivalent agencies worldwide) approves generics with the same safety standards. Ask your pharmacist about generic alternatives  they can save you significant money with no difference in quality. Some minor differences in inactive ingredients (fillers, colors) exist but rarely matter.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_medicine_with_food",
+      "keywords": [
+        "take medicine with food",
+        "empty stomach medicine",
+        "medicine before eating",
+        "medicine after eating",
+        "food and medicine"
+      ],
+      "response": "It depends on the medication. Take WITH food: ibuprofen, naproxen, steroids (reduce stomach irritation), metformin. Take on EMPTY stomach (30-60 min before food): thyroid medication (levothyroxine), some antibiotics. Take either way: acetaminophen, most blood pressure meds. Never take with: grapefruit (affects many drugs), alcohol (dangerous with many medications), dairy can block some antibiotics. Always read the label or ask your pharmacist  they are medication experts and happy to help.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_explain_symptoms",
+      "keywords": [
+        "how to describe symptoms",
+        "explain to doctor",
+        "tell doctor",
+        "describe pain",
+        "talk to doctor"
+      ],
+      "response": "Describing symptoms clearly helps your doctor diagnose faster. Use this framework:\n\nLocation  Where exactly does it hurt?\nOnset  When did it start? Sudden or gradual?\nCharacter  Sharp, dull, burning, throbbing, aching?\nRadiation  Does it spread anywhere?\nAssociations  Other symptoms at the same time?\nTiming  Constant or comes and goes? Worse at certain times?\nExacerbating/relieving  What makes it better or worse?\nSeverity  Rate pain 1-10.\n\nAlso mention: medications you take, allergies, family history of similar issues, and any recent life changes.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_no_insurance",
+      "keywords": [
+        "no insurance",
+        "cant afford doctor",
+        "no health insurance",
+        "medical bills",
+        "healthcare cost",
+        "free clinic"
+      ],
+      "response": "Healthcare costs should not stop you from getting help. Options: Community health centers offer sliding-scale fees based on income. Free clinics exist in most areas. Emergency rooms must treat you regardless of ability to pay (EMTALA law in the US). Many hospitals have financial assistance programs  ask about charity care. Generic medications save money. Telehealth is often cheaper than in-person visits. Pharmacy discount programs (GoodRx, etc.) reduce medication costs. If you receive a large bill, ask about payment plans or negotiate  many providers will work with you.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_physical_exam",
+      "keywords": [
+        "physical exam",
+        "annual checkup",
+        "what does doctor check",
+        "routine exam",
+        "wellness visit",
+        "check up what happens"
+      ],
+      "response": "During a routine physical exam, the doctor typically: checks vital signs (blood pressure, heart rate, temperature, weight), listens to heart and lungs with stethoscope, checks eyes, ears, nose, throat, feels abdomen for organ size, checks reflexes, examines skin, may order blood work (cholesterol, blood sugar, thyroid, etc.). They will also ask about lifestyle, mental health, medications, and family history. It is a great time to bring up any concerns  no question is too small or embarrassing. Recommended annually or as your doctor advises.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_side_effects",
+      "keywords": [
+        "side effects",
+        "medicine making me sick",
+        "reaction to medicine",
+        "adverse effect",
+        "drug reaction",
+        "bad reaction medicine"
+      ],
+      "response": "Medication side effects range from mild (nausea, headache, drowsiness) to serious (allergic reaction, organ damage). Common mild side effects often improve after a few days as your body adjusts. If side effects: do not stop medication without asking your doctor (some need gradual tapering), call your pharmacist for quick advice, report reactions to your doctor  they may adjust dosage or switch medication. Seek emergency help for: difficulty breathing, swelling of face/throat, severe rash, chest pain, or unusual bleeding. Always read the information sheet that comes with your medication.",
+      "severity": "moderate"
+    },
+    {
+      "category": "casual_how_long_recover",
+      "keywords": [
+        "how long to recover",
+        "when will I get better",
+        "recovery time",
+        "how long sick",
+        "when feel better"
+      ],
+      "response": "Common recovery times: Cold  7-10 days. Flu  1-2 weeks (fatigue may linger). Stomach virus  1-3 days. Ear infection  7-10 days. Strep throat  improvement in 2-3 days on antibiotics. Minor surgery  days to weeks. Major surgery  weeks to months. Broken bone  6-8 weeks.\n\nFactors affecting recovery: age, overall health, nutrition, rest, following treatment plan, stress levels. Recovery is not always linear  some days feel worse than others. Be patient with yourself and follow your doctor instructions.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_when_take_temp",
+      "keywords": [
+        "how to take temperature",
+        "check temperature",
+        "thermometer",
+        "what temperature is fever",
+        "normal temperature"
+      ],
+      "response": "Normal body temperature is around 98.6F (37C) but varies by person and time of day (lower in morning, higher in evening). A fever is generally 100.4F (38C) or higher. Thermometer types: oral (under tongue, wait 30 sec), forehead (quick but less precise), ear (fast, good for kids), underarm (add 1 degree for estimate). Tips: do not eat or drink 15 minutes before oral reading, clean thermometer between uses. For children under 3 months, any fever over 100.4F needs immediate medical attention.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_what_is_normal",
+      "keywords": [
+        "normal range",
+        "healthy range",
+        "what is normal",
+        "normal numbers",
+        "healthy levels"
+      ],
+      "response": "Key normal ranges for adults:\n\nHeart rate: 60-100 bpm at rest\nBlood pressure: less than 120/80 mmHg\nTemperature: around 98.6F (97-99F is normal range)\nBreathing rate: 12-20 breaths per minute\nOxygen saturation: 95-100%\nBlood sugar (fasting): 70-100 mg/dL\nCholesterol (total): under 200 mg/dL\nBMI: 18.5-24.9\n\nThese are general guidelines  your doctor may set different targets based on your individual health. What is normal for one person may differ for another.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_embarrassing_symptoms",
+      "keywords": [
+        "embarrassing symptom",
+        "too embarrassed",
+        "awkward to ask",
+        "private problem",
+        "sensitive question",
+        "uncomfortable topic"
+      ],
+      "response": "There is absolutely nothing to be embarrassed about when talking to a doctor or asking health questions. Doctors have seen and heard everything  literally. Bowel issues, sexual health, body odor, rashes in private areas, incontinence, mental health  these are all normal medical topics they deal with every day. Not mentioning something out of embarrassment can delay important diagnosis and treatment. Your doctor is bound by confidentiality. Be open and honest  it is the best thing for your health.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_keeping_healthy",
+      "keywords": [
+        "how to stay healthy",
+        "stay healthy",
+        "healthy lifestyle",
+        "prevent disease",
+        "health tips general",
+        "be healthier"
+      ],
+      "response": "The big five for staying healthy:\n\n1. Move your body  at least 30 minutes of activity most days\n2. Eat real food  mostly plants, not too much, variety of colors\n3. Sleep enough  7-9 hours, consistent schedule\n4. Manage stress  find what works for you (exercise, meditation, hobbies, friends)\n5. Avoid harmful substances  no smoking, limit alcohol\n\nBonus: stay hydrated, maintain social connections, get regular checkups, keep vaccinations current, practice good hygiene, wear sunscreen. Small consistent habits beat dramatic short-term changes every time.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_feeling_better_stop_meds",
+      "keywords": [
+        "feeling better stop medicine",
+        "can I stop taking",
+        "stop antibiotics early",
+        "dont need medicine anymore",
+        "medicine not needed"
+      ],
+      "response": "Just because you feel better does not mean you should stop medication  especially not antibiotics (stopping early creates resistant bacteria), blood pressure meds (BP will rise again), antidepressants (need gradual tapering  sudden stop causes withdrawal), insulin and diabetes meds (blood sugar will spike), and many chronic disease medications.\n\nIf you think you no longer need a medication, discuss it with your doctor first. They will guide you on whether and how to safely stop. Some medications need to be reduced gradually, not stopped suddenly.",
+      "severity": "moderate"
+    },
+    {
+      "category": "casual_child_sick_school",
+      "keywords": [
+        "child sick school",
+        "kid stay home",
+        "child fever school",
+        "when keep child home",
+        "sick child"
+      ],
+      "response": "Keep your child home from school if they have: fever (100.4F or higher  stay home until fever-free 24 hrs without medication), vomiting or diarrhea (keep home 24 hrs after last episode), persistent cough that disrupts class, pink eye with discharge, rash (until doctor confirms not contagious), head lice (until treated). Mild sniffles without fever are usually OK for school. When in doubt, call your pediatrician. Always inform the school so they can watch for outbreaks.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_how_does_pharmacy_work",
+      "keywords": [
+        "pharmacy",
+        "pharmacist",
+        "prescription",
+        "fill prescription",
+        "refill medicine",
+        "pick up medicine"
+      ],
+      "response": "Your pharmacist is a medication expert  use them! They can: explain how to take medications, check for drug interactions, suggest over-the-counter alternatives, give vaccines, advise on minor ailments, and answer questions your doctor did not have time for. For prescriptions: your doctor sends it electronically or you bring a paper script. Allow time for filling (15-30 min to hours). For refills: call ahead, use the pharmacy app, or set up auto-refill. Transfer prescriptions between pharmacies easily. Do not hesitate to ask your pharmacist anything  consultations are free!",
+      "severity": "information"
+    },
+    {
+      "category": "casual_worried_about_someone",
+      "keywords": [
+        "worried about someone",
+        "family member sick",
+        "friend is sick",
+        "how to help sick person",
+        "taking care of someone"
+      ],
+      "response": "Caring for a sick loved one: help them stay hydrated and fed (even small amounts), make sure they take medications on time, monitor symptoms and temperature, let them rest (sleep is healing), keep the environment clean and comfortable. Watch for warning signs that need medical attention: difficulty breathing, persistent high fever, confusion, inability to keep fluids down, or worsening condition.\n\nFor yourself as caregiver: wash hands frequently to avoid getting sick, take breaks, ask for help from others, do not neglect your own health. Caregiver burnout is real  your health matters too.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_medical_terms",
+      "keywords": [
+        "medical terms",
+        "doctor language",
+        "what does it mean",
+        "medical jargon",
+        "doctor said",
+        "medical words"
+      ],
+      "response": "Common medical terms simplified:\n\nAcute = sudden and short-term. Chronic = long-lasting. Benign = not harmful/not cancer. Malignant = cancerous. Inflammation = body swelling and redness response. Diagnosis = identifying the condition. Prognosis = expected outcome. Biopsy = tissue sample for testing. Edema = swelling from fluid. Hyper = too much. Hypo = too little. -itis = inflammation (bronchitis, arthritis). Stat = immediately. NPO = nothing by mouth. PRN = as needed.\n\nAlways ask your doctor to explain terms you do not understand  they should absolutely do that for you.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_water_enough",
+      "keywords": [
+        "how much water should I drink",
+        "drinking enough water",
+        "am I dehydrated",
+        "signs of dehydration"
+      ],
+      "response": "Aim for about 8 cups (2 liters) daily, more if active, hot weather, pregnant, or breastfeeding. Dehydration signs: dark yellow urine (aim for light straw color), dry mouth, headache, dizziness, fatigue, decreased urination. Severe dehydration: rapid heartbeat, confusion, fainting  seek medical help. All fluids count  water, tea, milk, soup, foods with high water content (watermelon, cucumber, oranges). Coffee and tea count too despite mild diuretic effect. Carry a water bottle and sip throughout the day rather than gulping large amounts at once.",
+      "severity": "information"
+    },
+    {
+      "category": "casual_cant_sleep_sick",
+      "keywords": [
+        "cant sleep when sick",
+        "sleeping while sick",
+        "rest when ill",
+        "sick in bed",
+        "bed rest"
+      ],
+      "response": "Sleep is when your body does most of its healing. Tips for sleeping when sick: elevate your head with extra pillows (helps congestion and acid reflux), use a humidifier for dry cough and congestion, keep a glass of water and tissues by the bed, take nighttime cold medicine before bed if needed (contains sleep aid), cool room temperature, hot shower before bed (steam clears airways), honey tea before sleep soothes throat. Do not fight the urge to nap during the day  your body is telling you it needs rest.",
+      "severity": "information"
+    }
+  ],
+  "emergency_keywords": [
+    "emergency",
+    "911",
+    "119",
+    "critical",
+    "severe",
+    "chest pain",
+    "can't breathe",
+    "unconscious",
+    "stroke",
+    "heart attack",
+    "dying",
+    "hemorrhage",
+    "urgent",
+    "anaphylaxis",
+    "poison",
+    "overdose",
+    "choking",
+    "seizure",
+    "suicide"
+  ],
+  "disclaimer": "This is for educational information only, not medical advice. For medical concerns, consult a healthcare professional. In emergencies, call your local emergency number."
+}
