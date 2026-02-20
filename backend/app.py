@@ -457,40 +457,41 @@ Output only the final tweet text with hashtags. Do not include explanations or q
         return format_message_locally(description), False
 
 
-@app.route('/body-selector')
-@auth.login_required
-def body_selector():
-    """Interactive Body Symptom Selector page (protected)"""
-    user = auth.get_current_user()
-    return render_template('body_selector.html', user=user)
+## Body Selector page removed — functionality moved into chatbot modal
+# @app.route('/body-selector')
+# @auth.login_required
+# def body_selector():
+#     """Interactive Body Symptom Selector page (protected)"""
+#     user = auth.get_current_user()
+#     return render_template('body_selector.html', user=user)
 
-
-@app.route('/submit_body_selection', methods=['POST'])
-@auth.login_required
-def submit_body_selection():
-    """Receive selected body parts from symptom selector"""
-    try:
-        data = request.json
-        selected_parts = data.get('selected_parts', [])
-        details = data.get('details', [])
-
-        if not selected_parts:
-            return jsonify({"success": False, "message": "No body parts selected"}), 400
-
-        # Build a symptom summary string to pre-fill chatbot
-        part_names = [d.get('name', d.get('id', '')) for d in details]
-        symptom_summary = "I have discomfort in: " + ", ".join(part_names)
-
-        return jsonify({
-            "success": True,
-            "message": f"{len(selected_parts)} area(s) received. Redirecting to chat...",
-            "redirect": f"/chat?symptoms={','.join(selected_parts)}",
-            "symptom_summary": symptom_summary
-        })
-
-    except Exception as e:
-        print(f"Error in body selection: {e}")
-        return jsonify({"success": False, "message": str(e)}), 500
+## Submit endpoint also removed - modal directly inserts into chat input
+# @app.route('/submit_body_selection', methods=['POST'])
+# @auth.login_required
+# def submit_body_selection():
+#     """Receive selected body parts from symptom selector"""
+#     try:
+#         data = request.json
+#         selected_parts = data.get('selected_parts', [])
+#         details = data.get('details', [])
+# 
+#         if not selected_parts:
+#             return jsonify({"success": False, "message": "No body parts selected"}), 400
+# 
+#         # Build a symptom summary string to pre-fill chatbot
+#         part_names = [d.get('name', d.get('id', '')) for d in details]
+#         symptom_summary = "I have discomfort in: " + ", ".join(part_names)
+# 
+#         return jsonify({
+#             "success": True,
+#             "message": f"{len(selected_parts)} area(s) received. Redirecting to chat...",
+#             "redirect": f"/chat?symptoms={','.join(selected_parts)}",
+#             "symptom_summary": symptom_summary
+#         })
+# 
+#     except Exception as e:
+#         print(f"Error in body selection: {e}")
+#         return jsonify({"success": False, "message": str(e)}), 500
 
 
 @app.route('/report-issue')
@@ -1006,7 +1007,7 @@ JSON schema:
   ],
   "positive_factors": ["<things the user is doing well>"],
   "suggested_actions": [
-    {"action": "<specific next step>", "link_label": "<e.g. Open Health Tracker>", "link": "<one of: /chat, /health-tracker, /body-selector, /report-issue>"}
+    {"action": "<specific next step>", "link_label": "<e.g. Open Health Tracker>", "link": "<one of: /chat, /health-tracker, /report-issue>"}
   ]
 }
 

@@ -1151,6 +1151,75 @@
 				padding: 0.5rem 1rem;
 			}
 		}
+
+		/* ===== BODY SELECTOR MODAL ===== */
+		.body-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+		.body-modal-overlay.active{display:flex;animation:bmFadeIn .25s ease}
+		@keyframes bmFadeIn{from{opacity:0}to{opacity:1}}
+		.body-modal{background:#0f172a;border-radius:18px;width:94vw;max-width:1100px;height:90vh;max-height:780px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);animation:bmSlideUp .3s ease}
+		@keyframes bmSlideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+		.body-modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff}
+		.body-modal-header h3{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px;margin:0}
+		.body-modal-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+		.body-modal-close:hover{background:rgba(255,255,255,.3)}
+		.body-modal-body{flex:1;overflow-y:auto;padding:1.25rem;display:grid;grid-template-columns:1fr 340px;gap:1.25rem}
+		.bm-svg-panel{background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:1rem;display:flex;flex-direction:column;align-items:center}
+		.bm-view-toggle{display:flex;background:rgba(255,255,255,.06);border-radius:8px;padding:4px;margin-bottom:1rem;gap:4px}
+		.bm-view-btn{padding:8px 20px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;border-radius:6px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:6px}
+		.bm-view-btn.active{background:rgba(255,255,255,.1);color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+		.bm-view-btn:hover:not(.active){color:var(--primary)}
+		.bm-svg-wrapper{display:flex;align-items:center;justify-content:center;width:100%;position:relative;border-radius:8px;padding:10px 0;flex:1}
+		.bm-svg-wrapper svg{width:100%;max-width:340px;height:auto;display:block}
+		.bm-body-view{display:none}
+		.bm-body-view.active{display:flex;align-items:center;justify-content:center;width:100%}
+		.bm-muscle{fill:rgba(120,160,200,.35);stroke:rgba(255,255,255,.15);stroke-width:2.2;stroke-linejoin:round;cursor:pointer;transition:fill .2s ease,filter .2s ease,stroke .2s ease}
+		.bm-muscle:hover{fill:rgba(8,145,178,.5);filter:drop-shadow(0 0 6px rgba(8,145,178,.4))}
+		.bm-muscle.selected{fill:rgba(8,145,178,.65);stroke:var(--primary);stroke-width:2;filter:drop-shadow(0 0 8px rgba(8,145,178,.5))}
+		.bm-muscle.selected:hover{fill:rgba(8,145,178,.75)}
+		.bm-detail-line{fill:none;stroke:rgba(255,255,255,.08);stroke-width:.6;pointer-events:none}
+		.bm-tooltip{position:absolute;background:rgba(15,23,42,.92);color:#fff;padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:500;pointer-events:none;z-index:100;white-space:nowrap;opacity:0;transition:opacity .15s;transform:translate(-50%,-100%);margin-top:-8px}
+		.bm-tooltip.show{opacity:1}
+		.bm-side-panel{display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
+		.bm-info-panel{background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden}
+		.bm-info-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px}
+		.bm-info-body{padding:1rem;flex:1;overflow-y:auto;max-height:280px}
+		.bm-info-placeholder{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem .75rem;color:rgba(255,255,255,.3)}
+		.bm-info-placeholder i{font-size:2rem;margin-bottom:.5rem}
+		.bm-info-placeholder p{font-size:.82rem;line-height:1.5}
+		.bm-info-detail{display:none}
+		.bm-info-detail.visible{display:block;animation:bmFadeIn .3s}
+		.bm-part-icon{width:36px;height:36px;border-radius:8px;background:rgba(8,145,178,.15);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1rem;margin-bottom:.5rem}
+		.bm-part-name{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:2px}
+		.bm-part-region{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+		.bm-info-section{margin-bottom:.75rem}
+		.bm-info-section-title{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;display:flex;align-items:center;gap:5px}
+		.bm-info-section-title i{font-size:.6rem;color:var(--primary)}
+		.bm-info-desc{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.6}
+		.bm-causes-list,.bm-symptoms-list{list-style:none;padding:0;margin:0}
+		.bm-causes-list li,.bm-symptoms-list li{display:flex;align-items:center;gap:6px;padding:.35rem .5rem;font-size:.76rem;color:rgba(255,255,255,.6);background:rgba(255,255,255,.04);border-radius:6px;margin-bottom:3px}
+		.bm-causes-list li:hover{background:rgba(8,145,178,.1);color:var(--primary)}
+		.bm-causes-list li i{color:#f59e0b;font-size:.6rem;flex-shrink:0}
+		.bm-symptoms-list li i{color:#10b981;font-size:.6rem;flex-shrink:0}
+		.bm-selected-panel{background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:.75rem 1rem}
+		.bm-selected-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+		.bm-selected-header h4{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);margin:0}
+		.bm-selected-count{background:var(--primary);color:#fff;font-size:.65rem;font-weight:600;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center}
+		.bm-btn-clear{font-size:.72rem;color:#ef4444;background:none;border:none;cursor:pointer;font-weight:500;padding:3px 6px;border-radius:4px;transition:background .2s}
+		.bm-btn-clear:hover{background:rgba(239,68,68,.1)}
+		.bm-selected-tags{display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-bottom:.5rem}
+		.bm-selected-tag{display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(8,145,178,.15);color:var(--primary);border-radius:20px;font-size:.73rem;font-weight:500;cursor:pointer;animation:bmTagPop .25s ease;transition:all .2s}
+		@keyframes bmTagPop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+		.bm-selected-tag:hover{background:var(--primary);color:#fff}
+		.bm-selected-tag .tag-remove{font-size:.55rem}
+		.bm-empty-selection{color:rgba(255,255,255,.3);font-size:.78rem;font-style:italic}
+		.bm-submit-row{display:flex;align-items:center;gap:.75rem}
+		.bm-btn-submit{display:inline-flex;align-items:center;gap:7px;padding:.55rem 1.2rem;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+		.bm-btn-submit:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,145,178,.3)}
+		.bm-btn-submit:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.3);cursor:not-allowed;transform:none;box-shadow:none}
+		.bm-submit-hint{font-size:.75rem;color:rgba(255,255,255,.3)}
+		.body-selector-btn{width:46px;height:46px;border-radius:14px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0}
+		.body-selector-btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(16,185,129,.4)}
+		@media(max-width:900px){.body-modal-body{grid-template-columns:1fr}.body-modal{height:95vh;max-height:none}}
 	</style>
 </head>
 
@@ -1375,6 +1444,9 @@
 						<input id="chat-input" class="chat-input" type="text" placeholder="Describe your symptoms..."
 							autocomplete="off">
 					</div>
+					<button class="body-selector-btn" id="body-selector-btn" title="Open Body Selector">
+						<i class="fas fa-person"></i>
+					</button>
 					<button class="send-btn" id="send-btn" title="Send message">
 						<i class="fas fa-paper-plane"></i>
 					</button>
@@ -1451,6 +1523,163 @@
 					Press <kbd>Enter</kbd> to send — <kbd>/</kbd> to focus input
 				</div>
 			</aside>
+		</div>
+	</div>
+
+	<!-- ===== BODY SELECTOR MODAL OVERLAY ===== -->
+	<div class="body-modal-overlay" id="bodyModalOverlay">
+		<div class="body-modal">
+			<div class="body-modal-header">
+				<h3><i class="fas fa-person"></i> Body Symptom Selector</h3>
+				<button class="body-modal-close" id="bodyModalClose"><i class="fas fa-times"></i></button>
+			</div>
+			<div class="body-modal-body">
+				<!-- SVG Panel -->
+				<div class="bm-svg-panel">
+					<div class="bm-view-toggle">
+						<button class="bm-view-btn active" data-view="front"><i class="fas fa-person"></i> Front</button>
+						<button class="bm-view-btn" data-view="back"><i class="fas fa-person-walking-arrow-loop-left"></i> Back</button>
+					</div>
+					<div class="bm-svg-wrapper">
+						<div class="bm-tooltip" id="bmTooltip"></div>
+						<!-- FRONT VIEW -->
+						<div class="bm-body-view active" id="bmFrontView">
+							<svg viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg">
+								<polygon class="bm-muscle" data-name="Head" points="200,16 224,24 232,48 226,72 200,80 174,72 168,48 176,24"/>
+								<polygon class="bm-muscle" data-name="Neck" points="188,80 212,80 216,90 218,100 182,100 184,90"/>
+								<polygon class="bm-muscle" data-name="Left Trapezius" points="218,100 240,94 268,98 296,110 282,122 258,118 238,112 218,107"/>
+								<polygon class="bm-muscle" data-name="Right Trapezius" points="182,100 160,94 132,98 104,110 118,122 142,118 162,112 182,107"/>
+								<polygon class="bm-muscle" data-name="Left Deltoid" points="296,110 318,102 340,114 344,136 336,156 318,162 304,148 296,130"/>
+								<polygon class="bm-muscle" data-name="Right Deltoid" points="104,110 82,102 60,114 56,136 64,156 82,162 96,148 104,130"/>
+								<polygon class="bm-muscle" data-name="Left Pectoral" points="258,118 218,107 200,112 200,190 218,198 252,192 276,176 286,152 282,122"/>
+								<polygon class="bm-muscle" data-name="Right Pectoral" points="142,118 182,107 200,112 200,190 182,198 148,192 124,176 114,152 118,122"/>
+								<polygon class="bm-muscle" data-name="Left Bicep" points="318,162 336,156 342,178 344,204 340,232 334,248 320,252 308,242 304,222 302,196 306,170"/>
+								<polygon class="bm-muscle" data-name="Right Bicep" points="82,162 64,156 58,178 56,204 60,232 66,248 80,252 92,242 96,222 98,196 94,170"/>
+								<polygon class="bm-muscle" data-name="Left Forearm" points="334,252 344,254 352,280 356,312 354,342 348,358 336,362 326,354 322,334 320,308 322,280 326,260"/>
+								<polygon class="bm-muscle" data-name="Right Forearm" points="66,252 56,254 48,280 44,312 46,342 52,358 64,362 74,354 78,334 80,308 78,280 74,260"/>
+								<polygon class="bm-muscle" data-name="Left Hand" points="348,362 356,366 362,388 360,412 354,422 340,426 332,414 330,394 336,372"/>
+								<polygon class="bm-muscle" data-name="Right Hand" points="52,362 44,366 38,388 40,412 46,422 60,426 68,414 70,394 64,372"/>
+								<polygon class="bm-muscle" data-name="Upper Abdominals" points="200,190 218,198 218,240 200,248 182,240 182,198"/>
+								<polygon class="bm-muscle" data-name="Lower Abdominals" points="200,248 218,240 218,282 200,290 182,282 182,240"/>
+								<polygon class="bm-muscle" data-name="Left Oblique" points="252,192 218,198 218,282 230,288 254,280 266,258 270,234 272,212 268,196"/>
+								<polygon class="bm-muscle" data-name="Right Oblique" points="148,192 182,198 182,282 170,288 146,280 134,258 130,234 128,212 132,196"/>
+								<polygon class="bm-muscle" data-name="Hip / Pelvis" points="230,288 218,282 200,290 182,282 170,288 158,308 154,332 158,355 170,370 200,378 230,370 242,355 246,332 242,308"/>
+								<polygon class="bm-muscle" data-name="Left Quadricep" points="230,370 242,355 246,382 244,418 240,452 234,480 226,502 218,510 214,498 218,466 222,434 225,404 228,382"/>
+								<polygon class="bm-muscle" data-name="Left Inner Thigh" points="218,374 228,382 225,404 222,434 218,466 214,498 208,506 202,492 200,462 200,428 200,398 200,378 210,374"/>
+								<polygon class="bm-muscle" data-name="Right Quadricep" points="170,370 158,355 154,382 156,418 160,452 166,480 174,502 182,510 186,498 182,466 178,434 175,404 172,382"/>
+								<polygon class="bm-muscle" data-name="Right Inner Thigh" points="182,374 172,382 175,404 178,434 182,466 186,498 192,506 198,492 200,462 200,428 200,398 200,378 190,374"/>
+								<polygon class="bm-muscle" data-name="Left Knee" points="226,512 234,508 240,520 238,534 228,540 214,540 208,534 210,520 214,512"/>
+								<polygon class="bm-muscle" data-name="Right Knee" points="174,512 166,508 160,520 162,534 172,540 186,540 192,534 190,520 186,512"/>
+								<polygon class="bm-muscle" data-name="Left Shin" points="214,542 228,542 232,560 232,588 230,614 226,636 220,652 214,656 208,650 204,632 204,608 204,580 206,558"/>
+								<polygon class="bm-muscle" data-name="Left Calf" points="228,542 240,542 246,562 248,592 246,618 242,640 234,656 228,660 220,652 226,636 230,614 232,588 232,560"/>
+								<polygon class="bm-muscle" data-name="Right Shin" points="186,542 172,542 168,560 168,588 170,614 174,636 180,652 186,656 192,650 196,632 196,608 196,580 194,558"/>
+								<polygon class="bm-muscle" data-name="Right Calf" points="172,542 160,542 154,562 152,592 154,618 158,640 166,656 172,660 180,652 174,636 170,614 168,588 168,560"/>
+								<polygon class="bm-muscle" data-name="Left Foot" points="214,660 234,660 240,670 242,686 238,696 222,700 210,696 206,686 208,672"/>
+								<polygon class="bm-muscle" data-name="Right Foot" points="186,660 166,660 160,670 158,686 162,696 178,700 190,696 194,686 192,672"/>
+								<line class="bm-detail-line" x1="200" y1="194" x2="200" y2="286"/>
+								<line class="bm-detail-line" x1="184" y1="212" x2="216" y2="212"/>
+								<line class="bm-detail-line" x1="184" y1="228" x2="216" y2="228"/>
+								<line class="bm-detail-line" x1="184" y1="258" x2="216" y2="258"/>
+								<line class="bm-detail-line" x1="184" y1="272" x2="216" y2="272"/>
+								<line class="bm-detail-line" x1="200" y1="296" x2="190" y2="360"/>
+								<line class="bm-detail-line" x1="200" y1="296" x2="210" y2="360"/>
+								<line class="bm-detail-line" x1="230" y1="380" x2="220" y2="500"/>
+								<line class="bm-detail-line" x1="170" y1="380" x2="180" y2="500"/>
+							</svg>
+						</div>
+						<!-- BACK VIEW -->
+						<div class="bm-body-view" id="bmBackView">
+							<svg viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg">
+								<polygon class="bm-muscle" data-name="Head (Back)" points="200,16 224,24 232,48 226,72 200,80 174,72 168,48 176,24"/>
+								<polygon class="bm-muscle" data-name="Neck (Back)" points="188,80 212,80 216,90 218,100 182,100 184,90"/>
+								<polygon class="bm-muscle" data-name="Left Trapezius" points="218,100 242,94 272,97 298,110 284,124 260,118 238,112 218,107"/>
+								<polygon class="bm-muscle" data-name="Right Trapezius" points="182,100 158,94 128,97 102,110 116,124 140,118 162,112 182,107"/>
+								<polygon class="bm-muscle" data-name="Left Rear Deltoid" points="298,110 320,102 340,114 344,136 336,156 318,162 304,148 296,130 296,114"/>
+								<polygon class="bm-muscle" data-name="Right Rear Deltoid" points="102,110 80,102 60,114 56,136 64,156 82,162 96,148 104,130 104,114"/>
+								<polygon class="bm-muscle" data-name="Left Upper Back" points="260,118 218,107 200,112 200,162 220,168 252,162 274,148 282,132 282,122"/>
+								<polygon class="bm-muscle" data-name="Right Upper Back" points="140,118 182,107 200,112 200,162 180,168 148,162 126,148 118,132 118,122"/>
+								<polygon class="bm-muscle" data-name="Spine / Mid Back" points="200,162 220,168 220,218 216,252 210,272 200,276 190,272 184,252 180,218 180,168"/>
+								<polygon class="bm-muscle" data-name="Left Latissimus Dorsi" points="252,162 220,168 220,218 216,252 230,274 256,264 270,242 274,218 274,196 270,172"/>
+								<polygon class="bm-muscle" data-name="Right Latissimus Dorsi" points="148,162 180,168 180,218 184,252 170,274 144,264 130,242 126,218 126,196 130,172"/>
+								<polygon class="bm-muscle" data-name="Left Tricep" points="318,162 336,156 342,178 344,204 340,232 334,248 320,252 308,242 304,222 302,196 306,170"/>
+								<polygon class="bm-muscle" data-name="Right Tricep" points="82,162 64,156 58,178 56,204 60,232 66,248 80,252 92,242 96,222 98,196 94,170"/>
+								<polygon class="bm-muscle" data-name="Left Forearm" points="334,252 344,254 352,280 356,312 354,342 348,358 336,362 326,354 322,334 320,308 322,280 326,260"/>
+								<polygon class="bm-muscle" data-name="Right Forearm" points="66,252 56,254 48,280 44,312 46,342 52,358 64,362 74,354 78,334 80,308 78,280 74,260"/>
+								<polygon class="bm-muscle" data-name="Left Hand" points="348,362 356,366 362,388 360,412 354,422 340,426 332,414 330,394 336,372"/>
+								<polygon class="bm-muscle" data-name="Right Hand" points="52,362 44,366 38,388 40,412 46,422 60,426 68,414 70,394 64,372"/>
+								<polygon class="bm-muscle" data-name="Lower Back" points="230,274 216,252 200,276 184,252 170,274 158,296 154,322 158,348 170,365 200,374 230,365 242,348 246,322 242,296"/>
+								<polygon class="bm-muscle" data-name="Left Glute" points="230,365 242,348 244,380 240,408 232,426 218,434 205,430 200,420 200,392 200,374 212,368"/>
+								<polygon class="bm-muscle" data-name="Right Glute" points="170,365 158,348 156,380 160,408 168,426 182,434 195,430 200,420 200,392 200,374 188,368"/>
+								<polygon class="bm-muscle" data-name="Left Hamstring" points="232,436 244,422 248,454 246,482 240,504 230,516 218,516 210,510 206,490 204,464 204,440 210,434 218,436"/>
+								<polygon class="bm-muscle" data-name="Right Hamstring" points="168,436 156,422 152,454 154,482 160,504 170,516 182,516 190,510 194,490 196,464 196,440 190,434 182,436"/>
+								<polygon class="bm-muscle" data-name="Left Knee (Back)" points="226,518 236,514 240,526 238,540 228,546 214,546 208,540 210,526 214,518"/>
+								<polygon class="bm-muscle" data-name="Right Knee (Back)" points="174,518 164,514 160,526 162,540 172,546 186,546 192,540 190,526 186,518"/>
+								<polygon class="bm-muscle" data-name="Left Calf" points="214,548 238,548 244,570 246,598 244,624 240,646 232,662 222,666 214,662 208,656 204,638 202,614 202,588 204,566"/>
+								<polygon class="bm-muscle" data-name="Right Calf" points="186,548 162,548 156,570 154,598 156,624 160,646 168,662 178,666 186,662 192,656 196,638 198,614 198,588 196,566"/>
+								<polygon class="bm-muscle" data-name="Left Achilles" points="222,666 232,662 236,678 234,690 226,692 218,692 216,682"/>
+								<polygon class="bm-muscle" data-name="Right Achilles" points="178,666 168,662 164,678 166,690 174,692 182,692 184,682"/>
+								<polygon class="bm-muscle" data-name="Left Foot" points="216,694 236,694 242,702 244,716 240,724 224,728 210,724 206,716 208,704"/>
+								<polygon class="bm-muscle" data-name="Right Foot" points="184,694 164,694 158,702 156,716 160,724 176,728 190,724 194,716 192,704"/>
+								<line class="bm-detail-line" x1="200" y1="112" x2="200" y2="162"/>
+								<line class="bm-detail-line" x1="200" y1="168" x2="200" y2="274"/>
+								<line class="bm-detail-line" x1="188" y1="180" x2="212" y2="180"/>
+								<line class="bm-detail-line" x1="186" y1="200" x2="214" y2="200"/>
+								<line class="bm-detail-line" x1="186" y1="220" x2="214" y2="220"/>
+								<line class="bm-detail-line" x1="188" y1="240" x2="212" y2="240"/>
+								<polyline class="bm-detail-line" points="240,126 250,132 252,148 246,158 234,162 228,156"/>
+								<polyline class="bm-detail-line" points="160,126 150,132 148,148 154,158 166,162 172,156"/>
+								<line class="bm-detail-line" x1="200" y1="378" x2="200" y2="430"/>
+								<line class="bm-detail-line" x1="228" y1="440" x2="222" y2="510"/>
+								<line class="bm-detail-line" x1="172" y1="440" x2="178" y2="510"/>
+								<line class="bm-detail-line" x1="224" y1="554" x2="224" y2="654"/>
+								<line class="bm-detail-line" x1="176" y1="554" x2="176" y2="654"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+				<!-- Side Panel: Info + Selected -->
+				<div class="bm-side-panel">
+					<div class="bm-info-panel">
+						<div class="bm-info-header"><i class="fas fa-stethoscope"></i> Body Part Details</div>
+						<div class="bm-info-body">
+							<div class="bm-info-placeholder" id="bmInfoPlaceholder">
+								<i class="fas fa-hand-pointer"></i>
+								<p>Hover or click a body part<br>to see medical info</p>
+							</div>
+							<div class="bm-info-detail" id="bmInfoDetail">
+								<div class="bm-part-icon" id="bmInfoIcon"><i class="fas fa-bone"></i></div>
+								<div class="bm-part-name" id="bmInfoName">-</div>
+								<div class="bm-part-region" id="bmInfoRegion">-</div>
+								<div class="bm-info-section">
+									<div class="bm-info-section-title"><i class="fas fa-info-circle"></i> Description</div>
+									<div class="bm-info-desc" id="bmInfoDesc">-</div>
+								</div>
+								<div class="bm-info-section">
+									<div class="bm-info-section-title"><i class="fas fa-exclamation-triangle"></i> Possible Causes</div>
+									<ul class="bm-causes-list" id="bmInfoCauses"></ul>
+								</div>
+								<div class="bm-info-section">
+									<div class="bm-info-section-title"><i class="fas fa-notes-medical"></i> Common Symptoms</div>
+									<ul class="bm-symptoms-list" id="bmInfoSymptoms"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="bm-selected-panel">
+						<div class="bm-selected-header">
+							<h4><i class="fas fa-check-circle" style="color:var(--primary)"></i> Selected Areas <span class="bm-selected-count" id="bmSelectedCount">0</span></h4>
+							<button class="bm-btn-clear" id="bmBtnClear" style="display:none"><i class="fas fa-times"></i> Clear</button>
+						</div>
+						<div class="bm-selected-tags" id="bmSelectedTags">
+							<span class="bm-empty-selection">Click body parts above to select.</span>
+						</div>
+						<div class="bm-submit-row">
+							<button class="bm-btn-submit" id="bmBtnSubmit" disabled><i class="fas fa-paper-plane"></i> Send to Chat</button>
+							<span class="bm-submit-hint" id="bmSubmitHint">Select at least one area</span>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -1995,6 +2224,205 @@
 	
 			// Focus input on load
 			chatInput.focus();
+
+		/* ═══════════════════════════════════════
+		   BODY SELECTOR MODAL LOGIC
+		   ═══════════════════════════════════════ */
+		(() => {
+			const bodyData = {
+				"Head":{region:"Cranium",icon:"fa-brain",desc:"The head encompasses the skull, brain, facial muscles, eyes, ears, sinuses, and jaw.",causes:["Tension headache","Migraine","Sinusitis","Concussion","Eye strain","Hypertension"],symptoms:["Throbbing or dull ache","Light sensitivity","Nausea / dizziness","Blurred vision"]},
+				"Head (Back)":{region:"Occipital Region",icon:"fa-brain",desc:"The back of the head includes the occipital bone and suboccipital muscles.",causes:["Tension headache","Occipital neuralgia","Cervicogenic headache","Whiplash","Stress"],symptoms:["Pain at base of skull","Sensitivity behind ears","Stiff neck","Radiating pain over scalp"]},
+				"Neck":{region:"Cervical",icon:"fa-head-side-cough",desc:"The anterior neck contains the sternocleidomastoid, scalenes, and deep cervical flexors.",causes:["Muscle strain","Cervical disc herniation","Poor posture","Whiplash","Thyroid disorder"],symptoms:["Stiffness","Radiating pain to shoulder","Numbness in arms","Difficulty turning head"]},
+				"Neck (Back)":{region:"Posterior Cervical",icon:"fa-head-side-cough",desc:"Posterior neck muscles include upper trapezius, splenius, and semispinalis.",causes:["Text neck / forward head posture","Cervical spondylosis","Muscle spasm","Facet joint irritation"],symptoms:["Stiffness at base of skull","Pain on looking up","Headache","Muscle knots"]},
+				"Left Trapezius":{region:"Upper Back / Shoulder",icon:"fa-arrows-up-down",desc:"The trapezius is a large triangular muscle spanning the neck, shoulders, and upper back.",causes:["Stress tension","Poor posture","Repetitive overhead movement","Nerve compression","Fibromyalgia"],symptoms:["Shoulder tightness","Muscle knots","Pain turning head","Headache from tension"]},
+				"Right Trapezius":{region:"Upper Back / Shoulder",icon:"fa-arrows-up-down",desc:"The right trapezius works bilaterally with the left to stabilize the shoulder girdle.",causes:["Mouse arm / desk posture","Carrying heavy bags","Muscle strain","Pinched nerve","Stress"],symptoms:["Shoulder tightness","Referred headache","Pain on shoulder shrug","Trigger points"]},
+				"Left Deltoid":{region:"Shoulder",icon:"fa-hand-fist",desc:"The deltoid covers the shoulder joint. The anterior head assists in forward arm elevation.",causes:["Rotator cuff injury","Impingement syndrome","Bursitis","Frozen shoulder","Tendinitis"],symptoms:["Pain lifting arm","Weakness in overhead motion","Clicking","Night pain"]},
+				"Right Deltoid":{region:"Shoulder",icon:"fa-hand-fist",desc:"The right anterior deltoid is commonly overworked in dominant-arm activities.",causes:["Rotator cuff tear","Tendinitis","AC joint injury","Bursitis","Labral tear"],symptoms:["Pain reaching overhead","Arm weakness","Shoulder instability","Swelling"]},
+				"Left Rear Deltoid":{region:"Posterior Shoulder",icon:"fa-hand-fist",desc:"The posterior deltoid extends and externally rotates the arm.",causes:["Rotator cuff strain","Posterior impingement","Teres minor injury","Muscle imbalance"],symptoms:["Pain reaching behind back","Weakness pulling","Shoulder blade pain","Popping"]},
+				"Right Rear Deltoid":{region:"Posterior Shoulder",icon:"fa-hand-fist",desc:"The right rear deltoid works with the infraspinatus and teres minor.",causes:["Overuse injury","Posterior capsule tightness","Infraspinatus strain","Poor posture"],symptoms:["Deep shoulder ache","Weakness in external rotation","Stiffness","Clicking"]},
+				"Left Pectoral":{region:"Chest",icon:"fa-heart-pulse",desc:"The pectoralis major is a large fan-shaped chest muscle.",causes:["Muscle strain","Costochondritis","Angina (referred)","Rib fracture","Acid reflux"],symptoms:["Chest tightness","Pain on pushing","Sharp pain on deep breath","Radiating to arm"]},
+				"Right Pectoral":{region:"Chest",icon:"fa-heart-pulse",desc:"The right pectoralis major mirrors the left.",causes:["Pec strain or tear","Costochondritis","Intercostal strain","Anxiety/panic","GERD"],symptoms:["Pain when pressing","Chest wall tenderness","Difficulty pushing","Bruising"]},
+				"Left Bicep":{region:"Upper Arm – Anterior",icon:"fa-dumbbell",desc:"The biceps brachii crosses both the shoulder and elbow joints.",causes:["Bicep tendinitis","Muscle strain","SLAP tear","Nerve impingement","Overuse"],symptoms:["Pain bending elbow","Weakness curling","Tenderness at shoulder","Popeye deformity (tear)"]},
+				"Right Bicep":{region:"Upper Arm – Anterior",icon:"fa-dumbbell",desc:"The right bicep is typically the dominant arm's primary flexor.",causes:["Distal bicep tendinitis","Muscle tear","Referred shoulder pain","Repetitive strain"],symptoms:["Elbow anterior pain","Weakness turning doorknob","Swelling","Cramping"]},
+				"Left Tricep":{region:"Upper Arm – Posterior",icon:"fa-dumbbell",desc:"The triceps brachii is the primary elbow extensor.",causes:["Tricep tendinitis","Muscle strain","Olecranon bursitis","Nerve entrapment"],symptoms:["Pain straightening arm","Elbow posterior ache","Weakness pushing","Swelling at elbow"]},
+				"Right Tricep":{region:"Upper Arm – Posterior",icon:"fa-dumbbell",desc:"The right tricep handles much of the pushing and extending work.",causes:["Overuse strain","Tendon inflammation","Radial nerve compression","Elbow hyperextension"],symptoms:["Pain during push-ups","Elbow stiffness","Weakness extending","Tingling in forearm"]},
+				"Upper Abdominals":{region:"Core – Upper",icon:"fa-shield-halved",desc:"The upper rectus abdominis flexes the trunk and compresses the abdominal cavity.",causes:["Muscle strain","Acid reflux/GERD","Gastritis","Hiatal hernia","Costochondritis"],symptoms:["Upper belly pain","Pain on crunching","Bloating","Difficulty bending forward"]},
+				"Lower Abdominals":{region:"Core – Lower",icon:"fa-shield-halved",desc:"The lower rectus abdominis stabilizes the pelvis and controls pelvic tilt.",causes:["Muscle strain","Appendicitis","IBS","Hernia","Urinary tract infection"],symptoms:["Lower belly pain","Pain on leg raises","Cramping","Bloating"]},
+				"Left Oblique":{region:"Core – Lateral",icon:"fa-rotate",desc:"The external and internal obliques enable trunk rotation and lateral flexion.",causes:["Side strain","Intercostal strain","Kidney stones (referred)","Muscle spasm","Hernia"],symptoms:["Pain twisting","Side stitch","Pain on coughing/sneezing","Flank tenderness"]},
+				"Right Oblique":{region:"Core – Lateral",icon:"fa-rotate",desc:"The right obliques produce rotational force for trunk rotation.",causes:["Side strain","Gallbladder pain (referred)","Muscle tear","Appendicitis (referred)"],symptoms:["Right flank pain","Pain on rotation","Tenderness on palpation","Cramping"]},
+				"Left Forearm":{region:"Forearm",icon:"fa-hand",desc:"The forearm contains flexors and extensors controlling wrist and finger movement.",causes:["Carpal tunnel (radiating)","Tennis elbow","Forearm splints","Fracture","Nerve entrapment"],symptoms:["Aching along forearm","Weak grip","Tingling in fingers","Pain twisting wrist"]},
+				"Right Forearm":{region:"Forearm",icon:"fa-hand",desc:"The right forearm handles most gripping and writing tasks.",causes:["Lateral epicondylitis","Medial epicondylitis","Carpal tunnel","Tendinitis","Compartment syndrome"],symptoms:["Pain gripping","Burning forearm","Tightness","Numbness in hand"]},
+				"Left Hand":{region:"Extremity",icon:"fa-hand",desc:"The hand has 27 bones, intrinsic muscles, and over 30 articulations.",causes:["Carpal tunnel","Arthritis","Trigger finger","Ganglion cyst","Raynaud's disease"],symptoms:["Numbness/tingling","Finger stiffness","Weak grip","Morning pain"]},
+				"Right Hand":{region:"Extremity",icon:"fa-hand",desc:"The dominant hand is susceptible to repetitive stress injuries.",causes:["Carpal tunnel","De Quervain's","Osteoarthritis","Dupuytren's contracture","Fracture"],symptoms:["Pain writing/typing","Swollen joints","Difficulty gripping","Night tingling"]},
+				"Hip / Pelvis":{region:"Hip / Core",icon:"fa-bone",desc:"The pelvic girdle connects the spine to the legs.",causes:["Hip flexor strain","Bursitis","Labral tear","Sciatica","Hernia","Pelvic floor dysfunction"],symptoms:["Groin pain","Hip stiffness","Pain climbing stairs","Lower abdominal discomfort"]},
+				"Left Quadricep":{region:"Anterior Thigh",icon:"fa-person-walking",desc:"The quadriceps is the strongest muscle group in the body.",causes:["Quad strain","Patellar tendinitis","Contusion","Referred hip pain","Femoral nerve issue"],symptoms:["Pain walking/running","Weakness going upstairs","Swelling","Cramping"]},
+				"Right Quadricep":{region:"Anterior Thigh",icon:"fa-person-walking",desc:"The right quadricep bears tremendous load during running, jumping, and squatting.",causes:["Muscle strain","Patellofemoral syndrome","IT band friction","Contusion","Stress fracture"],symptoms:["Thigh front pain","Knee ache","Weakness standing from sitting","Bruising"]},
+				"Left Inner Thigh":{region:"Medial Thigh",icon:"fa-person-walking",desc:"The adductor group pulls the legs together and stabilizes the pelvis.",causes:["Groin strain","Adductor tendinitis","Sports hernia","Hip joint referred pain"],symptoms:["Inner thigh pain","Pain spreading legs","Groin tenderness","Pain running"]},
+				"Right Inner Thigh":{region:"Medial Thigh",icon:"fa-person-walking",desc:"The right adductors are frequently strained in sports requiring direction changes.",causes:["Adductor strain","Osteitis pubis","Obturator nerve entrapment","Hip pathology"],symptoms:["Groin pain on movement","Inner thigh tenderness","Weakness pulling leg in","Stiffness"]},
+				"Left Knee":{region:"Joint",icon:"fa-bone",desc:"The knee is the body's largest synovial joint.",causes:["ACL/MCL tear","Meniscus tear","Osteoarthritis","Patellar tendinitis","Bursitis"],symptoms:["Pain bending/extending","Swelling","Locking sensation","Instability"]},
+				"Right Knee":{region:"Joint",icon:"fa-bone",desc:"The right knee handles daily stress from walking, running, and lifting.",causes:["Runner's knee","Ligament sprain","Cartilage damage","Gout","Patellar dislocation"],symptoms:["Stair pain","Popping/crunching","Stiffness after rest","Visible swelling"]},
+				"Left Knee (Back)":{region:"Posterior Knee",icon:"fa-bone",desc:"The posterior knee includes the popliteal fossa, hamstring insertions, and gastrocnemius origins.",causes:["Baker's cyst","Hamstring tendinitis","PCL injury","DVT","Popliteal artery entrapment"],symptoms:["Swelling behind knee","Pain straightening leg","Calf tightness","Warmth/redness"]},
+				"Right Knee (Back)":{region:"Posterior Knee",icon:"fa-bone",desc:"The right posterior knee is vulnerable to overuse injuries.",causes:["Baker's cyst","Hamstring strain","PCL sprain","Meniscal cyst","Nerve entrapment"],symptoms:["Fullness behind knee","Pain on full extension","Clicking","Night aching"]},
+				"Left Shin":{region:"Anterior Lower Leg",icon:"fa-shoe-prints",desc:"The tibialis anterior runs along the shin and dorsiflexes the foot.",causes:["Shin splints","Stress fracture","Compartment syndrome","Tibialis anterior tendinitis"],symptoms:["Pain along shin bone","Aching during running","Swelling","Pain on dorsiflexion"]},
+				"Right Shin":{region:"Anterior Lower Leg",icon:"fa-shoe-prints",desc:"The right shin area is commonly affected by overuse in runners.",causes:["Shin splints","Stress fracture","Exertional compartment syndrome","Periostitis"],symptoms:["Activity-related shin pain","Tenderness on bone","Mild swelling","Pain at start of exercise"]},
+				"Left Calf":{region:"Posterior Lower Leg",icon:"fa-shoe-prints",desc:"The gastrocnemius and soleus form the calf, powering plantarflexion.",causes:["Calf strain","DVT","Achilles tendinitis","Muscle cramp","Peripheral artery disease"],symptoms:["Calf tightness","Pain on tiptoe","Swelling","Sudden sharp pain (strain)"]},
+				"Right Calf":{region:"Posterior Lower Leg",icon:"fa-shoe-prints",desc:"The right calf muscles undergo tremendous eccentric load during running.",causes:["Gastrocnemius tear","Soleus strain","DVT","Varicose veins","Compartment syndrome"],symptoms:["Pain walking uphill","Cramping at night","Warmth/redness (DVT)","Muscle hardness"]},
+				"Left Foot":{region:"Extremity",icon:"fa-shoe-prints",desc:"The foot has 26 bones, 33 joints, and over 100 tendons/ligaments.",causes:["Plantar fasciitis","Bunions","Flat feet","Gout","Stress fracture","Neuropathy"],symptoms:["Heel pain (morning)","Arch ache","Toe stiffness","Burning/tingling"]},
+				"Right Foot":{region:"Extremity",icon:"fa-shoe-prints",desc:"The right foot typically has the push-off role in gait.",causes:["Plantar fasciitis","Morton's neuroma","Metatarsalgia","Achilles pain","Bone spurs"],symptoms:["Ball-of-foot pain","Heel tenderness","Toe numbness","Pain barefoot"]},
+				"Left Upper Back":{region:"Posterior Thoracic",icon:"fa-arrows-up-down",desc:"The left upper back includes the rhomboids, infraspinatus, and teres major/minor.",causes:["Poor posture","Rhomboid strain","Thoracic disc herniation","Scapular winging","Referred organ pain"],symptoms:["Pain between shoulder blades","Stiffness","Burning sensation","Pain on deep breath"]},
+				"Right Upper Back":{region:"Posterior Thoracic",icon:"fa-arrows-up-down",desc:"The right upper back muscles counter the pull of the chest muscles.",causes:["Muscle strain","Thoracic outlet syndrome","Rib dysfunction","Trigger points","Scoliosis"],symptoms:["Interscapular pain","Muscle knots","Pain on arm movement","Postural ache"]},
+				"Spine / Mid Back":{region:"Thoracolumbar Spine",icon:"fa-bone",desc:"The spinal column includes thoracic and lumbar vertebrae with erector spinae muscles.",causes:["Disc herniation","Spondylosis","Muscle spasm","Compression fracture","Ankylosing spondylitis"],symptoms:["Central back pain","Stiffness","Pain bending forward","Radiating pain around ribs"]},
+				"Left Latissimus Dorsi":{region:"Mid Back – Lateral",icon:"fa-arrows-up-down",desc:"The latissimus dorsi is the widest muscle of the body.",causes:["Lat strain","Overuse in swimming/climbing","Thoracodorsal nerve injury","Muscle spasm"],symptoms:["Pain reaching overhead","Side back ache","Weakness pulling","Pain with lat stretch"]},
+				"Right Latissimus Dorsi":{region:"Mid Back – Lateral",icon:"fa-arrows-up-down",desc:"The right lat is essential for rowing, pulling, and climbing movements.",causes:["Muscle strain","Overuse injury","Referred kidney pain","Trigger points"],symptoms:["Pain pulling objects","Lower side back ache","Muscle stiffness","Weakness"]},
+				"Lower Back":{region:"Lumbar / Sacral",icon:"fa-bone",desc:"The lower back supports 80% of body weight. Low back pain affects ~80% of adults.",causes:["Muscle strain","Herniated disc","Sciatica","Spinal stenosis","Degenerative disc disease","Kidney infection"],symptoms:["Dull constant ache","Sharp pain on movement","Pain radiating to legs","Morning stiffness"]},
+				"Left Glute":{region:"Buttock",icon:"fa-person-walking",desc:"The gluteus maximus is the body's largest and most powerful muscle.",causes:["Piriformis syndrome","Sciatica","Gluteal tendinopathy","SI joint dysfunction","Bursitis"],symptoms:["Deep buttock pain","Pain sitting","Radiating leg pain","Stiffness rising from chair"]},
+				"Right Glute":{region:"Buttock",icon:"fa-person-walking",desc:"The right glute fires powerfully during single-leg stance.",causes:["Piriformis syndrome","Gluteal strain","Hip bursitis","Sacroiliac dysfunction","Referred disc pain"],symptoms:["Pain walking uphill","Sitting discomfort","Pain lying on side","Weakness in hip extension"]},
+				"Left Hamstring":{region:"Posterior Thigh",icon:"fa-person-running",desc:"The hamstrings flex the knee and extend the hip.",causes:["Hamstring strain","Sciatica","Proximal tendinopathy","Ischial bursitis","Muscle imbalance"],symptoms:["Pain bending over","Sudden sharp pain (strain)","Tightness behind thigh","Bruising"]},
+				"Right Hamstring":{region:"Posterior Thigh",icon:"fa-person-running",desc:"The right hamstrings decelerate the leg during sprinting.",causes:["Acute strain","Chronic tendinitis","Referred lumbar pain","Nerve tension","Muscle weakness"],symptoms:["Pain sprinting","Stiffness after sitting","Pain on straight leg raise","Weakness bending knee"]},
+				"Left Achilles":{region:"Posterior Ankle",icon:"fa-shoe-prints",desc:"The Achilles tendon is the thickest tendon in the body.",causes:["Achilles tendinitis","Partial tear","Bursitis","Insertional tendinopathy"],symptoms:["Heel cord pain","Stiffness in morning","Pain on calf raise","Swelling above heel"]},
+				"Right Achilles":{region:"Posterior Ankle",icon:"fa-shoe-prints",desc:"The right Achilles tendon undergoes up to 8x body weight force during running.",causes:["Tendinitis","Rupture risk","Haglund's deformity","Paratendinitis"],symptoms:["Pain at back of ankle","Morning heel stiffness","Pain climbing stairs","Tenderness on squeeze"]}
+			};
+
+			/* ── State ── */
+			const bmSelected = new Set();
+			let bmCurrentView = 'front';
+
+			/* ── DOM refs ── */
+			const bmOverlay      = document.getElementById('bodyModalOverlay');
+			const bmCloseBtn     = document.getElementById('bodyModalClose');
+			const bmOpenBtn      = document.getElementById('body-selector-btn');
+			const bmInfoPH       = document.getElementById('bmInfoPlaceholder');
+			const bmInfoDetail   = document.getElementById('bmInfoDetail');
+			const bmInfoIcon     = document.getElementById('bmInfoIcon');
+			const bmInfoName     = document.getElementById('bmInfoName');
+			const bmInfoRegion   = document.getElementById('bmInfoRegion');
+			const bmInfoDesc     = document.getElementById('bmInfoDesc');
+			const bmInfoCauses   = document.getElementById('bmInfoCauses');
+			const bmInfoSymptoms = document.getElementById('bmInfoSymptoms');
+			const bmTagsEl       = document.getElementById('bmSelectedTags');
+			const bmCountEl      = document.getElementById('bmSelectedCount');
+			const bmClearBtn     = document.getElementById('bmBtnClear');
+			const bmSubmitBtn    = document.getElementById('bmBtnSubmit');
+			const bmHintEl       = document.getElementById('bmSubmitHint');
+			const bmTooltip      = document.getElementById('bmTooltip');
+
+			/* ── Open / Close ── */
+			bmOpenBtn.addEventListener('click', () => { bmOverlay.classList.add('active'); });
+			bmCloseBtn.addEventListener('click', () => { bmOverlay.classList.remove('active'); });
+			bmOverlay.addEventListener('click', e => { if (e.target === bmOverlay) bmOverlay.classList.remove('active'); });
+
+			/* ── View Toggle ── */
+			document.querySelectorAll('.bm-view-btn').forEach(btn => {
+				btn.addEventListener('click', () => {
+					document.querySelectorAll('.bm-view-btn').forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+					bmCurrentView = btn.dataset.view;
+					document.querySelectorAll('.bm-body-view').forEach(v => v.classList.remove('active'));
+					document.getElementById(bmCurrentView === 'front' ? 'bmFrontView' : 'bmBackView').classList.add('active');
+					bmSyncVisuals();
+				});
+			});
+
+			/* ── Show Info ── */
+			function bmShowInfo(name) {
+				const d = bodyData[name];
+				if (!d) return;
+				bmInfoPH.style.display = 'none';
+				bmInfoDetail.classList.add('visible');
+				bmInfoIcon.innerHTML = '<i class="fas ' + (d.icon || 'fa-bone') + '"></i>';
+				bmInfoName.textContent = name;
+				bmInfoRegion.textContent = d.region;
+				bmInfoDesc.textContent = d.desc;
+				bmInfoCauses.innerHTML = d.causes.map(c => '<li><i class="fas fa-exclamation-circle"></i>' + c + '</li>').join('');
+				bmInfoSymptoms.innerHTML = d.symptoms.map(s => '<li><i class="fas fa-check"></i>' + s + '</li>').join('');
+			}
+
+			/* ── Tooltip ── */
+			function bmShowTooltip(e, name) {
+				bmTooltip.textContent = name;
+				bmTooltip.classList.add('show');
+				const rect = document.querySelector('.bm-svg-wrapper').getBoundingClientRect();
+				bmTooltip.style.left = (e.clientX - rect.left) + 'px';
+				bmTooltip.style.top = (e.clientY - rect.top - 12) + 'px';
+			}
+
+			/* ── Selection ── */
+			function bmToggleSelection(name) {
+				if (bmSelected.has(name)) bmSelected.delete(name); else bmSelected.add(name);
+				bmSyncVisuals();
+				bmRenderTags();
+			}
+
+			function bmSyncVisuals() {
+				document.querySelectorAll('.bm-muscle').forEach(el => {
+					el.classList.toggle('selected', bmSelected.has(el.dataset.name));
+				});
+			}
+
+			function bmRenderTags() {
+				const n = bmSelected.size;
+				bmCountEl.textContent = n;
+				if (n === 0) {
+					bmTagsEl.innerHTML = '<span class="bm-empty-selection">Click body parts above to select.</span>';
+					bmClearBtn.style.display = 'none';
+					bmSubmitBtn.disabled = true;
+					bmHintEl.textContent = 'Select at least one area';
+				} else {
+					let h = '';
+					bmSelected.forEach(name => {
+						h += '<span class="bm-selected-tag" data-name="'+name+'" title="Click to remove"><i class="fas fa-map-marker-alt"></i>'+name+'<i class="fas fa-times tag-remove"></i></span>';
+					});
+					bmTagsEl.innerHTML = h;
+					bmClearBtn.style.display = '';
+					bmSubmitBtn.disabled = false;
+					bmHintEl.textContent = n + ' area' + (n > 1 ? 's' : '') + ' selected';
+					bmTagsEl.querySelectorAll('.bm-selected-tag').forEach(tag => {
+						tag.addEventListener('click', () => { bmSelected.delete(tag.dataset.name); bmSyncVisuals(); bmRenderTags(); });
+					});
+				}
+			}
+
+			/* ── Muscle Events ── */
+			document.querySelectorAll('.bm-muscle').forEach(el => {
+				const name = el.dataset.name;
+				if (!name) return;
+				el.addEventListener('mouseenter', e => { bmShowInfo(name); bmShowTooltip(e, name); });
+				el.addEventListener('mousemove', e => bmShowTooltip(e, name));
+				el.addEventListener('mouseleave', () => bmTooltip.classList.remove('show'));
+				el.addEventListener('click', () => { bmToggleSelection(name); bmShowInfo(name); });
+			});
+
+			bmClearBtn.addEventListener('click', () => {
+				bmSelected.clear();
+				bmSyncVisuals();
+				bmRenderTags();
+				bmInfoPH.style.display = '';
+				bmInfoDetail.classList.remove('visible');
+			});
+
+			/* ── Submit: Insert into chat ── */
+			bmSubmitBtn.addEventListener('click', () => {
+				if (bmSelected.size === 0) return;
+				const parts = Array.from(bmSelected);
+				const allSymptoms = [];
+				parts.forEach(name => {
+					const d = bodyData[name];
+					if (d && d.symptoms) allSymptoms.push(...d.symptoms);
+				});
+				const msg = 'I am experiencing discomfort in: ' + parts.join(', ') + '. ' +
+					'Related symptoms include: ' + [...new Set(allSymptoms)].slice(0, 8).join(', ') + '.';
+				chatInput.value = msg;
+				bmOverlay.classList.remove('active');
+				// Focus input so user can review/edit the message before sending
+				chatInput.focus();
+				// Reset modal state
+				bmSelected.clear();
+				bmSyncVisuals();
+				bmRenderTags();
+				bmInfoPH.style.display = '';
+				bmInfoDetail.classList.remove('visible');
+			});
+		})();
 		</script>
 	</body>
 
