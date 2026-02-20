@@ -298,6 +298,19 @@ def health_tracker():
     return render_template('health_tracker.html', user=user)
 
 
+# ============================================
+# COMMUNITY
+# ============================================
+
+@app.route('/community')
+@auth.login_required
+def community():
+    """Community page (protected)"""
+    user_id = session.get('user_id')
+    user = db.get_user_by_id(user_id)
+    return render_template('community.html', user=user)
+
+
 @app.route('/api/health-tracker/add', methods=['POST'])
 @auth.login_required
 def add_health_entry():
