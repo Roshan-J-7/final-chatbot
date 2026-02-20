@@ -220,6 +220,172 @@
 		}
 
 		/* ═══════════════════════════════════════════
+		   LEFT SIDEBAR — CHAT HISTORY
+		   ═══════════════════════════════════════════ */
+		.new-chat-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.5rem;
+			width: 100%;
+			padding: 0.7rem 1rem;
+			margin: 1rem 0.75rem 0.75rem;
+			border-radius: var(--radius-xs);
+			border: 2px solid var(--primary);
+			background: var(--primary);
+			color: white;
+			cursor: pointer;
+			font-size: 0.88rem;
+			font-weight: 600;
+			font-family: inherit;
+			transition: all var(--transition);
+		}
+
+		.new-chat-btn:hover {
+			background: var(--primary-dark);
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+		}
+
+		.new-chat-btn i {
+			font-size: 14px;
+		}
+
+		.sidebar-section-label {
+			font-size: 0.65rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--text-muted);
+			padding: 0.5rem 0.75rem;
+			display: block;
+		}
+
+		.chat-history-scroll {
+			flex: 1;
+			overflow-y: auto;
+			padding: 0 0.75rem;
+			min-height: 150px;
+			max-height: 40%;
+		}
+
+		.chat-history-scroll::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		.chat-history-scroll::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.chat-history-scroll::-webkit-scrollbar-thumb {
+			background: var(--border);
+			border-radius: 4px;
+		}
+
+		.chat-history-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.5rem;
+			padding: 0.6rem 0.7rem;
+			margin-bottom: 0.25rem;
+			border-radius: var(--radius-xs);
+			background: transparent;
+			color: var(--text-secondary);
+			cursor: pointer;
+			font-size: 0.82rem;
+			font-weight: 500;
+			transition: all var(--transition);
+			border: 1px solid transparent;
+		}
+
+		.chat-history-item:hover {
+			background: var(--primary-soft);
+			border-color: var(--border);
+		}
+
+		.chat-history-item.active {
+			background: var(--primary-soft);
+			border-color: var(--primary);
+			color: var(--primary-dark);
+		}
+
+		.chat-history-title {
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.chat-history-delete {
+			opacity: 0;
+			width: 24px;
+			height: 24px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 4px;
+			color: var(--text-muted);
+			transition: all var(--transition);
+			flex-shrink: 0;
+		}
+
+		.chat-history-item:hover .chat-history-delete {
+			opacity: 1;
+		}
+
+		.chat-history-delete:hover {
+			background: var(--red-soft);
+			color: var(--red);
+		}
+
+		.chat-history-empty {
+			text-align: center;
+			padding: 2rem 1rem;
+			color: var(--text-muted);
+			font-size: 0.8rem;
+		}
+
+		.chat-history-empty i {
+			font-size: 2rem;
+			margin-bottom: 0.5rem;
+			opacity: 0.3;
+		}
+
+		.topics-toggle {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0.75rem 0.75rem;
+			cursor: pointer;
+			user-select: none;
+			border-top: 1px solid var(--border);
+			transition: all var(--transition);
+		}
+
+		.topics-toggle:hover {
+			background: var(--surface-soft);
+		}
+
+		.topics-toggle .toggle-icon {
+			transition: transform var(--transition);
+		}
+
+		.topics-toggle.collapsed .toggle-icon {
+			transform: rotate(-90deg);
+		}
+
+		.topics-content {
+			max-height: 500px;
+			overflow: hidden;
+			transition: max-height 0.3s ease;
+		}
+
+		.topics-content.collapsed {
+			max-height: 0;
+		}
+
+		/* ═══════════════════════════════════════════
 		   CENTER — CHAT AREA
 		   ═══════════════════════════════════════════ */
 		.chat-center {
@@ -251,6 +417,34 @@
 			border-bottom: 1px solid var(--border);
 			flex-shrink: 0;
 			z-index: 1;
+		}
+
+		.back-btn {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.5rem 0.9rem;
+			background: var(--surface-soft);
+			border: 1.5px solid var(--border);
+			border-radius: var(--radius-xs);
+			color: var(--text-secondary);
+			font-size: 0.85rem;
+			font-weight: 500;
+			font-family: inherit;
+			cursor: pointer;
+			transition: all var(--transition);
+			text-decoration: none;
+		}
+
+		.back-btn:hover {
+			background: var(--primary-soft);
+			border-color: var(--primary);
+			color: var(--primary);
+			transform: translateX(-2px);
+		}
+
+		.back-btn i {
+			font-size: 14px;
 		}
 
 		.status-left {
@@ -365,7 +559,7 @@
 		/* ── Messages ── */
 		.message {
 			display: flex;
-			gap: 0;
+			gap: 0.6rem;
 			animation: messageIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 			max-width: 100%;
 			align-items: flex-start;
@@ -402,6 +596,13 @@
 			justify-content: center;
 			font-size: 14px;
 			margin-top: 2px;
+			overflow: hidden;
+		}
+
+		.msg-avatar img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
 		}
 
 		.message.bot .msg-avatar {
@@ -958,17 +1159,39 @@
 		<!-- ═══════ MAIN LAYOUT ═══════ -->
 		<div class="layout">
 
-			<!-- ── Left Sidebar: Topics ── -->
+			<!-- ── Left Sidebar: Chat History & Topics ── -->
 			<aside class="sidebar-left">
-				<div class="sidebar-search">
-					<label>Browse Topics</label>
-					<div class="search-input-wrap">
-						<i class="fas fa-search"></i>
-						<input id="topic-search" class="search-box" type="text"
-							placeholder="Search symptoms, conditions...">
+				<!-- New Chat Button -->
+				<button class="new-chat-btn" id="new-chat-btn">
+					<i class="fas fa-plus"></i>
+					<span>New Chat</span>
+				</button>
+
+				<!-- Chat History Section -->
+				<label class="sidebar-section-label">Chat History</label>
+				<div class="chat-history-scroll" id="chat-history-list">
+					<div class="chat-history-empty">
+						<i class="fas fa-comments"></i>
+						<p>No saved chats yet</p>
 					</div>
 				</div>
-				<div class="topic-scroll" id="topic-list">
+
+				<!-- Topics Toggle -->
+				<div class="topics-toggle" id="topics-toggle">
+					<label class="sidebar-section-label" style="margin: 0; padding: 0;">Browse Topics</label>
+					<i class="fas fa-chevron-down toggle-icon"></i>
+				</div>
+
+				<!-- Topics Content (Collapsible) -->
+				<div class="topics-content" id="topics-content">
+					<div class="sidebar-search" style="padding-top: 0.5rem;">
+						<div class="search-input-wrap">
+							<i class="fas fa-search"></i>
+							<input id="topic-search" class="search-box" type="text"
+								placeholder="Search symptoms, conditions...">
+						</div>
+					</div>
+					<div class="topic-scroll" id="topic-list">
 					<div class="topic-group-label">Body Systems</div>
 					<button class="topic-btn" data-prompt="How does the heart work?"><i class="fas fa-heartbeat"></i>
 						Heart & Circulation</button>
@@ -1064,12 +1287,17 @@
 							class="fas fa-hospital"></i> Hospital Stay</button>
 					<button class="topic-btn" data-prompt="Should I go to ER or urgent care?"><i
 							class="fas fa-truck-medical"></i> ER vs Urgent Care</button>
+					</div>
 				</div>
 			</aside>
 
 			<!-- ── Center: Chat ── -->
 			<main class="chat-center">
 				<div class="chat-status-bar">
+					<button class="back-btn" id="back-btn" onclick="navigateBack()">
+						<i class="fas fa-arrow-left"></i>
+						<span>Back</span>
+					</button>
 					<div class="status-left">
 						<div class="status-avatar"><i class="fas fa-user-doctor"></i></div>
 						<div class="status-info">
@@ -1230,6 +1458,10 @@
 	     JAVASCRIPT — All chatbot logic preserved
 	     ═══════════════════════════════════════════ -->
 	<script>
+		// User profile image path from backend
+		const userProfileImage = "{{ user.profile_image_path if user and user.profile_image_path else '' }}";
+		const isAuthenticated = {% if user %}true{% else %}false{% endif %};
+
 		const chatWindow = document.getElementById('chat-window');
 		const chatInput = document.getElementById('chat-input');
 		const sendBtn = document.getElementById('send-btn');
@@ -1238,8 +1470,192 @@
 		const statTopics = document.getElementById('stat-topics');
 		const topicSearch = document.getElementById('topic-search');
 		const topicList = document.getElementById('topic-list');
+		const chatHistoryList = document.getElementById('chat-history-list');
+		const newChatBtn = document.getElementById('new-chat-btn');
+		const topicsToggle = document.getElementById('topics-toggle');
+		const topicsContent = document.getElementById('topics-content');
 
 		const messages = [];
+		let currentSessionId = null;
+		let chatSessions = [];
+
+		// ═══════════════════════════════════════════
+		// CHAT SESSION MANAGEMENT
+		// ═══════════════════════════════════════════
+
+		async function loadChatSessions() {
+			if (!isAuthenticated) return;
+			
+			try {
+				const response = await fetch('/api/chat-sessions');
+				const data = await response.json();
+				
+				if (data.success) {
+					chatSessions = data.sessions;
+					renderChatSessions();
+				}
+			} catch (error) {
+				console.error('Failed to load chat sessions:', error);
+			}
+		}
+
+		function renderChatSessions() {
+			if (chatSessions.length === 0) {
+				chatHistoryList.innerHTML = `
+					<div class="chat-history-empty">
+						<i class="fas fa-comments"></i>
+						<p>No saved chats yet</p>
+					</div>
+				`;
+				return;
+			}
+
+			chatHistoryList.innerHTML = chatSessions.map(session => `
+				<div class="chat-history-item ${session.id === currentSessionId ? 'active' : ''}" 
+					 data-session-id="${session.id}">
+					<span class="chat-history-title">${escapeHtml(session.title)}</span>
+					<button class="chat-history-delete" onclick="deleteChatSession(${session.id}, event)">
+						<i class="fas fa-trash"></i>
+					</button>
+				</div>
+			`).join('');
+
+			// Add click listeners
+			document.querySelectorAll('.chat-history-item').forEach(item => {
+				item.addEventListener('click', (e) => {
+					if (!e.target.closest('.chat-history-delete')) {
+						const sessionId = parseInt(item.getAttribute('data-session-id'));
+						loadChatSession(sessionId);
+					}
+				});
+			});
+		}
+
+		async function createNewChat() {
+			if (!isAuthenticated) {
+				// Guest mode - just clear the chat
+				clearChatWindow();
+				currentSessionId = null;
+				return;
+			}
+
+			try {
+				const response = await fetch('/api/chat-sessions', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ title: 'New Chat' })
+				});
+				const data = await response.json();
+				
+				if (data.success) {
+					currentSessionId = data.session_id;
+					clearChatWindow();
+					await loadChatSessions();
+				}
+			} catch (error) {
+				console.error('Failed to create new chat:', error);
+				// Still clear the chat even if session creation fails
+				clearChatWindow();
+				currentSessionId = null;
+			}
+		}
+
+		async function loadChatSession(sessionId) {
+			try {
+				const response = await fetch(`/api/chat-sessions/${sessionId}`);
+				const data = await response.json();
+				
+				if (data.success) {
+					currentSessionId = sessionId;
+					clearChatWindow();
+					
+					// Load messages into chat window
+					data.messages.forEach(msg => {
+						addMessage(msg.role, msg.message, false);
+					});
+					
+					renderChatSessions();
+				}
+			} catch (error) {
+				console.error('Failed to load chat session:', error);
+			}
+		}
+
+		async function deleteChatSession(sessionId, event) {
+			event.stopPropagation();
+			
+			if (!confirm('Delete this chat?')) return;
+			
+			try {
+				const response = await fetch(`/api/chat-sessions/${sessionId}`, {
+					method: 'DELETE'
+				});
+				const data = await response.json();
+				
+				if (data.success) {
+					if (currentSessionId === sessionId) {
+						currentSessionId = null;
+						clearChatWindow();
+					}
+					await loadChatSessions();
+				}
+			} catch (error) {
+				console.error('Failed to delete chat session:', error);
+			}
+		}
+
+		async function updateSessionTitle(sessionId, newTitle) {
+			try {
+				await fetch(`/api/chat-sessions/${sessionId}/title`, {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ title: newTitle })
+				});
+				await loadChatSessions();
+			} catch (error) {
+				console.error('Failed to update session title:', error);
+			}
+		}
+
+		function generateTitleFromMessage(message) {
+			const words = message.trim().split(' ').slice(0, 5).join(' ');
+			let title = words.length > 50 ? words.substring(0, 47) + '...' : words;
+			return title.charAt(0).toUpperCase() + title.slice(1);
+		}
+
+		function clearChatWindow() {
+			chatWindow.innerHTML = `
+				<div class="welcome-card">
+					<div class="welcome-header">
+						<div class="welcome-icon"><i class="fas fa-stethoscope"></i></div>
+						<div>
+							<h2>Welcome to MedAssist</h2>
+							<p>Your personal health assistant</p>
+						</div>
+					</div>
+					<div class="welcome-body">
+						I can help you understand <strong>symptoms</strong>, learn about <strong>diseases</strong>,
+						explore <strong>body systems</strong>, get <strong>nutrition</strong> advice, <strong>first
+							aid</strong> instructions, and much more. Just type your question below!
+					</div>
+					<div class="welcome-tags">
+						<span class="welcome-tag">Symptoms</span>
+						<span class="welcome-tag">Diseases</span>
+						<span class="welcome-tag">Body Systems</span>
+						<span class="welcome-tag">Nutrition</span>
+						<span class="welcome-tag">Mental Health</span>
+						<span class="welcome-tag">First Aid</span>
+						<span class="welcome-tag">Medications</span>
+					</div>
+				</div>
+			`;
+			messages.length = 0;
+			statMessages.textContent = '0';
+		}
+
+		// ═══════════════════════════════════════════
+		// CHAT FUNCTIONALITY
+		// ═══════════════════════════════════════════
 
 		function escapeHtml(text) {
 			const div = document.createElement('div');
@@ -1251,7 +1667,7 @@
 			return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 		}
 
-		function addMessage(role, text) {
+		function addMessage(role, text, saveToSession = true) {
 			const wrapper = document.createElement('div');
 			wrapper.className = `message ${role}`;
 
@@ -1261,7 +1677,15 @@
 			if (role === 'bot') {
 				avatar.innerHTML = '<i class="fas fa-user-doctor"></i>';
 			} else {
-				avatar.innerHTML = '<i class="fas fa-user"></i>';
+				// User avatar - show profile image if available
+				if (userProfileImage) {
+					const img = document.createElement('img');
+					img.src = userProfileImage;
+					img.alt = 'User';
+					avatar.appendChild(img);
+				} else {
+					avatar.innerHTML = '<i class="fas fa-user"></i>';
+				}
 			}
 
 			// Bubble + time container
@@ -1283,8 +1707,11 @@
 
 			chatWindow.appendChild(wrapper);
 			chatWindow.scrollTop = chatWindow.scrollHeight;
-			messages.push({ role, text });
-			statMessages.textContent = messages.length;
+			
+			if (saveToSession) {
+				messages.push({ role, text });
+				statMessages.textContent = messages.length;
+			}
 		}
 
 		function buildPrompt(raw) {
@@ -1311,19 +1738,38 @@
 			const prompt = buildPrompt(raw);
 			if (!prompt) return;
 
+			// Create new session if needed (authenticated user, no current session, first message)
+			if (isAuthenticated && currentSessionId === null && messages.length === 0) {
+				await createNewChat();
+			}
+
 			addMessage('user', raw);
 			chatInput.value = '';
 			typingIndicator.classList.add('active');
 			chatWindow.scrollTop = chatWindow.scrollHeight;
 
+			// Auto-generate title from first message
+			const isFirstMessage = messages.length === 1;
+
 			try {
+				const requestBody = { message: prompt };
+				if (currentSessionId) {
+					requestBody.session_id = currentSessionId;
+				}
+
 				const response = await fetch('/api/chat', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ message: prompt })
+					body: JSON.stringify(requestBody)
 				});
 				const data = await response.json();
 				addMessage('bot', data.reply || 'Sorry, I had trouble answering that.');
+
+				// Update session title after first message
+				if (isFirstMessage && currentSessionId && isAuthenticated) {
+					const newTitle = generateTitleFromMessage(raw);
+					await updateSessionTitle(currentSessionId, newTitle);
+				}
 			} catch (error) {
 				addMessage('bot', 'Sorry, I could not reach the server. Please try again.');
 			} finally {
@@ -1403,15 +1849,43 @@
 		chatInput.addEventListener('keypress', (e) => {
 			if (e.key === 'Enter') sendMessage();
 		});
-		// Removed header button listeners (export, copy, clear)
 		topicSearch.addEventListener('input', (e) => filterTopics(e.target.value));
+		newChatBtn.addEventListener('click', createNewChat);
+		
+		// Topics toggle
+		topicsToggle.addEventListener('click', () => {
+			topicsToggle.classList.toggle('collapsed');
+			topicsContent.classList.toggle('collapsed');
+		});
 
 		bindPromptButtons('.chip');
 		bindPromptButtons('.topic-btn', true);
 
-		// Focus input on load
-		chatInput.focus();
-	</script>
+		// Initialize chat sessions on page load
+		if (isAuthenticated) {
+			loadChatSessions();
+		}
+
+		// Navigate back function
+			function navigateBack() {
+				// Check if user is authenticated by checking if user object exists
+				const isAuthenticated = "{{ user }}" !== "";
+				
+				if (isAuthenticated) {
+					// Navigate to dashboard if logged in
+					window.location.href = '/dashboard';
+				} else {
+					// Navigate to home page if not logged in
+					window.location.href = '/';
+				}
+			}
+	
+			// Focus input on load
+			chatInput.focus();
+		</script>
+	</body>
+	
+	</html>
 </body>
 
 </html>

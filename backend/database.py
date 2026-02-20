@@ -47,6 +47,30 @@ def init_database():
         )
     ''')
     
+    # Create chat_sessions table for storing chat conversations
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS chat_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL DEFAULT 'New Chat',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
+    # Create chat_messages table for storing individual messages
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id INTEGER NOT NULL,
+            role TEXT NOT NULL CHECK(role IN ('user', 'bot')),
+            message TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+        )
+    ''')
+    
     conn.commit()
     conn.close()
 
@@ -262,6 +286,189 @@ def get_dashboard_stats(user_id: int) -> Dict[str, Any]:
         'recent_chats': recent_chats,
         'recent_symptoms': recent_symptoms[:5]  # Limit to 5 most recent
     }
+
+
+# ============================================
+# CHAT SESSION OPERATIONS
+# ============================================
+
+def create_chat_session(user_id: int, title: str = "New Chat") -> Optional[int]:
+    """
+    Create a new chat session
+    Returns session ID if successful, None otherwise
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'INSERT INTO chat_sessions (user_id, title) VALUES (?, ?)',
+            (user_id, title)
+        )
+        session_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return session_id
+    except sqlite3.Error:
+        return None
+
+
+def get_user_chat_sessions(user_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+    """
+    Get all chat sessions for a user
+    Returns list of session dictionaries ordered by most recent
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        '''SELECT id, title, created_at, updated_at 
+           FROM chat_sessions 
+           WHERE user_id = ? 
+           ORDER BY updated_at DESC 
+           LIMIT ?''',
+        (user_id, limit)
+    )
+    sessions = cursor.fetchall()
+    conn.close()
+    return [dict(session) for session in sessions]
+
+
+def get_chat_session(session_id: int) -> Optional[Dict[str, Any]]:
+    """
+    Get a specific chat session by ID
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM chat_sessions WHERE id = ?', (session_id,))
+    session = cursor.fetchone()
+    conn.close()
+    return dict(session) if session else None
+
+
+def update_chat_session_title(session_id: int, title: str) -> bool:
+    """
+    Update the title of a chat session
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE chat_sessions SET title = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+            (title, session_id)
+        )
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error:
+        return False
+
+
+def update_chat_session_timestamp(session_id: int) -> bool:
+    """
+    Update the updated_at timestamp of a chat session
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE chat_sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+            (session_id,)
+        )
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error:
+        return False
+
+
+def delete_chat_session(session_id: int, user_id: int) -> bool:
+    """
+    Delete a chat session (only if it belongs to the user)
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'DELETE FROM chat_sessions WHERE id = ? AND user_id = ?',
+            (session_id, user_id)
+        )
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error:
+        return False
+
+
+def save_chat_message(session_id: int, role: str, message: str) -> Optional[int]:
+    """
+    Save a message to a chat session
+    role should be 'user' or 'bot'
+    Returns message ID if successful
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'INSERT INTO chat_messages (session_id, role, message) VALUES (?, ?, ?)',
+            (session_id, role, message)
+        )
+        message_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        
+        # Update session timestamp
+        update_chat_session_timestamp(session_id)
+        
+        return message_id
+    except sqlite3.Error:
+        return None
+
+
+def get_session_messages(session_id: int) -> List[Dict[str, Any]]:
+    """
+    Get all messages for a specific session
+    Returns list of message dictionaries ordered by creation time
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        '''SELECT id, role, message, created_at 
+           FROM chat_messages 
+           WHERE session_id = ? 
+           ORDER BY created_at ASC''',
+        (session_id,)
+    )
+    messages = cursor.fetchall()
+    conn.close()
+    return [dict(msg) for msg in messages]
+
+
+def generate_chat_title(first_user_message: str) -> str:
+    """
+    Generate a chat title from the first user message
+    Takes first 5 words or 50 characters, whichever is shorter
+    """
+    if not first_user_message:
+        return "New Chat"
+    
+    # Clean the message
+    message = first_user_message.strip()
+    
+    # Take first 5 words
+    words = message.split()[:5]
+    title = ' '.join(words)
+    
+    # Limit to 50 characters
+    if len(title) > 50:
+        title = title[:47] + '...'
+    
+    # Capitalize first letter
+    if title:
+        title = title[0].upper() + title[1:]
+    
+    return title if title else "New Chat"
 
 
 # Initialize database on module import

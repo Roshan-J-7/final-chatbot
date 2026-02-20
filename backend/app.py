@@ -294,8 +294,10 @@ def chat():
     """
     Handle chat messages
     Saves to database if user is logged in
+    Supports session-based chat storage
     """
     user_msg = request.json.get('message', '')
+    session_id = request.json.get('session_id')
     
     if not user_msg:
         return jsonify({"error": "Message required"}), 400
@@ -306,12 +308,105 @@ def chat():
     # Save to database if user is logged in
     if auth.is_authenticated():
         user = auth.get_current_user()
+        
+        # If session_id is provided, save to that session
+        if session_id:
+            db.save_chat_message(session_id, 'user', user_msg)
+            db.save_chat_message(session_id, 'bot', reply)
+        
+        # Also save to legacy chat_history table
         db.save_chat(user['id'], user_msg, reply)
     
     return jsonify({
         "reply": reply,
         "timestamp": datetime.now().isoformat()
     })
+
+
+# ============================================
+# CHAT SESSION API
+# ============================================
+
+@app.route('/api/chat-sessions', methods=['GET', 'POST'])
+@auth.login_required
+def chat_sessions():
+    """
+    GET: List all chat sessions for the user
+    POST: Create a new chat session
+    """
+    user_id = session.get('user_id')
+    
+    if request.method == 'GET':
+        sessions = db.get_user_chat_sessions(user_id)
+        return jsonify({"success": True, "sessions": sessions})
+    
+    elif request.method == 'POST':
+        data = request.json or {}
+        title = data.get('title', 'New Chat')
+        
+        session_id = db.create_chat_session(user_id, title)
+        
+        if session_id:
+            return jsonify({"success": True, "session_id": session_id, "title": title})
+        else:
+            return jsonify({"success": False, "message": "Failed to create session"}), 500
+
+
+@app.route('/api/chat-sessions/<int:session_id>', methods=['GET', 'DELETE'])
+@auth.login_required
+def chat_session_detail(session_id):
+    """
+    GET: Get a specific session with all messages
+    DELETE: Delete a session
+    """
+    user_id = session.get('user_id')
+    
+    # Verify session belongs to user
+    chat_session = db.get_chat_session(session_id)
+    if not chat_session or chat_session['user_id'] != user_id:
+        return jsonify({"success": False, "message": "Session not found"}), 404
+    
+    if request.method == 'GET':
+        messages = db.get_session_messages(session_id)
+        return jsonify({
+            "success": True,
+            "session": chat_session,
+            "messages": messages
+        })
+    
+    elif request.method == 'DELETE':
+        success = db.delete_chat_session(session_id, user_id)
+        if success:
+            return jsonify({"success": True, "message": "Session deleted"})
+        else:
+            return jsonify({"success": False, "message": "Failed to delete session"}), 500
+
+
+@app.route('/api/chat-sessions/<int:session_id>/title', methods=['PUT'])
+@auth.login_required
+def update_session_title(session_id):
+    """
+    Update the title of a chat session
+    """
+    user_id = session.get('user_id')
+    
+    # Verify session belongs to user
+    chat_session = db.get_chat_session(session_id)
+    if not chat_session or chat_session['user_id'] != user_id:
+        return jsonify({"success": False, "message": "Session not found"}), 404
+    
+    data = request.json or {}
+    new_title = data.get('title', '').strip()
+    
+    if not new_title:
+        return jsonify({"success": False, "message": "Title required"}), 400
+    
+    success = db.update_chat_session_title(session_id, new_title)
+    
+    if success:
+        return jsonify({"success": True, "message": "Title updated"})
+    else:
+        return jsonify({"success": False, "message": "Failed to update title"}), 500
 
 
 # ============================================

@@ -67,15 +67,28 @@ def is_authenticated() -> bool:
 
 def get_current_user() -> dict:
     """
-    Get current user info from session
+    Get current user info from session and database
+    Returns complete user object including profile_image_path
     """
     if not is_authenticated():
         return None
     
+    # Import here to avoid circular dependency
+    import database as db
+    
+    user_id = session.get('user_id')
+    if user_id:
+        # Fetch complete user data from database
+        user = db.get_user_by_id(user_id)
+        if user:
+            return user
+    
+    # Fallback to session data if database fetch fails
     return {
         'id': session.get('user_id'),
         'name': session.get('user_name'),
-        'email': session.get('user_email')
+        'email': session.get('user_email'),
+        'profile_image_path': None
     }
 
 

@@ -152,6 +152,13 @@
             color: var(--white);
             font-size: 14px;
             font-weight: 600;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-details {
@@ -528,7 +535,11 @@
         <div class="sidebar-footer">
             <div class="user-profile">
                 <div class="user-avatar">
+                    {% if user.profile_image_path %}
+                    <img src="{{ user.profile_image_path }}" alt="Profile">
+                    {% else %}
                     <i class="fas fa-user"></i>
+                    {% endif %}
                 </div>
                 <div class="user-details">
                     <div class="user-name" id="userName">{{ user.name }}</div>
