@@ -30,6 +30,7 @@ def init_database():
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            profile_image_path TEXT DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -104,6 +105,65 @@ def get_user_by_id(user_id: int) -> Optional[Dict[str, Any]]:
     if user:
         return dict(user)
     return None
+
+
+def update_user_profile(user_id: int, name: str, email: str) -> bool:
+    """
+    Update user's name and email
+    Returns True if successful, False if email already exists
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE users SET name = ?, email = ? WHERE id = ?',
+            (name, email, user_id)
+        )
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+
+
+def update_user_password(user_id: int, hashed_password: str) -> bool:
+    """
+    Update user's password
+    Returns True if successful
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE users SET password = ? WHERE id = ?',
+            (hashed_password, user_id)
+        )
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error updating password: {e}")
+        return False
+
+
+def update_profile_image(user_id: int, image_path: str) -> bool:
+    """
+    Update user's profile image path
+    Returns True if successful
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE users SET profile_image_path = ? WHERE id = ?',
+            (image_path, user_id)
+        )
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error updating profile image: {e}")
+        return False
 
 
 # ============================================

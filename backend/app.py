@@ -1,12 +1,25 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import os
 from datetime import datetime
+from werkzeug.utils import secure_filename
 from chatbot.rule_engine import get_response
 import database as db
 import auth
 
 app = Flask(__name__)
 app.secret_key = 'medical_kiosk_secret_key_2026'
+
+# File upload configuration
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
+
+def allowed_file(filename):
+    """Check if file extension is allowed"""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ============================================
 # PUBLIC ROUTES
@@ -143,6 +156,133 @@ def dashboard_data():
             "recent_chats": stats['recent_chats']
         }
     })
+
+
+# ============================================
+# PROFILE ROUTES
+# ============================================
+
+@app.route('/profile')
+@auth.login_required
+def profile():
+    """User profile page (protected)"""
+    user_id = session.get('user_id')
+    user = db.get_user_by_id(user_id)
+    return render_template('profile.html', user=user)
+
+
+@app.route('/api/profile/update', methods=['POST'])
+@auth.login_required
+def update_profile():
+    """Update user profile information"""
+    data = request.json
+    user_id = session.get('user_id')
+    
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip()
+    
+    # Validate input
+    if not name or not email:
+        return jsonify({"success": False, "message": "Name and email are required"}), 400
+    
+    if not auth.validate_email(email):
+        return jsonify({"success": False, "message": "Invalid email format"}), 400
+    
+    # Update profile
+    success = db.update_user_profile(user_id, name, email)
+    
+    if not success:
+        return jsonify({"success": False, "message": "Email already in use"}), 409
+    
+    # Update session
+    session['user_name'] = name
+    session['user_email'] = email
+    
+    return jsonify({"success": True, "message": "Profile updated successfully"})
+
+
+@app.route('/api/profile/update-password', methods=['POST'])
+@auth.login_required
+def update_password():
+    """Update user password"""
+    data = request.json
+    user_id = session.get('user_id')
+    
+    current_password = data.get('current_password', '')
+    new_password = data.get('new_password', '')
+    confirm_password = data.get('confirm_password', '')
+    
+    # Validate input
+    if not current_password or not new_password or not confirm_password:
+        return jsonify({"success": False, "message": "All fields are required"}), 400
+    
+    if new_password != confirm_password:
+        return jsonify({"success": False, "message": "New passwords do not match"}), 400
+    
+    # Validate new password strength
+    is_valid, error_msg = auth.validate_password(new_password)
+    if not is_valid:
+        return jsonify({"success": False, "message": error_msg}), 400
+    
+    # Verify current password
+    user = db.get_user_by_id(user_id)
+    if not auth.verify_password(user['password'], current_password):
+        return jsonify({"success": False, "message": "Current password is incorrect"}), 401
+    
+    # Update password
+    hashed_password = auth.hash_password(new_password)
+    success = db.update_user_password(user_id, hashed_password)
+    
+    if success:
+        return jsonify({"success": True, "message": "Password updated successfully"})
+    else:
+        return jsonify({"success": False, "message": "Failed to update password"}), 500
+
+
+@app.route('/api/profile/upload-image', methods=['POST'])
+@auth.login_required
+def upload_profile_image():
+    """Upload profile picture"""
+    user_id = session.get('user_id')
+    
+    # Check if file is present
+    if 'profile_image' not in request.files:
+        return jsonify({"success": False, "message": "No file uploaded"}), 400
+    
+    file = request.files['profile_image']
+    
+    # Check if file is selected
+    if file.filename == '':
+        return jsonify({"success": False, "message": "No file selected"}), 400
+    
+    # Validate file type
+    if not allowed_file(file.filename):
+        return jsonify({"success": False, "message": "Invalid file type. Only JPG, JPEG, and PNG are allowed"}), 400
+    
+    # Create secure filename
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    extension = file.filename.rsplit('.', 1)[1].lower()
+    filename = f"user_{user_id}_{timestamp}.{extension}"
+    
+    # Ensure upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
+    # Save file
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+    
+    # Store relative path in database
+    relative_path = f"/static/uploads/{filename}"
+    success = db.update_profile_image(user_id, relative_path)
+    
+    if success:
+        return jsonify({
+            "success": True, 
+            "message": "Profile image uploaded successfully",
+            "image_path": relative_path
+        })
+    else:
+        return jsonify({"success": False, "message": "Failed to update profile image"}), 500
 
 
 # ============================================
