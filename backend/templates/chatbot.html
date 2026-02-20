@@ -1460,7 +1460,7 @@
 	<script>
 		// User profile image path from backend
 		const userProfileImage = "{{ user.profile_image_path if user and user.profile_image_path else '' }}";
-		const isAuthenticated = {{ 'true' if user else 'false' }};
+		const isAuthenticated = "{{ 'true' if user else 'false' }}" === "true";
 
 		const chatWindow = document.getElementById('chat-window');
 		const chatInput = document.getElementById('chat-input');
@@ -1881,8 +1881,5 @@
 			chatInput.focus();
 		</script>
 	</body>
-	
-	</html>
-</body>
 
 </html>

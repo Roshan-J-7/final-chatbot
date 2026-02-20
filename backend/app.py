@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import os
+import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from chatbot.rule_engine import get_response
 import database as db
 import auth
+import requests
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'medical_kiosk_secret_key_2026'
@@ -16,6 +22,9 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
+
+# API Keys
+CEREBRAS_API_KEY = os.getenv('CEREBRAS_API_KEY', '')
 
 def allowed_file(filename):
     """Check if file extension is allowed"""
@@ -66,7 +75,7 @@ def login():
             return jsonify({"success": False, "message": "Invalid email or password"}), 401
         
         # Verify password
-        if not auth.verify_password(user['password'], password):
+        if not auth.verify_password(user['password_hash'], password):
             return jsonify({"success": False, "message": "Invalid email or password"}), 401
         
         # Create session
@@ -226,7 +235,7 @@ def update_password():
     
     # Verify current password
     user = db.get_user_by_id(user_id)
-    if not auth.verify_password(user['password'], current_password):
+    if not auth.verify_password(user['password_hash'], current_password):
         return jsonify({"success": False, "message": "Current password is incorrect"}), 401
     
     # Update password
@@ -309,6 +318,255 @@ def community():
     user_id = session.get('user_id')
     user = db.get_user_by_id(user_id)
     return render_template('community.html', user=user)
+
+
+# ============================================
+# HEALTH REPORTING (Community Awareness)
+# ============================================
+
+def format_message_locally(description: str) -> str:
+    """
+    Local text formatter - cleans up text without AI.
+    Capitalizes sentences, adds punctuation, generates relevant hashtags.
+    """
+    text = description.strip()
+    
+    # Capitalize first letter of each sentence
+    sentences = re.split(r'([.!?]+)', text)
+    cleaned = []
+    for i, part in enumerate(sentences):
+        part = part.strip()
+        if part and not re.match(r'^[.!?]+$', part):
+            part = part[0].upper() + part[1:] if len(part) > 1 else part.upper()
+            cleaned.append(part)
+        elif part:
+            cleaned.append(part)
+    
+    text = ' '.join(cleaned) if cleaned else text.capitalize()
+    
+    # Ensure it ends with punctuation
+    if text and text[-1] not in '.!?':
+        text += '.'
+    
+    # Generate relevant hashtags based on keywords
+    hashtag_map = {
+        'water': '#CleanWater', 'drink': '#CleanWater',
+        'dengue': '#DenguePrevention', 'mosquito': '#MosquitoControl',
+        'fever': '#FeverAlert', 'malaria': '#MalariaPrevention',
+        'medicine': '#MedicineAccess', 'drug': '#MedicineAccess',
+        'doctor': '#HealthcareAccess', 'hospital': '#HealthcareAccess', 'clinic': '#HealthcareAccess',
+        'food': '#FoodSafety', 'hunger': '#FoodSecurity',
+        'pollution': '#AirQuality', 'air': '#AirQuality', 'smoke': '#AirQuality',
+        'covid': '#COVID19', 'vaccine': '#Vaccination', 'vaccination': '#Vaccination',
+        'diarrhea': '#WaterborneDisease', 'cholera': '#WaterborneDisease',
+        'child': '#ChildHealth', 'children': '#ChildHealth', 'baby': '#ChildHealth',
+        'pregnant': '#MaternalHealth', 'pregnancy': '#MaternalHealth',
+        'mental': '#MentalHealth', 'stress': '#MentalHealth', 'anxiety': '#MentalHealth',
+        'sanitation': '#Sanitation', 'toilet': '#Sanitation', 'sewage': '#Sanitation',
+    }
+    
+    desc_lower = description.lower()
+    found_hashtags = set()
+    for keyword, hashtag in hashtag_map.items():
+        if keyword in desc_lower:
+            found_hashtags.add(hashtag)
+    
+    # Always add general health hashtags
+    found_hashtags.add('#PublicHealth')
+    found_hashtags.add('#CommunityHealth')
+    
+    # Limit to 4 hashtags
+    hashtags = list(found_hashtags)[:4]
+    
+    result = f"{text}\n\n{' '.join(hashtags)}"
+    
+    # Trim to 280 characters
+    if len(result) > 280:
+        max_text_len = 280 - len('\n\n' + ' '.join(hashtags))
+        text = text[:max_text_len - 3] + '...'
+        result = f"{text}\n\n{' '.join(hashtags)}"
+    
+    return result
+
+
+def format_message_with_ai(description: str) -> tuple:
+    """
+    Use Cerebras API to format health issue description into Twitter-ready post.
+    Returns (formatted_message, ai_used) tuple.
+    Falls back to local formatting if AI is unavailable.
+    """
+    if not CEREBRAS_API_KEY:
+        return format_message_locally(description), False
+    
+    try:
+        headers = {
+            "Authorization": f"Bearer {CEREBRAS_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": "llama3.1-8b",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": """You are an AI assistant helping rural communities communicate health issues clearly and professionally to a global audience.
+
+Your task is to rewrite health messages into clear, simple, and impactful public awareness posts suitable for Twitter.
+
+Instructions:
+- Fix grammar, spelling, and improve clarity
+- Keep the core meaning intact
+- Use professional yet accessible language
+- Make it concise (under 280 characters total including hashtags)
+- Remove any personal names or sensitive information
+- Add 2-4 relevant health hashtags at the end based on the topic
+- Make it action-oriented and informative
+- Focus on public health awareness
+
+Output only the final tweet text with hashtags. Do not include explanations or quotes."""
+                },
+                {
+                    "role": "user",
+                    "content": f"Rewrite this health message:\n\n{description}"
+                }
+            ],
+            "temperature": 0.7,
+            "max_tokens": 150
+        }
+        
+        response = requests.post(
+            "https://api.cerebras.ai/v1/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            formatted_message = data['choices'][0]['message']['content'].strip()
+            # Remove quotes if AI wrapped the response
+            formatted_message = formatted_message.strip('"').strip("'")
+            return formatted_message, True
+        else:
+            print(f"Cerebras API error: {response.status_code} - {response.text}")
+            return format_message_locally(description), False
+    
+    except Exception as e:
+        print(f"Error calling Cerebras API: {e}")
+        return format_message_locally(description), False
+
+
+@app.route('/report-issue')
+@auth.login_required
+def report_issue():
+    """Health Issue Reporting page (protected)"""
+    user_id = session.get('user_id')
+    user = db.get_user_by_id(user_id)
+    return render_template('report_issue.html', user=user)
+
+
+@app.route('/api/generate-post', methods=['POST'])
+@auth.login_required
+def generate_post():
+    """Generate AI-formatted post from health issue description"""
+    try:
+        user_id = session.get('user_id')
+        
+        # Get description
+        description = request.form.get('description', '').strip()
+        if not description:
+            return jsonify({"success": False, "message": "Description is required"}), 400
+        
+        # Generate formatted message (AI or local fallback)
+        ai_message, ai_used = format_message_with_ai(description)
+        
+        # Save report to database
+        report_id = db.add_health_report(
+            user_id=user_id,
+            description=description,
+            image_path=None,
+            ai_formatted_message=ai_message
+        )
+        
+        if report_id:
+            return jsonify({
+                "success": True,
+                "report_id": report_id,
+                "formatted_message": ai_message,
+                "ai_used": ai_used
+            })
+        else:
+            return jsonify({"success": False, "message": "Failed to save report"}), 500
+    
+    except Exception as e:
+        print(f"Error generating post: {e}")
+        # Ultimate fallback - still return success with basic formatting
+        try:
+            fallback_msg = format_message_locally(description)
+            report_id = db.add_health_report(
+                user_id=session.get('user_id'),
+                description=description,
+                image_path=None,
+                ai_formatted_message=fallback_msg
+            )
+            return jsonify({
+                "success": True,
+                "report_id": report_id,
+                "formatted_message": fallback_msg,
+                "ai_used": False
+            })
+        except Exception:
+            return jsonify({"success": False, "message": "Failed to generate post. Please try again."}), 500
+
+
+@app.route('/api/post-to-twitter', methods=['POST'])
+@auth.login_required
+def post_twitter():
+    """Mark report as shared via Twitter Intent URL"""
+    try:
+        user_id = session.get('user_id')
+        data = request.json
+        
+        report_id = data.get('report_id')
+        message = data.get('message', '').strip()
+        
+        if not message:
+            return jsonify({"success": False, "message": "Message is required"}), 400
+        
+        if not report_id:
+            return jsonify({"success": False, "message": "Report ID is required"}), 400
+        
+        # Verify report belongs to user
+        report = db.get_health_report_by_id(report_id)
+        if not report or report['user_id'] != user_id:
+            return jsonify({"success": False, "message": "Unauthorized"}), 403
+        
+        # Mark as posted in database
+        db.update_health_report_twitter_post(report_id, 'intent_shared')
+        
+        return jsonify({
+            "success": True,
+            "message": "Report marked as shared"
+        })
+    
+    except Exception as e:
+        print(f"Error marking report: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route('/api/health-reports', methods=['GET'])
+@auth.login_required
+def get_health_reports():
+    """Get user's health reports"""
+    user_id = session.get('user_id')
+    limit = request.args.get('limit', type=int)
+    
+    reports = db.get_user_health_reports(user_id, limit)
+    
+    return jsonify({
+        "success": True,
+        "reports": reports
+    })
 
 
 @app.route('/api/health-tracker/add', methods=['POST'])

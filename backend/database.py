@@ -8,18 +8,44 @@ import os
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'medical_chatbot.db')
+# Database file in project root for persistence across local and hosted environments
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database.db')
 
 
 def get_db_connection():
     """Create and return a database connection"""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.execute('PRAGMA journal_mode=WAL')  # Better concurrency
+    conn.execute('PRAGMA foreign_keys=ON')   # Enforce foreign keys
     return conn
+
+
+def _migrate_password_column():
+    """Migrate old 'password' column to 'password_hash' if needed"""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    columns = [col[1] for col in cursor.fetchall()]
+    if 'password' in columns and 'password_hash' not in columns:
+        print("[DB Migration] Renaming 'password' column to 'password_hash'...")
+        cursor.execute('ALTER TABLE users RENAME COLUMN password TO password_hash')
+        conn.commit()
+        print("[DB Migration] Done.")
+    conn.close()
 
 
 def init_database():
     """Initialize database with required tables"""
+    # Migrate old DB file to new location if it exists
+    old_db = os.path.join(os.path.dirname(__file__), 'medical_chatbot.db')
+    if os.path.exists(old_db) and not os.path.exists(DB_PATH):
+        import shutil
+        print(f"[DB Migration] Moving database to project root: {DB_PATH}")
+        shutil.copy2(old_db, DB_PATH)
+        os.rename(old_db, old_db + '.bak')  # Keep backup
+        print("[DB Migration] Old database backed up as medical_chatbot.db.bak")
+
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -29,7 +55,7 @@ def init_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
             profile_image_path TEXT DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -89,8 +115,26 @@ def init_database():
         )
     ''')
     
+    # Create health_reports table for community health awareness posts
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS health_reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            description TEXT NOT NULL,
+            image_path TEXT,
+            ai_formatted_message TEXT,
+            twitter_post_id TEXT,
+            status TEXT DEFAULT 'draft' CHECK(status IN ('draft', 'posted', 'failed')),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
     conn.commit()
     conn.close()
+
+    # Migrate password column name if upgrading from old schema
+    _migrate_password_column()
 
 
 # ============================================
@@ -106,7 +150,7 @@ def create_user(name: str, email: str, hashed_password: str) -> Optional[int]:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+            'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
             (name, email, hashed_password)
         )
         conn.commit()
@@ -177,7 +221,7 @@ def update_user_password(user_id: int, hashed_password: str) -> bool:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            'UPDATE users SET password = ? WHERE id = ?',
+            'UPDATE users SET password_hash = ? WHERE id = ?',
             (hashed_password, user_id)
         )
         conn.commit()
@@ -676,6 +720,192 @@ def delete_health_entry(entry_id: int, user_id: int) -> bool:
     except sqlite3.Error as e:
         print(f"Error deleting health entry: {e}")
         return False
+
+
+# ============================================
+# HEALTH REPORTS OPERATIONS
+# ============================================
+
+def add_health_report(user_id: int, description: str, image_path: Optional[str] = None, 
+                      ai_formatted_message: Optional[str] = None) -> Optional[int]:
+    """
+    Add a new health report to the database
+    
+    Args:
+        user_id: ID of the user creating the report
+        description: Original health issue description
+        image_path: Path to uploaded image (optional)
+        ai_formatted_message: AI-formatted message (optional)
+    
+    Returns:
+        Report ID if successful, None otherwise
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            INSERT INTO health_reports (user_id, description, image_path, ai_formatted_message, status)
+            VALUES (?, ?, ?, ?, 'draft')
+        ''', (user_id, description, image_path, ai_formatted_message))
+        
+        report_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return report_id
+    except sqlite3.Error as e:
+        print(f"Error adding health report: {e}")
+        return None
+
+
+def update_health_report_twitter_post(report_id: int, twitter_post_id: str) -> bool:
+    """
+    Update health report with Twitter post ID after successful posting
+    
+    Args:
+        report_id: ID of the health report
+        twitter_post_id: Twitter post/tweet ID
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            UPDATE health_reports
+            SET twitter_post_id = ?, status = 'posted'
+            WHERE id = ?
+        ''', (twitter_post_id, report_id))
+        
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error as e:
+        print(f"Error updating Twitter post ID: {e}")
+        return False
+
+
+def update_health_report_status(report_id: int, status: str) -> bool:
+    """
+    Update health report status
+    
+    Args:
+        report_id: ID of the health report
+        status: New status ('draft', 'posted', 'failed')
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            UPDATE health_reports
+            SET status = ?
+            WHERE id = ?
+        ''', (status, report_id))
+        
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error as e:
+        print(f"Error updating report status: {e}")
+        return False
+
+
+def get_user_health_reports(user_id: int, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    """
+    Get all health reports for a specific user
+    
+    Args:
+        user_id: User ID
+        limit: Maximum number of reports to return (optional)
+    
+    Returns:
+        List of health reports as dictionaries
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        query = '''
+            SELECT id, user_id, description, image_path, ai_formatted_message, 
+                   twitter_post_id, status, created_at
+            FROM health_reports
+            WHERE user_id = ?
+            ORDER BY created_at DESC
+        '''
+        
+        if limit:
+            query += f' LIMIT {limit}'
+        
+        cursor.execute(query, (user_id,))
+        rows = cursor.fetchall()
+        conn.close()
+        
+        reports = []
+        for row in rows:
+            reports.append({
+                'id': row['id'],
+                'user_id': row['user_id'],
+                'description': row['description'],
+                'image_path': row['image_path'],
+                'ai_formatted_message': row['ai_formatted_message'],
+                'twitter_post_id': row['twitter_post_id'],
+                'status': row['status'],
+                'created_at': row['created_at']
+            })
+        
+        return reports
+    except sqlite3.Error as e:
+        print(f"Error fetching user health reports: {e}")
+        return []
+
+
+def get_health_report_by_id(report_id: int) -> Optional[Dict[str, Any]]:
+    """
+    Get a specific health report by ID
+    
+    Args:
+        report_id: Report ID
+    
+    Returns:
+        Health report as dictionary or None
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT id, user_id, description, image_path, ai_formatted_message, 
+                   twitter_post_id, status, created_at
+            FROM health_reports
+            WHERE id = ?
+        ''', (report_id,))
+        
+        row = cursor.fetchone()
+        conn.close()
+        
+        if row:
+            return {
+                'id': row['id'],
+                'user_id': row['user_id'],
+                'description': row['description'],
+                'image_path': row['image_path'],
+                'ai_formatted_message': row['ai_formatted_message'],
+                'twitter_post_id': row['twitter_post_id'],
+                'status': row['status'],
+                'created_at': row['created_at']
+            }
+        return None
+    except sqlite3.Error as e:
+        print(f"Error fetching health report: {e}")
+        return None
 
 
 # Initialize database on module import

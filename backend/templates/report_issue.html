@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Health Issue - MedAssist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0891b2;
+            --primary-dark: #0e7490;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #1A1A1A;
+            --text-gray: #666666;
+            --text-light: #8B8B8B;
+            --border: #E0E0E0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0 1.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(8, 145, 178, 0.05);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label .required {
+            color: var(--danger);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.2s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-label:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(8, 145, 178, 0.05);
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            display: none;
+            max-width: 100%;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.85rem 2rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+        }
+
+        .btn-twitter {
+            background: #1DA1F2;
+            color: var(--white);
+            font-size: 1rem;
+            padding: 1rem 2.5rem;
+        }
+
+        .btn-twitter:hover:not(:disabled) {
+            background: #1a8cd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 161, 242, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* PREVIEW SECTION */
+        .preview-section {
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-content {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-message {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .preview-message:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .char-count.warning {
+            color: var(--warning);
+        }
+
+        .char-count.danger {
+            color: var(--danger);
+        }
+
+        .preview-image {
+            margin-top: 1rem;
+        }
+
+        .preview-image img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .alert-info {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        /* LOADING SPINNER */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--white);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="logo-text">MedAssist</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="/dashboard" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="/chat" class="nav-item">
+                    <i class="fas fa-comment-medical"></i>
+                    <span>Chat</span>
+                </a>
+                <a href="/health-tracker" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Health Tracker</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Community</div>
+                <a href="/community" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Community</span>
+                </a>
+                <a href="/report-issue" class="nav-item active">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Report Issue</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Profile</div>
+                <div class="nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medication List</span>
+                </div>
+                <a href="/profile" class="nav-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>My Account</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    {% if user.profile_image_path %}
+                        <img src="{{ user.profile_image_path }}" alt="{{ user.name }}">
+                    {% else %}
+                        {{ user.name[0].upper() }}
+                    {% endif %}
+                </div>
+                <div class="user-details">
+                    <div class="user-name">{{ user.name }}</div>
+                    <div class="user-email">{{ user.email }}</div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="window.location.href='/logout'">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-bullhorn"></i>
+                Report Health Issue
+            </h1>
+            <p class="page-subtitle">Share local health concerns and raise community awareness</p>
+        </div>
+
+        <!-- Alerts -->
+        <div id="successAlert" class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span id="successMessage"></span>
+        </div>
+
+        <div id="errorAlert" class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorMessage"></span>
+        </div>
+
+        <div id="infoAlert" class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span id="infoMessage"></span>
+        </div>
+
+        <!-- Report Form -->
+        <div class="card" id="reportFormCard">
+            <h2 class="card-title">
+                <i class="fas fa-edit"></i>
+                Describe the Health Issue
+            </h2>
+
+            <form id="reportForm">
+                <div class="form-group">
+                    <label class="form-label" for="description">
+                        Health Issue Description <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        class="form-textarea" 
+                        placeholder="Describe the health issue you've observed in your community. Be specific about location, affected population, symptoms, or conditions..."
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="generateBtn">
+                    <i class="fas fa-magic"></i>
+                    Generate AI Post
+                </button>
+            </form>
+        </div>
+
+        <!-- AI Preview Section -->
+        <div class="card preview-section" id="previewCard">
+            <h2 class="card-title">
+                <i class="fas fa-eye"></i>
+                Preview & Edit
+            </h2>
+
+            <div class="preview-content">
+                <label class="form-label" for="previewMessage">
+                    AI-Generated Message (Editable)
+                </label>
+                <textarea 
+                    id="previewMessage" 
+                    class="preview-message"
+                    placeholder="AI-generated message will appear here..."
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> / 280 characters
+                </div>
+            </div>
+
+            <button class="btn btn-twitter" id="postToTwitterBtn">
+                <i class="fab fa-twitter"></i>
+                Post to Twitter
+            </button>
+        </div>
+    </main>
+
+    <script>
+        let currentReportId = null;
+
+        // Character count
+        const previewMessage = document.getElementById('previewMessage');
+        const charCount = document.getElementById('charCount');
+
+        previewMessage.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            charCount.classList.remove('warning', 'danger');
+            if (count > 280) {
+                charCount.classList.add('danger');
+            } else if (count > 240) {
+                charCount.classList.add('warning');
+            }
+        });
+
+        // Generate Post
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const description = document.getElementById('description').value;
+
+            if (!description.trim()) {
+                showAlert('error', 'Please enter a description');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const originalBtnHTML = generateBtn.innerHTML;
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<div class="spinner"></div> Generating...';
+
+            try {
+                const formData = new FormData();
+                formData.append('description', description);
+
+                const response = await fetch('/api/generate-post', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentReportId = data.report_id;
+
+                    // Show preview
+                    previewMessage.value = data.formatted_message;
+                    document.getElementById('previewCard').classList.add('show');
+
+                    // Update character count
+                    charCount.textContent = data.formatted_message.length;
+
+                    // Scroll to preview
+                    document.getElementById('previewCard').scrollIntoView({ behavior: 'smooth' });
+
+                    if (data.ai_used) {
+                        showAlert('success', 'AI post generated successfully! Review and edit before posting.');
+                    } else {
+                        showAlert('info', 'AI is currently unavailable. Your message has been auto-formatted. You can edit it before posting.');
+                    }
+                } else {
+                    showAlert('error', data.message || 'Failed to generate post');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'An error occurred. Please try again.');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = originalBtnHTML;
+            }
+        });
+
+        // Post to Twitter via Intent URL (FREE - no API needed)
+        document.getElementById('postToTwitterBtn').addEventListener('click', async function() {
+            const message = previewMessage.value.trim();
+
+            if (!message) {
+                showAlert('error', 'Please enter a message');
+                return;
+            }
+
+            if (message.length > 280) {
+                showAlert('error', 'Message exceeds 280 characters');
+                return;
+            }
+
+            if (!currentReportId) {
+                showAlert('error', 'No report ID found. Please generate post first.');
+                return;
+            }
+
+            // Open Twitter Intent URL in new tab
+            const tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(message);
+            window.open(tweetUrl, '_blank');
+
+            // Mark report as shared in database
+            try {
+                await fetch('/api/post-to-twitter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        report_id: currentReportId,
+                        message: message
+                    })
+                });
+            } catch (err) {
+                console.log('DB update skipped:', err);
+            }
+
+            showAlert('success', 'Twitter opened in a new tab! Click "Post" on Twitter to publish your tweet.');
+        });
+
+        // Alert helper
+        function showAlert(type, message) {
+            // Hide all alerts
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.classList.remove('show');
+            });
+
+            // Show specific alert
+            if (type === 'success') {
+                document.getElementById('successMessage').textContent = message;
+                document.getElementById('successAlert').classList.add('show');
+            } else if (type === 'error') {
+                document.getElementById('errorMessage').textContent = message;
+                document.getElementById('errorAlert').classList.add('show');
+            } else if (type === 'info') {
+                document.getElementById('infoMessage').textContent = message;
+                document.getElementById('infoAlert').classList.add('show');
+            }
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.classList.remove('show');
+                });
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

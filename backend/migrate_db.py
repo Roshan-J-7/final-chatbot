@@ -7,7 +7,7 @@ Run this once if you have an existing database
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'medical_chatbot.db')
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database.db')
 
 def migrate_database():
     """Add profile_image_path column to users table if it doesn't exist"""
