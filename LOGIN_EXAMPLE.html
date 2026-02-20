@@ -1,0 +1,217 @@
+<!-- 
+    EXAMPLE: Login Page Migration
+    
+    This shows how to convert an existing page to use the global theme system.
+    
+    BENEFITS OF USING THEME:
+    - Consistent design across all pages
+    - Easier maintenance (change once, update everywhere)
+    - Smaller file sizes (no duplicate CSS)
+    - Professional, clean code
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MedAssist</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- GLOBAL THEME - Single source of truth -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    
+    <style>
+        /* Only page-specific styles here */
+        .login-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .login-left {
+            flex: 1;
+            background-color: var(--color-primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+        }
+        
+        .login-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            background-color: var(--color-white);
+        }
+        
+        .login-illustration {
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .login-illustration i {
+            font-size: 120px;
+            color: var(--color-primary);
+            margin-bottom: var(--space-6);
+        }
+        
+        .login-form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+            color: var(--color-text-tertiary);
+            font-size: 0.875rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--color-border);
+        }
+        
+        @media (max-width: 768px) {
+            .login-layout {
+                flex-direction: column;
+            }
+            .login-left {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="login-layout">
+        
+        <!-- Left Side - Illustration -->
+        <div class="login-left">
+            <div class="login-illustration">
+                <i class="fas fa-heartbeat"></i>
+                <h2 class="mb-3">Welcome to MedAssist</h2>
+                <p class="text-secondary">
+                    Your AI-powered medical assistant for better health management
+                </p>
+            </div>
+        </div>
+        
+        <!-- Right Side - Login Form -->
+        <div class="login-right">
+            <div class="login-form-container">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="navbar-logo">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h1 class="text-primary">MedAssist</h1>
+                </div>
+                
+                <!-- Welcome Text -->
+                <div class="mb-6">
+                    <h2 class="mb-2">Sign in to your account</h2>
+                    <p class="text-secondary">Enter your credentials to continue</p>
+                </div>
+                
+                <!-- Flash Messages (if any) -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'error' if category == 'error' else 'success' }} mb-4">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Login Form -->
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email" class="form-label form-label-required">
+                            Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="you@example.com"
+                            required
+                            autofocus
+                        >
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label for="password" class="form-label">Password</label>
+                            <a href="#" class="text-small text-blue">Forgot password?</a>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+                    
+                    <!-- Remember Me -->
+                    <div class="form-check mb-6">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember me for 30 days
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-full btn-lg">
+                        Sign In
+                    </button>
+                    
+                </form>
+                
+                <!-- Divider -->
+                <div class="divider">or</div>
+                
+                <!-- Social Login (Optional) -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <button class="btn btn-secondary">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fab fa-microsoft"></i>
+                        Microsoft
+                    </button>
+                </div>
+                
+                <!-- Sign Up Link -->
+                <p class="text-center text-secondary text-small">
+                    Don't have an account? 
+                    <a href="{{ url_for('auth.signup') }}" class="text-blue text-bold">
+                        Sign up for free
+                    </a>
+                </p>
+                
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+</html>

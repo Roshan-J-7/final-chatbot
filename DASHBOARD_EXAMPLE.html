@@ -1,0 +1,404 @@
+<!-- 
+    EXAMPLE: Dashboard Page with Sidebar
+    
+    This shows a complete authenticated page layout using:
+    - Sidebar navigation
+    - Stats cards
+    - Data tables
+    - All theme components
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MedAssist</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- GLOBAL THEME -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    
+    <style>
+        /* Page-specific layout only */
+        body {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--color-bg);
+        }
+        
+        .page-container {
+            padding: var(--space-8) var(--space-6);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .stat-card-icon.blue {
+            background-color: var(--color-primary-bg);
+            color: var(--color-primary);
+        }
+        
+        .stat-card-icon.green {
+            background-color: var(--color-success-bg);
+            color: var(--color-success);
+        }
+        
+        .stat-card-icon.orange {
+            background-color: var(--color-warning-bg);
+            color: var(--color-warning);
+        }
+        
+        .stat-card-icon.red {
+            background-color: var(--color-error-bg);
+            color: var(--color-error);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <a href="/" class="navbar-brand">
+                <div class="navbar-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                MedAssist
+            </a>
+        </div>
+        
+        <!-- Sidebar Navigation -->
+        <div class="sidebar-body">
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="/dashboard" class="sidebar-nav-link active">
+                        <i class="fas fa-home sidebar-nav-icon"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/chat" class="sidebar-nav-link">
+                        <i class="fas fa-comments sidebar-nav-icon"></i>
+                        AI Chat
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/health-tracker" class="sidebar-nav-link">
+                        <i class="fas fa-heart-pulse sidebar-nav-icon"></i>
+                        Health Tracker
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/analyze-health" class="sidebar-nav-link">
+                        <i class="fas fa-chart-line sidebar-nav-icon"></i>
+                        Health Analysis
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/community" class="sidebar-nav-link">
+                        <i class="fas fa-users sidebar-nav-icon"></i>
+                        Community
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href="/profile" class="sidebar-nav-link">
+                        <i class="fas fa-user sidebar-nav-icon"></i>
+                        Profile
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-primary); color: var(--color-white); display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                    JD
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                    <p class="text-small text-bold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        John Doe
+                    </p>
+                    <p class="text-tiny text-tertiary">john@example.com</p>
+                </div>
+            </div>
+            <button class="btn btn-ghost btn-full">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+        
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="page-container">
+            
+            <!-- Page Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="mb-2">Dashboard</h1>
+                    <p class="text-secondary">
+                        Welcome back, John! Here's your health overview.
+                    </p>
+                </div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    New Appointment
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-4 gap-6 mb-8">
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-start gap-4">
+                            <div class="stat-card-icon blue">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-tertiary text-small mb-1">Total Appointments</p>
+                                <h2 class="mb-1">24</h2>
+                                <p class="text-success text-small">
+                                    <i class="fas fa-arrow-up"></i> 12% vs last month
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-start gap-4">
+                            <div class="stat-card-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-tertiary text-small mb-1">Completed</p>
+                                <h2 class="mb-1">19</h2>
+                                <p class="text-success text-small">
+                                    <i class="fas fa-arrow-up"></i> 8% increase
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-start gap-4">
+                            <div class="stat-card-icon orange">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-tertiary text-small mb-1">Pending</p>
+                                <h2 class="mb-1">5</h2>
+                                <p class="text-secondary text-small">
+                                    Awaiting review
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="flex items-start gap-4">
+                            <div class="stat-card-icon red">
+                                <i class="fas fa-heart-pulse"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-tertiary text-small mb-1">Health Score</p>
+                                <h2 class="mb-1">87</h2>
+                                <p class="text-success text-small">
+                                    <i class="fas fa-arrow-up"></i> Good health
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                
+                <!-- Recent Appointments -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="flex items-center justify-between">
+                            <h3 class="card-title">Recent Appointments</h3>
+                            <a href="/appointments" class="text-blue text-small">View All</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Doctor</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <p class="text-bold">Dr. Sarah Johnson</p>
+                                                <p class="text-tiny text-tertiary">Cardiology</p>
+                                            </div>
+                                        </td>
+                                        <td>Feb 21, 2026</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <p class="text-bold">Dr. Michael Chen</p>
+                                                <p class="text-tiny text-tertiary">General Practice</p>
+                                            </div>
+                                        </td>
+                                        <td>Feb 18, 2026</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <p class="text-bold">Dr. Emily Rodriguez</p>
+                                                <p class="text-tiny text-tertiary">Dermatology</p>
+                                            </div>
+                                        </td>
+                                        <td>Feb 25, 2026</td>
+                                        <td><span class="badge badge-warning">Upcoming</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Health Metrics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Health Metrics</h3>
+                        <p class="card-subtitle">Last 7 days average</p>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="mb-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-small">Blood Pressure</span>
+                                <span class="text-bold">120/80 mmHg</span>
+                            </div>
+                            <div style="height: 8px; background-color: var(--color-gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="width: 75%; height: 100%; background-color: var(--color-success);"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-small">Heart Rate</span>
+                                <span class="text-bold">72 bpm</span>
+                            </div>
+                            <div style="height: 8px; background-color: var(--color-gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="width: 80%; height: 100%; background-color: var(--color-success);"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-small">Sleep Quality</span>
+                                <span class="text-bold">7.5 hours</span>
+                            </div>
+                            <div style="height: 8px; background-color: var(--color-gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="width: 85%; height: 100%; background-color: var(--color-primary);"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-small">Activity Level</span>
+                                <span class="text-bold">8,432 steps</span>
+                            </div>
+                            <div style="height: 8px; background-color: var(--color-gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="width: 65%; height: 100%; background-color: var(--color-warning);"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-secondary btn-sm btn-full">
+                            View Detailed Report
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Quick Actions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="grid grid-cols-4 gap-4">
+                        
+                        <button class="card card-hover">
+                            <div class="card-body text-center">
+                                <i class="fas fa-comments text-primary" style="font-size: 2rem; margin-bottom: var(--space-3);"></i>
+                                <p class="text-small text-bold">AI Consultation</p>
+                            </div>
+                        </button>
+                        
+                        <button class="card card-hover">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar-plus text-primary" style="font-size: 2rem; margin-bottom: var(--space-3);"></i>
+                                <p class="text-small text-bold">Book Appointment</p>
+                            </div>
+                        </button>
+                        
+                        <button class="card card-hover">
+                            <div class="card-body text-center">
+                                <i class="fas fa-file-medical text-primary" style="font-size: 2rem; margin-bottom: var(--space-3);"></i>
+                                <p class="text-small text-bold">Medical Records</p>
+                            </div>
+                        </button>
+                        
+                        <button class="card card-hover">
+                            <div class="card-body text-center">
+                                <i class="fas fa-pills text-primary" style="font-size: 2rem; margin-bottom: var(--space-3);"></i>
+                                <p class="text-small text-bold">Medications</p>
+                            </div>
+                        </button>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+</body>
+</html>
