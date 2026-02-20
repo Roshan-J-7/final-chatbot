@@ -1325,7 +1325,7 @@
 						<div class="welcome-body">
 							I can help you understand <strong>symptoms</strong>, learn about <strong>diseases</strong>,
 							explore <strong>body systems</strong>, get <strong>nutrition</strong> advice, <strong>first
-								aid</strong> instructions, and much more. Just type your question below!
+								aid</strong> instructions, and much more. I remember our conversation, so feel free to ask follow-ups!
 						</div>
 						<div class="welcome-tags">
 							<span class="welcome-tag">Symptoms</span>
@@ -1457,10 +1457,31 @@
 	<!-- ═══════════════════════════════════════════
 	     JAVASCRIPT — All chatbot logic preserved
 	     ═══════════════════════════════════════════ -->
+	<!-- Markdown rendering -->
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<style>
+		/* Markdown inside bot bubbles */
+		.bubble.md-rendered h1,.bubble.md-rendered h2,.bubble.md-rendered h3{margin:0.6em 0 0.3em;line-height:1.3}
+		.bubble.md-rendered h1{font-size:1.05em}
+		.bubble.md-rendered h2{font-size:0.98em}
+		.bubble.md-rendered h3{font-size:0.92em}
+		.bubble.md-rendered p{margin:0.3em 0}
+		.bubble.md-rendered ul,.bubble.md-rendered ol{margin:0.3em 0 0.3em 1.2em;padding:0}
+		.bubble.md-rendered li{margin:0.15em 0}
+		.bubble.md-rendered strong{color:var(--primary-dark)}
+		.bubble.md-rendered code{background:var(--surface-soft);padding:1px 5px;border-radius:4px;font-size:0.85em}
+		.bubble.md-rendered pre{background:var(--surface-soft);padding:0.6em;border-radius:8px;overflow-x:auto;font-size:0.82em;margin:0.4em 0}
+		.bubble.md-rendered blockquote{border-left:3px solid var(--primary);padding-left:0.7em;margin:0.4em 0;color:var(--text-secondary)}
+		.model-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.62rem;color:var(--text-muted);margin-top:2px;opacity:0.7}
+		.model-badge i{font-size:8px;color:var(--primary)}
+	</style>
 	<script>
 		// User profile image path from backend
 		const userProfileImage = "{{ user.profile_image_path if user and user.profile_image_path else '' }}";
 		const isAuthenticated = "{{ 'true' if user else 'false' }}" === "true";
+
+		// Configure marked for safe rendering
+		marked.setOptions({ breaks: true, gfm: true });
 
 		const chatWindow = document.getElementById('chat-window');
 		const chatInput = document.getElementById('chat-input');
@@ -1476,8 +1497,11 @@
 		const topicsContent = document.getElementById('topics-content');
 
 		const messages = [];
+		// Conversation history for API context (role: user/assistant)
+		const conversationHistory = [];
 		let currentSessionId = null;
 		let chatSessions = [];
+		let isStreaming = false;
 
 		// ═══════════════════════════════════════════
 		// CHAT SESSION MANAGEMENT
@@ -1569,9 +1593,15 @@
 					currentSessionId = sessionId;
 					clearChatWindow();
 					
-					// Load messages into chat window
+					// Load messages into chat window and rebuild conversation history
 					data.messages.forEach(msg => {
 						addMessage(msg.role, msg.message, false);
+						// Rebuild conversationHistory for API context
+						if (msg.role === 'user') {
+							conversationHistory.push({ role: 'user', content: msg.message });
+						} else if (msg.role === 'bot') {
+							conversationHistory.push({ role: 'assistant', content: msg.message });
+						}
 					});
 					
 					renderChatSessions();
@@ -1630,13 +1660,13 @@
 						<div class="welcome-icon"><i class="fas fa-stethoscope"></i></div>
 						<div>
 							<h2>Welcome to MedAssist</h2>
-							<p>Your personal health assistant</p>
+							<p>AI-powered by Cerebras AI</p>
 						</div>
 					</div>
 					<div class="welcome-body">
 						I can help you understand <strong>symptoms</strong>, learn about <strong>diseases</strong>,
 						explore <strong>body systems</strong>, get <strong>nutrition</strong> advice, <strong>first
-							aid</strong> instructions, and much more. Just type your question below!
+							aid</strong> instructions, and much more. I remember our conversation, so feel free to ask follow-ups!
 					</div>
 					<div class="welcome-tags">
 						<span class="welcome-tag">Symptoms</span>
@@ -1650,6 +1680,7 @@
 				</div>
 			`;
 			messages.length = 0;
+			conversationHistory.length = 0;
 			statMessages.textContent = '0';
 		}
 
@@ -1667,7 +1698,7 @@
 			return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 		}
 
-		function addMessage(role, text, saveToSession = true) {
+		function addMessage(role, text, saveToSession = true, model = '') {
 			const wrapper = document.createElement('div');
 			wrapper.className = `message ${role}`;
 
@@ -1693,14 +1724,24 @@
 
 			const bubble = document.createElement('div');
 			bubble.className = 'bubble';
-			bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+			if (role === 'bot') {
+				// Render markdown for bot messages
+				bubble.classList.add('md-rendered');
+				bubble.innerHTML = marked.parse(text);
+			} else {
+				bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+			}
 
-			const time = document.createElement('div');
-			time.className = 'msg-time';
-			time.textContent = getTimeString();
+			const timeLine = document.createElement('div');
+			timeLine.className = 'msg-time';
+			let timeStr = getTimeString();
+			if (role === 'bot' && model) {
+				timeStr += ` · <span class="model-badge"><i class="fas fa-microchip"></i> Cerebras AI</span>`;
+			}
+			timeLine.innerHTML = timeStr;
 
 			bubbleWrap.appendChild(bubble);
-			bubbleWrap.appendChild(time);
+			bubbleWrap.appendChild(timeLine);
 
 			wrapper.appendChild(avatar);
 			wrapper.appendChild(bubbleWrap);
@@ -1711,7 +1752,15 @@
 			if (saveToSession) {
 				messages.push({ role, text });
 				statMessages.textContent = messages.length;
+				// Track conversation for API context
+				if (role === 'user') {
+					conversationHistory.push({ role: 'user', content: text });
+				} else if (role === 'bot') {
+					conversationHistory.push({ role: 'assistant', content: text });
+				}
 			}
+
+			return { wrapper, bubble, timeLine };
 		}
 
 		function buildPrompt(raw) {
@@ -1734,6 +1783,7 @@
 		}
 
 		async function sendMessage() {
+			if (isStreaming) return;
 			const raw = chatInput.value;
 			const prompt = buildPrompt(raw);
 			if (!prompt) return;
@@ -1747,23 +1797,85 @@
 			chatInput.value = '';
 			typingIndicator.classList.add('active');
 			chatWindow.scrollTop = chatWindow.scrollHeight;
+			isStreaming = true;
+			sendBtn.disabled = true;
 
 			// Auto-generate title from first message
 			const isFirstMessage = messages.length === 1;
 
 			try {
-				const requestBody = { message: prompt };
+				const requestBody = {
+					message: prompt,
+					history: conversationHistory.slice(0, -1) // exclude the just-added user msg (API adds it)
+				};
 				if (currentSessionId) {
 					requestBody.session_id = currentSessionId;
 				}
 
-				const response = await fetch('/api/chat', {
+				// Try streaming endpoint first
+				const response = await fetch('/api/chat/stream', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(requestBody)
 				});
-				const data = await response.json();
-				addMessage('bot', data.reply || 'Sorry, I had trouble answering that.');
+
+				if (response.ok && response.headers.get('content-type')?.includes('text/event-stream')) {
+					// SSE streaming
+					typingIndicator.classList.remove('active');
+
+					// Create empty bot message to fill with streamed tokens
+					const { bubble, timeLine } = addMessage('bot', '', true, '');
+					// Remove the empty assistant entry — we'll re-add the final text
+					conversationHistory.pop();
+					messages.pop();
+					statMessages.textContent = messages.length;
+
+					let fullText = '';
+					let modelName = 'Cerebras AI';
+					const reader = response.body.getReader();
+					const decoder = new TextDecoder();
+					let buffer = '';
+
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+						buffer += decoder.decode(value, { stream: true });
+						const lines = buffer.split('\n');
+						buffer = lines.pop(); // keep incomplete line
+
+						for (const line of lines) {
+							if (line.startsWith('data: ')) {
+								try {
+									const chunk = JSON.parse(line.slice(6));
+									if (chunk.token) {
+										fullText += chunk.token;
+										bubble.classList.add('md-rendered');
+										bubble.innerHTML = marked.parse(fullText);
+										chatWindow.scrollTop = chatWindow.scrollHeight;
+									}
+									if (chunk.done) {
+										modelName = chunk.model || modelName;
+									}
+								} catch (e) { /* skip bad JSON */ }
+							}
+						}
+					}
+
+					// Finalize
+					const finalText = fullText || 'Sorry, I had trouble answering that.';
+					bubble.innerHTML = marked.parse(finalText);
+					timeLine.innerHTML = getTimeString() + ` · <span class="model-badge"><i class="fas fa-microchip"></i> Cerebras AI</span>`;
+					messages.push({ role: 'bot', text: finalText });
+					conversationHistory.push({ role: 'assistant', content: finalText });
+					statMessages.textContent = messages.length;
+
+				} else {
+					// Fallback: non-streaming
+					typingIndicator.classList.remove('active');
+					const data = await response.json();
+					const model = data.model || 'rule-engine';
+					addMessage('bot', data.reply || 'Sorry, I had trouble answering that.', true, model);
+				}
 
 				// Update session title after first message
 				if (isFirstMessage && currentSessionId && isAuthenticated) {
@@ -1771,8 +1883,11 @@
 					await updateSessionTitle(currentSessionId, newTitle);
 				}
 			} catch (error) {
+				typingIndicator.classList.remove('active');
 				addMessage('bot', 'Sorry, I could not reach the server. Please try again.');
 			} finally {
+				isStreaming = false;
+				sendBtn.disabled = false;
 				typingIndicator.classList.remove('active');
 			}
 		}
@@ -1800,7 +1915,8 @@
 		function clearChat() {
 			chatWindow.innerHTML = '';
 			messages.length = 0;
-			addMessage('bot', 'Chat cleared. Ask a new health question anytime.');
+			conversationHistory.length = 0;
+			addMessage('bot', 'Chat cleared. Ask a new health question anytime.', true, 'Cerebras AI');
 		}
 
 		function bindPromptButtons(selector, increment = false) {

@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 import os
 import re
+import json
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from chatbot.rule_engine import get_response
@@ -456,6 +457,42 @@ Output only the final tweet text with hashtags. Do not include explanations or q
         return format_message_locally(description), False
 
 
+@app.route('/body-selector')
+@auth.login_required
+def body_selector():
+    """Interactive Body Symptom Selector page (protected)"""
+    user = auth.get_current_user()
+    return render_template('body_selector.html', user=user)
+
+
+@app.route('/submit_body_selection', methods=['POST'])
+@auth.login_required
+def submit_body_selection():
+    """Receive selected body parts from symptom selector"""
+    try:
+        data = request.json
+        selected_parts = data.get('selected_parts', [])
+        details = data.get('details', [])
+
+        if not selected_parts:
+            return jsonify({"success": False, "message": "No body parts selected"}), 400
+
+        # Build a symptom summary string to pre-fill chatbot
+        part_names = [d.get('name', d.get('id', '')) for d in details]
+        symptom_summary = "I have discomfort in: " + ", ".join(part_names)
+
+        return jsonify({
+            "success": True,
+            "message": f"{len(selected_parts)} area(s) received. Redirecting to chat...",
+            "redirect": f"/chat?symptoms={','.join(selected_parts)}",
+            "symptom_summary": symptom_summary
+        })
+
+    except Exception as e:
+        print(f"Error in body selection: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
 @app.route('/report-issue')
 @auth.login_required
 def report_issue():
@@ -671,40 +708,194 @@ def delete_health_entry(entry_id):
 
 
 # ============================================
-# CHATBOT API
+# CHATBOT API  (Cerebras — llama-3.3-70b)
 # ============================================
+
+MEDICAL_SYSTEM_PROMPT = """You are Dr. MedAssist, a professional medical AI assistant.
+You provide accurate, empathetic, and evidence-based health information.
+
+Guidelines:
+- Always be clear, helpful, and compassionate.
+- Use simple language; explain medical terms when used.
+- Format responses with markdown: **bold**, bullet points, headings.
+- If the user describes symptoms, suggest possible causes AND recommend seeing a doctor.
+- Never diagnose — say "This could be related to…" or "Common causes include…"
+- For emergencies (chest pain, breathing difficulty, stroke signs), urge calling emergency services immediately.
+- You can discuss medications generally but always recommend consulting a healthcare provider.
+- Keep answers focused and concise unless the user asks for detail.
+- Remember previous messages in the conversation for continuity.
+
+Model: You are powered by Cerebras Llama 3.1 8B."""
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """
-    Handle chat messages
-    Saves to database if user is logged in
-    Supports session-based chat storage
+    Handle chat messages using Cerebras API (llama-3.3-70b).
+    Falls back to rule engine if API is unavailable.
+    Maintains conversation history per session.
     """
     user_msg = request.json.get('message', '')
     session_id = request.json.get('session_id')
-    
+    history = request.json.get('history', [])  # [{role, content}, ...]
+
     if not user_msg:
         return jsonify({"error": "Message required"}), 400
-    
-    # Get bot response
-    reply = get_response(user_msg)
-    
+
+    # Build messages array for the API
+    api_messages = [{"role": "system", "content": MEDICAL_SYSTEM_PROMPT}]
+
+    # Add conversation history for context (last 20 messages max)
+    for msg in history[-20:]:
+        role = msg.get('role', 'user')
+        content = msg.get('content', '')
+        if role in ('user', 'assistant') and content:
+            api_messages.append({"role": role, "content": content})
+
+    api_messages.append({"role": "user", "content": user_msg})
+
+    reply = None
+    model_used = "rule-engine"
+
+    if CEREBRAS_API_KEY:
+        try:
+            headers = {
+                "Authorization": f"Bearer {CEREBRAS_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": "llama3.1-8b",
+                "messages": api_messages,
+                "temperature": 0.6,
+                "max_tokens": 1024,
+                "stream": False
+            }
+            resp = requests.post(
+                "https://api.cerebras.ai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=30
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                reply = data['choices'][0]['message']['content'].strip()
+                model_used = "llama3.1-8b"
+            else:
+                print(f"Cerebras API error {resp.status_code}: {resp.text}")
+        except Exception as e:
+            print(f"Cerebras API exception: {e}")
+
+    # Fallback to rule engine
+    if reply is None:
+        reply = get_response(user_msg)
+
     # Save to database if user is logged in
     if auth.is_authenticated():
         user = auth.get_current_user()
-        
-        # If session_id is provided, save to that session
         if session_id:
             db.save_chat_message(session_id, 'user', user_msg)
             db.save_chat_message(session_id, 'bot', reply)
-        
-        # Also save to legacy chat_history table
         db.save_chat(user['id'], user_msg, reply)
-    
+
     return jsonify({
         "reply": reply,
+        "model": model_used,
         "timestamp": datetime.now().isoformat()
+    })
+
+
+@app.route('/api/chat/stream', methods=['POST'])
+def chat_stream():
+    """
+    Streaming chat endpoint — returns Server-Sent Events.
+    Frontend receives tokens in real-time for a typing effect.
+    """
+    # Capture all request data BEFORE entering the generator
+    # (Flask request context is not available inside generators)
+    req_data = request.get_json(force=True) or {}
+    user_msg = req_data.get('message', '')
+    session_id = req_data.get('session_id')
+    history = req_data.get('history', [])
+
+    if not user_msg:
+        return jsonify({"error": "Message required"}), 400
+
+    # Check auth before generator
+    is_authed = auth.is_authenticated()
+    current_user = auth.get_current_user() if is_authed else None
+
+    api_messages = [{"role": "system", "content": MEDICAL_SYSTEM_PROMPT}]
+    for msg in history[-20:]:
+        role = msg.get('role', 'user')
+        content = msg.get('content', '')
+        if role in ('user', 'assistant') and content:
+            api_messages.append({"role": role, "content": content})
+    api_messages.append({"role": "user", "content": user_msg})
+
+    def generate():
+        full_reply = ""
+        try:
+            headers = {
+                "Authorization": f"Bearer {CEREBRAS_API_KEY}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "model": "llama3.1-8b",
+                "messages": api_messages,
+                "temperature": 0.6,
+                "max_tokens": 1024,
+                "stream": True
+            }
+            resp = requests.post(
+                "https://api.cerebras.ai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=60,
+                stream=True
+            )
+            if resp.status_code != 200:
+                print(f"Cerebras stream error {resp.status_code}: {resp.text}")
+                fallback = get_response(user_msg)
+                full_reply = fallback
+                yield f"data: {json.dumps({'token': fallback})}\n\n"
+            else:
+                for line in resp.iter_lines():
+                    if line:
+                        decoded = line.decode('utf-8')
+                        if decoded.startswith('data: '):
+                            chunk_data = decoded[6:]
+                            if chunk_data.strip() == '[DONE]':
+                                break
+                            try:
+                                chunk = json.loads(chunk_data)
+                                delta = chunk['choices'][0].get('delta', {})
+                                token = delta.get('content', '')
+                                if token:
+                                    full_reply += token
+                                    yield f"data: {json.dumps({'token': token})}\n\n"
+                            except (json.JSONDecodeError, KeyError, IndexError):
+                                pass
+        except Exception as e:
+            print(f"Stream error: {e}")
+            if not full_reply:
+                fallback = get_response(user_msg)
+                full_reply = fallback
+                yield f"data: {json.dumps({'token': fallback})}\n\n"
+
+        # Save after streaming completes (using pre-captured auth data)
+        if is_authed and current_user and full_reply:
+            try:
+                if session_id:
+                    db.save_chat_message(session_id, 'user', user_msg)
+                    db.save_chat_message(session_id, 'bot', full_reply)
+                db.save_chat(current_user['id'], user_msg, full_reply)
+            except Exception as e:
+                print(f"Save error after stream: {e}")
+
+        yield f"data: {json.dumps({'done': True, 'model': 'llama3.1-8b'})}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream', headers={
+        'Cache-Control': 'no-cache',
+        'X-Accel-Buffering': 'no'
     })
 
 
@@ -792,6 +983,195 @@ def update_session_title(session_id):
         return jsonify({"success": True, "message": "Title updated"})
     else:
         return jsonify({"success": False, "message": "Failed to update title"}), 500
+
+
+# ============================================
+# ANALYZE MY HEALTH — Central AI Health Analysis
+# ============================================
+
+HEALTH_ANALYSIS_PROMPT = """You are a preventive healthcare analyst AI. The user has submitted their aggregated health data from multiple sources (health tracker, chatbot conversations, symptom reports, body part complaints, and community health reports).
+
+Analyze ALL the data below and produce a structured JSON response. You MUST return ONLY valid JSON — no markdown, no explanation, no extra text.
+
+JSON schema:
+{
+  "risk_level": "Low" | "Moderate" | "High",
+  "risk_score": <integer 0-100>,
+  "summary": "<2-3 sentence overall health summary in simple language>",
+  "risk_factors": [
+    {"factor": "<short title>", "detail": "<1 sentence explanation>", "severity": "low" | "medium" | "high"}
+  ],
+  "recommendations": [
+    {"title": "<short action title>", "description": "<1-2 sentence actionable advice>", "category": "lifestyle" | "nutrition" | "exercise" | "medical" | "mental_health" | "sleep"}
+  ],
+  "positive_factors": ["<things the user is doing well>"],
+  "suggested_actions": [
+    {"action": "<specific next step>", "link_label": "<e.g. Open Health Tracker>", "link": "<one of: /chat, /health-tracker, /body-selector, /report-issue>"}
+  ]
+}
+
+Rules:
+- If data is sparse or missing, note that and recommend the user track more data. Still provide at least basic advice.
+- risk_factors array: 2-6 items.
+- recommendations array: 3-6 items.
+- positive_factors: 1-4 items (find something encouraging even if data is limited).
+- suggested_actions: 2-4 items linking to existing app features.
+- Use clear, non-technical language a teenager could understand.
+- Never diagnose. Use phrases like "This may indicate…" or "Consider checking…"
+- Be empathetic and encouraging.
+
+USER HEALTH DATA:
+"""
+
+
+@app.route('/analyze-health')
+@auth.login_required
+def analyze_health_page():
+    """Analyze My Health results page (protected)"""
+    user = auth.get_current_user()
+    return render_template('health_analysis.html', user=user)
+
+
+@app.route('/api/analyze-health', methods=['POST'])
+@auth.login_required
+def analyze_health():
+    """
+    Central AI Health Analysis endpoint.
+    Collects data from all modules, sends to Cerebras, returns structured analysis.
+    """
+    user = auth.get_current_user()
+    user_id = user['id']
+
+    # 1. Aggregate all health data
+    health_data = db.get_comprehensive_health_data(user_id)
+
+    # 2. Build a human-readable data summary for the AI
+    data_parts = []
+
+    # User info
+    data_parts.append(f"User: {health_data['user'].get('name', 'Unknown')}")
+    data_parts.append(f"Account created: {health_data['user'].get('created_at', 'N/A')}")
+
+    # Health tracker
+    ht = health_data['health_tracker']
+    if ht['entries_count'] > 0:
+        data_parts.append(f"\n--- HEALTH TRACKER ({ht['entries_count']} entries) ---")
+        avgs = ht['averages']
+        if avgs['weight_kg']:
+            data_parts.append(f"Average weight: {avgs['weight_kg']} kg")
+        if avgs['calories']:
+            data_parts.append(f"Average daily calories: {avgs['calories']}")
+        if avgs['sleep_hours']:
+            data_parts.append(f"Average sleep: {avgs['sleep_hours']} hours/night")
+        if avgs['water_litres']:
+            data_parts.append(f"Average water intake: {avgs['water_litres']} litres/day")
+        if avgs['heart_rate_bpm']:
+            data_parts.append(f"Average heart rate: {avgs['heart_rate_bpm']} bpm")
+        if ht['latest_blood_pressure']:
+            data_parts.append(f"Latest blood pressure: {ht['latest_blood_pressure']}")
+        if ht['recent_entries']:
+            data_parts.append("Recent entries (newest first):")
+            for entry in ht['recent_entries'][:5]:
+                parts = []
+                if entry.get('date_created'):
+                    parts.append(f"Date: {entry['date_created']}")
+                if entry.get('weight'):
+                    parts.append(f"Weight: {entry['weight']}kg")
+                if entry.get('calories'):
+                    parts.append(f"Cal: {entry['calories']}")
+                if entry.get('sleep_hours'):
+                    parts.append(f"Sleep: {entry['sleep_hours']}h")
+                if entry.get('water_intake'):
+                    parts.append(f"Water: {entry['water_intake']}L")
+                if entry.get('notes'):
+                    parts.append(f"Notes: {entry['notes']}")
+                data_parts.append("  - " + ", ".join(parts))
+    else:
+        data_parts.append("\n--- HEALTH TRACKER ---\nNo health tracker data recorded yet.")
+
+    # Symptoms from chatbot
+    if health_data['chat_symptoms']:
+        data_parts.append(f"\n--- SYMPTOMS MENTIONED IN CHAT ---\n{', '.join(health_data['chat_symptoms'])}")
+    else:
+        data_parts.append("\n--- SYMPTOMS ---\nNo symptoms discussed in chat yet.")
+
+    # Body parts
+    if health_data['body_parts']:
+        data_parts.append(f"\n--- BODY AREAS OF CONCERN ---\n{', '.join(health_data['body_parts'])}")
+
+    # Recent chat topics
+    if health_data['chat_messages']:
+        data_parts.append(f"\n--- RECENT CHAT MESSAGES ({len(health_data['chat_messages'])} messages) ---")
+        for msg in health_data['chat_messages'][:10]:
+            data_parts.append(f"  - {msg[:150]}")
+
+    # Health reports
+    if health_data['health_reports']:
+        data_parts.append(f"\n--- COMMUNITY HEALTH REPORTS ({len(health_data['health_reports'])}) ---")
+        for rpt in health_data['health_reports'][:5]:
+            data_parts.append(f"  - {rpt['description'][:150]} ({rpt['created_at']})")
+
+    full_prompt = HEALTH_ANALYSIS_PROMPT + "\n".join(data_parts)
+
+    # 3. Call Cerebras API
+    if not CEREBRAS_API_KEY:
+        return jsonify({"success": False, "message": "AI service unavailable"}), 503
+
+    try:
+        headers = {
+            "Authorization": f"Bearer {CEREBRAS_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "llama3.1-8b",
+            "messages": [
+                {"role": "system", "content": "You are a medical data analyst. Return ONLY valid JSON. No markdown fences, no explanation."},
+                {"role": "user", "content": full_prompt}
+            ],
+            "temperature": 0.4,
+            "max_tokens": 2048,
+            "stream": False
+        }
+        resp = requests.post(
+            "https://api.cerebras.ai/v1/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=45
+        )
+
+        if resp.status_code == 200:
+            raw = resp.json()['choices'][0]['message']['content'].strip()
+            # Strip markdown fences if present
+            if raw.startswith('```'):
+                raw = raw.split('\n', 1)[1] if '\n' in raw else raw[3:]
+            if raw.endswith('```'):
+                raw = raw[:-3].strip()
+            if raw.startswith('json'):
+                raw = raw[4:].strip()
+
+            analysis = json.loads(raw)
+
+            return jsonify({
+                "success": True,
+                "analysis": analysis,
+                "data_summary": {
+                    "tracker_entries": ht['entries_count'],
+                    "symptoms_found": len(health_data['chat_symptoms']),
+                    "chat_messages": len(health_data['chat_messages']),
+                    "body_parts": len(health_data['body_parts']),
+                    "health_reports": len(health_data['health_reports']),
+                }
+            })
+        else:
+            print(f"Cerebras analysis error {resp.status_code}: {resp.text}")
+            return jsonify({"success": False, "message": "AI analysis failed. Try again."}), 502
+
+    except json.JSONDecodeError as e:
+        print(f"JSON parse error from AI: {e}\nRaw: {raw[:500]}")
+        return jsonify({"success": False, "message": "AI returned invalid data. Try again."}), 502
+    except Exception as e:
+        print(f"Health analysis error: {e}")
+        return jsonify({"success": False, "message": "Analysis failed. Please try again."}), 500
 
 
 # ============================================

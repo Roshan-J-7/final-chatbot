@@ -908,5 +908,126 @@ def get_health_report_by_id(report_id: int) -> Optional[Dict[str, Any]]:
         return None
 
 
+# ============================================
+# COMPREHENSIVE HEALTH DATA FOR AI ANALYSIS
+# ============================================
+
+def get_comprehensive_health_data(user_id: int) -> Dict[str, Any]:
+    """
+    Aggregate ALL health-related data for a user across every module.
+    Used by the 'Analyze My Health' feature to build a unified AI prompt.
+
+    Returns dict with keys:
+        - user: basic user info
+        - health_tracker: recent entries + summary stats
+        - chat_symptoms: symptoms extracted from recent chatbot conversations
+        - chat_messages: last N user messages from chat history
+        - body_parts: body parts mentioned in recent chats (heuristic)
+        - health_reports: recent community health reports by the user
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data: Dict[str, Any] = {}
+
+    # ---- 1. User info ----
+    cursor.execute('SELECT id, name, created_at FROM users WHERE id = ?', (user_id,))
+    user_row = cursor.fetchone()
+    data['user'] = dict(user_row) if user_row else {}
+
+    # ---- 2. Health tracker (last 30 entries + averages) ----
+    cursor.execute(
+        '''SELECT weight, blood_pressure, heart_rate, calories,
+                  water_intake, sleep_hours, notes, date_created
+           FROM health_tracker
+           WHERE user_id = ?
+           ORDER BY date_created DESC, created_at DESC
+           LIMIT 30''',
+        (user_id,)
+    )
+    tracker_rows = [dict(r) for r in cursor.fetchall()]
+
+    # Compute averages
+    weights = [r['weight'] for r in tracker_rows if r['weight'] is not None]
+    calories_list = [r['calories'] for r in tracker_rows if r['calories'] is not None]
+    sleep_list = [r['sleep_hours'] for r in tracker_rows if r['sleep_hours'] is not None]
+    water_list = [r['water_intake'] for r in tracker_rows if r['water_intake'] is not None]
+    hr_list = [r['heart_rate'] for r in tracker_rows if r['heart_rate'] is not None]
+
+    data['health_tracker'] = {
+        'entries_count': len(tracker_rows),
+        'recent_entries': tracker_rows[:7],  # last 7 for the prompt
+        'averages': {
+            'weight_kg': round(sum(weights) / len(weights), 1) if weights else None,
+            'calories': round(sum(calories_list) / len(calories_list)) if calories_list else None,
+            'sleep_hours': round(sum(sleep_list) / len(sleep_list), 1) if sleep_list else None,
+            'water_litres': round(sum(water_list) / len(water_list), 1) if water_list else None,
+            'heart_rate_bpm': round(sum(hr_list) / len(hr_list)) if hr_list else None,
+        },
+        'latest_blood_pressure': next(
+            (r['blood_pressure'] for r in tracker_rows if r['blood_pressure']), None
+        ),
+    }
+
+    # ---- 3. Recent chat messages (last 30 user messages) ----
+    cursor.execute(
+        '''SELECT user_message, timestamp
+           FROM chat_history
+           WHERE user_id = ?
+           ORDER BY timestamp DESC
+           LIMIT 30''',
+        (user_id,)
+    )
+    chat_rows = [dict(r) for r in cursor.fetchall()]
+    data['chat_messages'] = [r['user_message'] for r in chat_rows]
+
+    # ---- 4. Symptoms extracted from chat messages ----
+    symptom_keywords = [
+        'fever', 'headache', 'cough', 'cold', 'pain', 'nausea', 'vomiting',
+        'fatigue', 'dizziness', 'chest', 'stomach', 'throat', 'back',
+        'insomnia', 'anxiety', 'depression', 'rash', 'swelling', 'allergies',
+        'shortness of breath', 'migraine', 'joint pain', 'muscle pain',
+        'diarrhea', 'constipation', 'heartburn', 'blurry vision',
+        'numbness', 'tingling', 'weight loss', 'weight gain', 'snoring',
+        'bleeding', 'bruising', 'itching', 'cramp'
+    ]
+    found_symptoms = set()
+    for msg in data['chat_messages']:
+        lower = msg.lower()
+        for kw in symptom_keywords:
+            if kw in lower:
+                found_symptoms.add(kw)
+    data['chat_symptoms'] = list(found_symptoms)
+
+    # ---- 5. Body parts heuristic (from chat messages) ----
+    body_parts_kw = [
+        'head', 'neck', 'shoulder', 'chest', 'arm', 'elbow', 'wrist',
+        'hand', 'finger', 'abdomen', 'stomach', 'hip', 'back', 'spine',
+        'knee', 'leg', 'ankle', 'foot', 'toe', 'eye', 'ear', 'nose',
+        'throat', 'heart', 'lung', 'liver', 'kidney'
+    ]
+    found_parts = set()
+    for msg in data['chat_messages']:
+        lower = msg.lower()
+        for bp in body_parts_kw:
+            if bp in lower:
+                found_parts.add(bp)
+    data['body_parts'] = list(found_parts)
+
+    # ---- 6. Health reports (last 10) ----
+    cursor.execute(
+        '''SELECT description, ai_formatted_message, created_at
+           FROM health_reports
+           WHERE user_id = ?
+           ORDER BY created_at DESC
+           LIMIT 10''',
+        (user_id,)
+    )
+    data['health_reports'] = [dict(r) for r in cursor.fetchall()]
+
+    conn.close()
+    return data
+
+
 # Initialize database on module import
 init_database()
