@@ -1,52 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Advanced Medical Chatbot</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<title>MedAssist — AI Health Assistant</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		rel="stylesheet">
 	<style>
-		* { margin: 0; padding: 0; box-sizing: border-box; }
+		/* ═══════════════════════════════════════════
+		   RESET & VARIABLES
+		   ═══════════════════════════════════════════ */
+		*,
+		*::before,
+		*::after {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
 		:root {
-			--bg: #f4f5f7;
+			--primary: #0891b2;
+			--primary-dark: #0e7490;
+			--primary-light: #22d3ee;
+			--primary-soft: rgba(8, 145, 178, 0.08);
+			--primary-glow: rgba(8, 145, 178, 0.15);
+
+			--bg: #f0f9ff;
 			--surface: #ffffff;
-			--surface-soft: #f8f9fa;
-			--text: #111827;
-			--muted: #6b7280;
-			--border: #e5e7eb;
-			--accent: #111827;
-			--accent-soft: rgba(17, 24, 39, 0.08);
-			--shadow: rgba(0, 0, 0, 0.06);
-			--chip: #f3f4f6;
-			--green: #22c55e;
+			--surface-soft: #f8fafc;
+			--surface-glass: rgba(255, 255, 255, 0.75);
+
+			--text: #0f172a;
+			--text-secondary: #475569;
+			--text-muted: #94a3b8;
+
+			--border: #e2e8f0;
+			--border-light: #f1f5f9;
+
+			--red: #ef4444;
 			--red-soft: #fef2f2;
 			--red-border: #fecaca;
-			--red-text: #991b1b;
+			--green: #10b981;
+			--green-soft: #ecfdf5;
+			--amber: #f59e0b;
+
+			--radius: 16px;
+			--radius-sm: 10px;
+			--radius-xs: 8px;
+			--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+			--shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+			--shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.08);
+			--shadow-glow: 0 0 30px rgba(8, 145, 178, 0.12);
+			--transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
-		[data-theme="dark"] {
-			--bg: #0b0b0c;
-			--surface: #141414;
-			--surface-soft: #1b1b1b;
-			--text: #e5e7eb;
-			--muted: #9ca3af;
-			--border: #2a2a2a;
-			--accent: #e5e7eb;
-			--accent-soft: rgba(229, 231, 235, 0.12);
-			--shadow: rgba(0, 0, 0, 0.3);
-			--chip: #1f1f1f;
-			--red-soft: #1c1111;
-			--red-border: #442222;
-			--red-text: #fca5a5;
-		}
-
+		/* ═══════════════════════════════════════════
+		   BASE
+		   ═══════════════════════════════════════════ */
 		body {
-			font-family: 'Inter', sans-serif;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 			background: var(--bg);
 			color: var(--text);
-			height: 100vh;
 			overflow: hidden;
+			height: 100vh;
 		}
 
 		.app {
@@ -55,15 +73,31 @@
 			height: 100vh;
 		}
 
-		/* ── Topbar ── */
-		.topbar {
+		/* ═══════════════════════════════════════════
+		   HEADER
+		   ═══════════════════════════════════════════ */
+		.header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0.9rem 1.75rem;
+			padding: 0 1.5rem;
+			height: 64px;
 			background: var(--surface);
 			border-bottom: 1px solid var(--border);
 			flex-shrink: 0;
+			position: relative;
+			z-index: 100;
+		}
+
+		.header::after {
+			content: '';
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
+			opacity: 0.6;
 		}
 
 		.brand {
@@ -72,77 +106,88 @@
 			gap: 0.75rem;
 		}
 
-		.brand-icon {
-			width: 38px;
-			height: 38px;
-			border-radius: 10px;
-			background: var(--accent);
-			color: var(--bg);
+		.brand-logo {
+			width: 42px;
+			height: 42px;
+			border-radius: 12px;
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 16px;
+			color: white;
+			font-size: 18px;
+			box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
 		}
 
-		.brand h1 {
-			font-size: 1.1rem;
+		.brand-text h1 {
+			font-size: 1.15rem;
 			font-weight: 700;
+			color: var(--text);
 			letter-spacing: -0.02em;
 		}
 
-		.brand p {
-			font-size: 0.78rem;
-			color: var(--muted);
+		.brand-text p {
+			font-size: 0.72rem;
+			color: var(--text-muted);
+			font-weight: 500;
 			margin-top: 1px;
 		}
 
-		.topbar-actions {
+		.header-actions {
 			display: flex;
-			gap: 0.5rem;
 			align-items: center;
+			gap: 0.5rem;
 		}
 
-		.icon-btn {
-			width: 36px;
-			height: 36px;
-			border-radius: 8px;
+		.header-btn {
+			height: 38px;
+			padding: 0 0.85rem;
+			border-radius: var(--radius-xs);
 			border: 1px solid var(--border);
-			background: var(--surface-soft);
-			color: var(--text);
+			background: var(--surface);
+			color: var(--text-secondary);
+			font-size: 0.8rem;
+			font-weight: 600;
+			font-family: inherit;
 			cursor: pointer;
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			font-size: 14px;
-			transition: all 0.15s;
+			gap: 0.4rem;
+			transition: all var(--transition);
 		}
 
-		.icon-btn:hover { background: var(--chip); }
-
-		.primary-link {
-			padding: 0.5rem 0.9rem;
-			border-radius: 8px;
-			border: 1px solid var(--border);
-			text-decoration: none;
-			color: var(--text);
-			background: var(--surface-soft);
-			font-weight: 600;
-			font-size: 0.82rem;
-			transition: all 0.15s;
+		.header-btn:hover {
+			border-color: var(--primary);
+			color: var(--primary);
+			background: var(--primary-soft);
 		}
 
-		.primary-link:hover { background: var(--chip); }
+		.header-btn.profile {
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+			color: white;
+			border: none;
+			box-shadow: 0 2px 8px rgba(8, 145, 178, 0.25);
+		}
 
-		/* ── 3-Column Layout ── */
+		.header-btn.profile:hover {
+			box-shadow: 0 4px 16px rgba(8, 145, 178, 0.35);
+			transform: translateY(-1px);
+		}
+
+		/* ═══════════════════════════════════════════
+		   MAIN LAYOUT
+		   ═══════════════════════════════════════════ */
 		.layout {
 			display: grid;
-			grid-template-columns: 260px minmax(0, 1fr) 260px;
-			gap: 0;
+			grid-template-columns: 272px 1fr 280px;
 			flex: 1;
 			min-height: 0;
+			overflow: hidden;
 		}
 
-		/* ── Left Sidebar ── */
+		/* ═══════════════════════════════════════════
+		   LEFT SIDEBAR — TOPICS
+		   ═══════════════════════════════════════════ */
 		.sidebar-left {
 			background: var(--surface);
 			border-right: 1px solid var(--border);
@@ -151,265 +196,540 @@
 			overflow: hidden;
 		}
 
-		.sidebar-section {
-			padding: 0.9rem 1rem;
-			border-bottom: 1px solid var(--border);
+		.sidebar-search {
+			padding: 1rem 1rem 0.75rem;
 			flex-shrink: 0;
 		}
 
-		.sidebar-section-label {
-			font-size: 0.68rem;
+		.sidebar-search label {
+			font-size: 0.65rem;
 			font-weight: 700;
 			text-transform: uppercase;
-			letter-spacing: 0.06em;
-			color: var(--muted);
-			margin-bottom: 0.6rem;
+			letter-spacing: 0.08em;
+			color: var(--text-muted);
+			margin-bottom: 0.5rem;
+			display: block;
+		}
+
+		.search-input-wrap {
+			position: relative;
+		}
+
+		.search-input-wrap i {
+			position: absolute;
+			left: 0.75rem;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 12px;
+			color: var(--text-muted);
 		}
 
 		.search-box {
 			width: 100%;
-			padding: 0.55rem 0.75rem;
-			border: 1px solid var(--border);
-			border-radius: 8px;
+			padding: 0.6rem 0.75rem 0.6rem 2.1rem;
+			border: 1.5px solid var(--border);
+			border-radius: var(--radius-xs);
 			background: var(--surface-soft);
 			color: var(--text);
 			font-size: 0.82rem;
+			font-family: inherit;
 			outline: none;
-			transition: border 0.15s;
+			transition: all var(--transition);
 		}
 
-		.search-box:focus { border-color: var(--muted); }
+		.search-box:focus {
+			border-color: var(--primary);
+			box-shadow: 0 0 0 3px var(--primary-glow);
+		}
 
 		.topic-scroll {
 			flex: 1;
 			overflow-y: auto;
-			padding: 0.5rem 0.75rem 1rem;
+			padding: 0.25rem 0.75rem 1rem;
 		}
 
-		.topic-scroll::-webkit-scrollbar { width: 4px; }
-		.topic-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+		.topic-scroll::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		.topic-scroll::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.topic-scroll::-webkit-scrollbar-thumb {
+			background: var(--border);
+			border-radius: 4px;
+		}
 
 		.topic-group-label {
-			font-size: 0.68rem;
+			font-size: 0.62rem;
 			font-weight: 700;
 			text-transform: uppercase;
-			letter-spacing: 0.05em;
-			color: var(--muted);
-			padding: 0.7rem 0.25rem 0.35rem;
+			letter-spacing: 0.08em;
+			color: var(--primary);
+			padding: 0.85rem 0.35rem 0.4rem;
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+		}
+
+		.topic-group-label::before {
+			content: '';
+			width: 3px;
+			height: 12px;
+			background: var(--primary);
+			border-radius: 2px;
 		}
 
 		.topic-btn {
 			display: flex;
 			align-items: center;
-			gap: 0.55rem;
+			gap: 0.6rem;
 			width: 100%;
 			padding: 0.55rem 0.65rem;
-			border-radius: 8px;
+			border-radius: var(--radius-xs);
 			border: none;
 			background: transparent;
-			color: var(--text);
+			color: var(--text-secondary);
 			cursor: pointer;
 			text-align: left;
 			font-size: 0.82rem;
 			font-weight: 500;
-			transition: all 0.12s;
+			font-family: inherit;
+			transition: all var(--transition);
 		}
 
 		.topic-btn i {
 			font-size: 13px;
-			width: 18px;
+			width: 20px;
 			text-align: center;
-			color: var(--muted);
+			color: var(--text-muted);
 			flex-shrink: 0;
+			transition: color var(--transition);
 		}
 
-		.topic-btn:hover { background: var(--chip); }
+		.topic-btn:hover {
+			background: var(--primary-soft);
+			color: var(--primary-dark);
+			transform: translateX(3px);
+		}
 
-		/* ── Center Chat ── */
+		.topic-btn:hover i {
+			color: var(--primary);
+		}
+
+		/* ═══════════════════════════════════════════
+		   CENTER — CHAT AREA
+		   ═══════════════════════════════════════════ */
 		.chat-center {
 			display: flex;
 			flex-direction: column;
 			min-height: 0;
 			background: var(--bg);
+			position: relative;
 		}
 
-		.chat-header {
+		/* Subtle Pattern Background */
+		.chat-center::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-image:
+				radial-gradient(circle at 20% 50%, rgba(8, 145, 178, 0.03) 0%, transparent 50%),
+				radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.03) 0%, transparent 50%);
+			pointer-events: none;
+			z-index: 0;
+		}
+
+		.chat-status-bar {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0.7rem 1.25rem;
+			padding: 0.65rem 1.5rem;
 			background: var(--surface);
 			border-bottom: 1px solid var(--border);
 			flex-shrink: 0;
+			z-index: 1;
 		}
 
-		.chat-header .status {
+		.status-left {
 			display: flex;
 			align-items: center;
-			gap: 0.5rem;
-			font-weight: 600;
-			font-size: 0.88rem;
+			gap: 0.6rem;
 		}
 
-		.status-dot {
-			width: 8px;
-			height: 8px;
+		.status-avatar {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 14px;
+		}
+
+		.status-info h3 {
+			font-size: 0.88rem;
+			font-weight: 600;
+			color: var(--text);
+		}
+
+		.status-info p {
+			font-size: 0.72rem;
+			color: var(--green);
+			font-weight: 500;
+			display: flex;
+			align-items: center;
+			gap: 0.3rem;
+		}
+
+		.status-info p::before {
+			content: '';
+			width: 6px;
+			height: 6px;
 			border-radius: 50%;
 			background: var(--green);
-			box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+			box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+			animation: pulse-dot 2s infinite;
+		}
+
+		@keyframes pulse-dot {
+
+			0%,
+			100% {
+				opacity: 1;
+			}
+
+			50% {
+				opacity: 0.4;
+			}
 		}
 
 		.mode-toggles {
 			display: flex;
-			gap: 0.6rem;
+			gap: 0.75rem;
 			align-items: center;
-			font-size: 0.78rem;
-			color: var(--muted);
 		}
 
-		.mode-toggles label {
+		.mode-toggle {
 			display: flex;
 			align-items: center;
 			gap: 0.3rem;
+			font-size: 0.75rem;
+			color: var(--text-muted);
 			cursor: pointer;
+			padding: 0.3rem 0.6rem;
+			border-radius: 6px;
+			transition: all var(--transition);
+			user-select: none;
 		}
 
-		.mode-toggles input { cursor: pointer; }
+		.mode-toggle:hover {
+			background: var(--primary-soft);
+			color: var(--primary);
+		}
 
+		.mode-toggle input {
+			cursor: pointer;
+			accent-color: var(--primary);
+		}
+
+		/* ── Chat Window ── */
 		.chat-window {
 			flex: 1;
 			overflow-y: auto;
-			padding: 1.25rem 1.5rem;
+			padding: 1.5rem;
 			display: flex;
 			flex-direction: column;
-			gap: 0.6rem;
+			gap: 0.5rem;
+			z-index: 1;
+			scroll-behavior: smooth;
 		}
 
-		.chat-window::-webkit-scrollbar { width: 5px; }
-		.chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+		.chat-window::-webkit-scrollbar {
+			width: 5px;
+		}
 
+		.chat-window::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		.chat-window::-webkit-scrollbar-thumb {
+			background: var(--border);
+			border-radius: 5px;
+		}
+
+		/* ── Messages ── */
 		.message {
 			display: flex;
-		}
-
-		.message.user { justify-content: flex-end; }
-
-		.bubble {
-			max-width: 72%;
-			padding: 0.7rem 1rem;
-			border-radius: 14px;
-			line-height: 1.55;
-			font-size: 0.88rem;
-		}
-
-		.message.bot .bubble {
-			background: var(--surface);
-			border: 1px solid var(--border);
-			color: var(--text);
-			border-bottom-left-radius: 4px;
-		}
-
-		.message.user .bubble {
-			background: #1f1f1f;
-			color: #ffffff;
-			border-bottom-right-radius: 4px;
-		}
-
-		.typing {
-			display: none;
-			align-items: center;
-			gap: 0.4rem;
-			color: var(--muted);
-			font-size: 0.82rem;
-			padding: 0 1.5rem 0.5rem;
-			flex-shrink: 0;
-		}
-
-		.typing.active { display: flex; }
-
-		.dot {
-			width: 5px;
-			height: 5px;
-			border-radius: 50%;
-			background: var(--muted);
-			animation: bounce 1s infinite ease-in-out;
-		}
-
-		.dot:nth-child(2) { animation-delay: 0.15s; }
-		.dot:nth-child(3) { animation-delay: 0.3s; }
-
-		@keyframes bounce {
-			0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-			40% { transform: scale(1.3); opacity: 1; }
-		}
-
-		.quick-chips {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.4rem;
-			padding: 0.6rem 1.25rem;
-			border-top: 1px solid var(--border);
-			background: var(--surface);
-			flex-shrink: 0;
-		}
-
-		.chip {
-			background: var(--chip);
-			border: 1px solid var(--border);
-			color: var(--text);
-			padding: 0.35rem 0.65rem;
-			border-radius: 999px;
-			font-size: 0.75rem;
-			cursor: pointer;
-			transition: all 0.12s;
-			font-weight: 500;
-		}
-
-		.chip:hover { background: var(--accent-soft); }
-
-		.chat-input-bar {
-			display: flex;
 			gap: 0.6rem;
-			align-items: center;
-			padding: 0.75rem 1.25rem;
-			background: var(--surface);
-			border-top: 1px solid var(--border);
+			animation: messageIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+			max-width: 100%;
+		}
+
+		.message.user {
+			flex-direction: row-reverse;
+		}
+
+		@keyframes messageIn {
+			from {
+				opacity: 0;
+				transform: translateY(12px) scale(0.97);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		.msg-avatar {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
 			flex-shrink: 0;
-		}
-
-		.chat-input-bar input {
-			flex: 1;
-			border: 1px solid var(--border);
-			border-radius: 10px;
-			padding: 0.65rem 0.9rem;
-			background: var(--surface-soft);
-			color: var(--text);
-			font-size: 0.88rem;
-			outline: none;
-			transition: border 0.15s;
-		}
-
-		.chat-input-bar input:focus { border-color: var(--muted); }
-
-		.send-btn {
-			width: 40px;
-			height: 40px;
-			border-radius: 10px;
-			border: none;
-			background: #1f1f1f;
-			color: #ffffff;
-			cursor: pointer;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			font-size: 14px;
-			transition: opacity 0.15s;
+			margin-top: 2px;
+		}
+
+		.message.bot .msg-avatar {
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+			color: white;
+			box-shadow: 0 2px 8px rgba(8, 145, 178, 0.2);
+		}
+
+		.message.user .msg-avatar {
+			background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+			color: white;
+			box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+		}
+
+		.bubble {
+			max-width: 70%;
+			padding: 0.85rem 1.1rem;
+			border-radius: 18px;
+			line-height: 1.6;
+			font-size: 0.88rem;
+			position: relative;
+		}
+
+		.message.bot .bubble {
+			background: var(--surface);
+			color: var(--text);
+			border: 1px solid var(--border);
+			border-bottom-left-radius: 6px;
+			box-shadow: var(--shadow-sm);
+		}
+
+		.message.user .bubble {
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+			color: white;
+			border-bottom-right-radius: 6px;
+			box-shadow: 0 2px 12px rgba(8, 145, 178, 0.2);
+		}
+
+		.msg-time {
+			font-size: 0.65rem;
+			color: var(--text-muted);
+			margin-top: 0.25rem;
+			padding: 0 0.2rem;
+		}
+
+		.message.user .msg-time {
+			text-align: right;
+		}
+
+		/* ── Typing Indicator ── */
+		.typing {
+			display: none;
+			align-items: center;
+			gap: 0.6rem;
+			padding: 0 1.5rem 0.75rem;
+			z-index: 1;
 			flex-shrink: 0;
 		}
 
-		.send-btn:hover { opacity: 0.85; }
+		.typing.active {
+			display: flex;
+		}
 
-		/* ── Right Sidebar ── */
+		.typing-avatar {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 12px;
+		}
+
+		.typing-dots {
+			display: flex;
+			gap: 4px;
+			background: var(--surface);
+			border: 1px solid var(--border);
+			padding: 0.6rem 1rem;
+			border-radius: 18px;
+			border-bottom-left-radius: 6px;
+		}
+
+		.typing-dot {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background: var(--primary);
+			animation: typingBounce 1.4s infinite ease-in-out;
+		}
+
+		.typing-dot:nth-child(2) {
+			animation-delay: 0.15s;
+		}
+
+		.typing-dot:nth-child(3) {
+			animation-delay: 0.3s;
+		}
+
+		@keyframes typingBounce {
+
+			0%,
+			60%,
+			100% {
+				transform: translateY(0);
+				opacity: 0.4;
+			}
+
+			30% {
+				transform: translateY(-6px);
+				opacity: 1;
+			}
+		}
+
+		/* ── Quick Chips ── */
+		.quick-chips {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.4rem;
+			padding: 0.6rem 1.5rem;
+			border-top: 1px solid var(--border);
+			background: var(--surface);
+			z-index: 1;
+			flex-shrink: 0;
+		}
+
+		.chip {
+			background: var(--surface-soft);
+			border: 1.5px solid var(--border);
+			color: var(--text-secondary);
+			padding: 0.35rem 0.75rem;
+			border-radius: 999px;
+			font-size: 0.75rem;
+			font-weight: 500;
+			font-family: inherit;
+			cursor: pointer;
+			transition: all var(--transition);
+			display: flex;
+			align-items: center;
+			gap: 0.3rem;
+		}
+
+		.chip i {
+			font-size: 10px;
+			color: var(--primary);
+		}
+
+		.chip:hover {
+			border-color: var(--primary);
+			background: var(--primary-soft);
+			color: var(--primary-dark);
+			transform: translateY(-1px);
+		}
+
+		/* ── Input Bar ── */
+		.chat-input-bar {
+			display: flex;
+			gap: 0.6rem;
+			align-items: center;
+			padding: 0.85rem 1.5rem;
+			background: var(--surface);
+			border-top: 1px solid var(--border);
+			z-index: 1;
+			flex-shrink: 0;
+		}
+
+		.input-wrap {
+			flex: 1;
+			position: relative;
+		}
+
+		.input-wrap i {
+			position: absolute;
+			left: 1rem;
+			top: 50%;
+			transform: translateY(-50%);
+			color: var(--text-muted);
+			font-size: 14px;
+			pointer-events: none;
+		}
+
+		.chat-input {
+			width: 100%;
+			padding: 0.8rem 1rem 0.8rem 2.6rem;
+			border: 2px solid var(--border);
+			border-radius: 14px;
+			background: var(--surface-soft);
+			color: var(--text);
+			font-size: 0.9rem;
+			font-family: inherit;
+			outline: none;
+			transition: all var(--transition);
+		}
+
+		.chat-input::placeholder {
+			color: var(--text-muted);
+		}
+
+		.chat-input:focus {
+			border-color: var(--primary);
+			box-shadow: 0 0 0 4px var(--primary-glow);
+			background: var(--surface);
+		}
+
+		.send-btn {
+			width: 46px;
+			height: 46px;
+			border-radius: 14px;
+			border: none;
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+			color: white;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			transition: all var(--transition);
+			flex-shrink: 0;
+			box-shadow: 0 2px 10px rgba(8, 145, 178, 0.3);
+		}
+
+		.send-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 20px rgba(8, 145, 178, 0.4);
+		}
+
+		.send-btn:active {
+			transform: scale(0.95);
+		}
+
+		/* ═══════════════════════════════════════════
+		   RIGHT SIDEBAR
+		   ═══════════════════════════════════════════ */
 		.sidebar-right {
 			background: var(--surface);
 			border-left: 1px solid var(--border);
@@ -420,50 +740,78 @@
 			gap: 0.75rem;
 		}
 
-		.sidebar-right::-webkit-scrollbar { width: 4px; }
-		.sidebar-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+		.sidebar-right::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		.sidebar-right::-webkit-scrollbar-thumb {
+			background: var(--border);
+			border-radius: 4px;
+		}
 
 		.right-card {
 			background: var(--surface-soft);
 			border: 1px solid var(--border);
-			border-radius: 10px;
-			padding: 0.85rem;
+			border-radius: var(--radius-sm);
+			padding: 0.9rem;
+			transition: all var(--transition);
+		}
+
+		.right-card:hover {
+			box-shadow: var(--shadow-sm);
+			border-color: var(--primary-glow);
 		}
 
 		.right-card-title {
-			font-size: 0.72rem;
+			font-size: 0.68rem;
 			font-weight: 700;
 			text-transform: uppercase;
-			letter-spacing: 0.05em;
-			color: var(--muted);
-			margin-bottom: 0.55rem;
+			letter-spacing: 0.06em;
+			color: var(--text-muted);
+			margin-bottom: 0.6rem;
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
 		}
 
+		.right-card-title i {
+			color: var(--primary);
+			font-size: 11px;
+		}
+
+		/* Tool Buttons */
 		.tool-btn-row {
 			display: flex;
-			gap: 0.4rem;
+			gap: 0.35rem;
 		}
 
 		.tool-btn {
 			flex: 1;
-			padding: 0.5rem 0.5rem;
-			border-radius: 8px;
-			border: 1px solid var(--border);
+			padding: 0.5rem;
+			border-radius: var(--radius-xs);
+			border: 1.5px solid var(--border);
 			background: var(--surface);
-			color: var(--text);
+			color: var(--text-secondary);
 			cursor: pointer;
-			font-size: 0.78rem;
+			font-size: 0.75rem;
 			font-weight: 600;
+			font-family: inherit;
 			text-align: center;
-			transition: all 0.12s;
-			text-decoration: none;
-			display: block;
+			transition: all var(--transition);
 		}
 
-		.tool-btn:hover { background: var(--chip); }
+		.tool-btn:hover {
+			border-color: var(--primary);
+			color: var(--primary);
+			background: var(--primary-soft);
+		}
 
-		.tool-btn i { margin-right: 4px; font-size: 11px; }
+		.tool-btn i {
+			margin-right: 3px;
+			font-size: 10px;
+		}
 
+		/* Stats Grid */
 		.stats-grid {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
@@ -473,7 +821,7 @@
 		.stat-item {
 			background: var(--surface);
 			border: 1px solid var(--border);
-			border-radius: 8px;
+			border-radius: var(--radius-xs);
 			padding: 0.6rem;
 			text-align: center;
 		}
@@ -481,37 +829,95 @@
 		.stat-number {
 			font-size: 1.3rem;
 			font-weight: 700;
+			color: var(--primary);
 			display: block;
 		}
 
 		.stat-label {
-			font-size: 0.7rem;
-			color: var(--muted);
+			font-size: 0.68rem;
+			color: var(--text-muted);
 			margin-top: 2px;
+			font-weight: 500;
 		}
 
+		/* Health Tips Card */
+		.tip-list {
+			display: flex;
+			flex-direction: column;
+			gap: 0.4rem;
+		}
+
+		.tip-item {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5rem;
+			font-size: 0.78rem;
+			color: var(--text-secondary);
+			line-height: 1.45;
+			padding: 0.35rem 0;
+		}
+
+		.tip-item i {
+			color: var(--primary);
+			font-size: 10px;
+			margin-top: 4px;
+			flex-shrink: 0;
+		}
+
+		/* Emergency Card */
 		.emergency-card {
 			background: var(--red-soft);
-			border: 1px solid var(--red-border);
-			border-radius: 10px;
-			padding: 0.85rem;
+			border: 1.5px solid var(--red-border);
+			border-radius: var(--radius-sm);
+			padding: 0.9rem;
 		}
 
 		.emergency-card .right-card-title {
-			color: var(--red-text);
+			color: var(--red);
 		}
 
-		.emergency-card p {
-			font-size: 0.8rem;
-			color: var(--red-text);
-			line-height: 1.45;
+		.emergency-card .right-card-title i {
+			color: var(--red);
 		}
 
-		.keyboard-hint {
+		.emergency-contacts {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+
+		.emergency-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 0.78rem;
+		}
+
+		.emergency-item span {
+			color: var(--text-secondary);
+		}
+
+		.emergency-item strong {
+			color: var(--red);
+			font-weight: 700;
+			font-size: 0.82rem;
+		}
+
+		.emergency-note {
+			margin-top: 0.5rem;
 			font-size: 0.72rem;
-			color: var(--muted);
-			text-align: center;
+			color: var(--text-muted);
+			line-height: 1.4;
 			padding-top: 0.4rem;
+			border-top: 1px solid var(--red-border);
+		}
+
+		/* Keyboard Hint */
+		.keyboard-hint {
+			font-size: 0.7rem;
+			color: var(--text-muted);
+			text-align: center;
+			padding-top: 0.3rem;
 		}
 
 		.keyboard-hint kbd {
@@ -520,159 +926,352 @@
 			border-radius: 4px;
 			padding: 1px 5px;
 			font-family: inherit;
-			font-size: 0.7rem;
+			font-size: 0.68rem;
 		}
 
-		/* ── Responsive ── */
+		/* ═══════════════════════════════════════════
+		   WELCOME CARD in Chat
+		   ═══════════════════════════════════════════ */
+		.welcome-card {
+			background: linear-gradient(135deg, rgba(8, 145, 178, 0.06) 0%, rgba(34, 211, 238, 0.04) 100%);
+			border: 1.5px solid rgba(8, 145, 178, 0.15);
+			border-radius: var(--radius);
+			padding: 1.5rem;
+			margin-bottom: 0.5rem;
+			animation: messageIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+		}
+
+		.welcome-header {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			margin-bottom: 0.85rem;
+		}
+
+		.welcome-icon {
+			width: 44px;
+			height: 44px;
+			border-radius: 12px;
+			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 18px;
+			box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25);
+		}
+
+		.welcome-header h2 {
+			font-size: 1.05rem;
+			font-weight: 700;
+			color: var(--text);
+		}
+
+		.welcome-header p {
+			font-size: 0.78rem;
+			color: var(--text-secondary);
+			margin-top: 1px;
+		}
+
+		.welcome-body {
+			font-size: 0.85rem;
+			color: var(--text-secondary);
+			line-height: 1.6;
+		}
+
+		.welcome-body strong {
+			color: var(--primary-dark);
+		}
+
+		.welcome-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem;
+			margin-top: 0.85rem;
+		}
+
+		.welcome-tag {
+			background: rgba(8, 145, 178, 0.08);
+			color: var(--primary-dark);
+			padding: 0.25rem 0.6rem;
+			border-radius: 999px;
+			font-size: 0.72rem;
+			font-weight: 600;
+		}
+
+		/* ═══════════════════════════════════════════
+		   RESPONSIVE
+		   ═══════════════════════════════════════════ */
 		@media (max-width: 1100px) {
-			.layout { grid-template-columns: 1fr; }
-			.sidebar-left, .sidebar-right { display: none; }
-			body { overflow: auto; }
-			.app { height: auto; min-height: 100vh; }
-			.chat-center { min-height: 100vh; }
-			.chat-window { min-height: 50vh; }
+			.layout {
+				grid-template-columns: 1fr;
+			}
+
+			.sidebar-left,
+			.sidebar-right {
+				display: none;
+			}
+
+			.chat-center {
+				min-height: 100vh;
+			}
+		}
+
+		@media (max-width: 600px) {
+			.header {
+				padding: 0 1rem;
+			}
+
+			.brand-text h1 {
+				font-size: 1rem;
+			}
+
+			.chat-input-bar {
+				padding: 0.75rem 1rem;
+			}
+
+			.quick-chips {
+				padding: 0.5rem 1rem;
+			}
 		}
 	</style>
 </head>
+
 <body>
 	<div class="app">
-		<header class="topbar">
+		<!-- ═══════ HEADER ═══════ -->
+		<header class="header">
 			<div class="brand">
-				<div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-				<div>
-					<h1>Medical Chatbot</h1>
-					<p>173 topics — symptoms, diseases, clinical, wellness</p>
+				<div class="brand-logo">
+					<i class="fas fa-heartbeat"></i>
+				</div>
+				<div class="brand-text">
+					<h1>MedAssist</h1>
+					<p>AI-Powered Health Assistant</p>
 				</div>
 			</div>
-			<div class="topbar-actions">
-				<button id="theme-toggle" class="icon-btn" title="Toggle theme"><i class="fas fa-moon"></i></button>
+			<div class="header-actions">
+				<button class="header-btn" id="clear-chat" title="Clear chat">
+					<i class="fas fa-rotate-right"></i> New Chat
+				</button>
+				<button class="header-btn" id="export-chat" title="Export chat">
+					<i class="fas fa-download"></i> Export
+				</button>
+				<button class="header-btn" id="copy-chat" title="Copy last reply">
+					<i class="fas fa-copy"></i>
+				</button>
+				<button class="header-btn profile">
+					<i class="fas fa-user"></i> Login
+				</button>
 			</div>
 		</header>
 
+		<!-- ═══════ MAIN LAYOUT ═══════ -->
 		<div class="layout">
-			<!-- Left Sidebar: Topics -->
+
+			<!-- ── Left Sidebar: Topics ── -->
 			<aside class="sidebar-left">
-				<div class="sidebar-section">
-					<div class="sidebar-section-label">Search Topics</div>
-					<input id="topic-search" class="search-box" type="text" placeholder="Type to filter...">
+				<div class="sidebar-search">
+					<label>Browse Topics</label>
+					<div class="search-input-wrap">
+						<i class="fas fa-search"></i>
+						<input id="topic-search" class="search-box" type="text"
+							placeholder="Search symptoms, conditions...">
+					</div>
 				</div>
 				<div class="topic-scroll" id="topic-list">
 					<div class="topic-group-label">Body Systems</div>
-					<button class="topic-btn" data-prompt="How does the heart work?"><i class="fas fa-heartbeat"></i> Heart & Circulation</button>
-					<button class="topic-btn" data-prompt="How do the lungs work?"><i class="fas fa-lungs"></i> Lungs & Breathing</button>
-					<button class="topic-btn" data-prompt="How does the brain work?"><i class="fas fa-brain"></i> Brain & Nerves</button>
-					<button class="topic-btn" data-prompt="Explain digestion and gut health."><i class="fas fa-stomach"></i> Digestive System</button>
-					<button class="topic-btn" data-prompt="Explain the immune system."><i class="fas fa-shield-virus"></i> Immune System</button>
-					<button class="topic-btn" data-prompt="How do the kidneys work?"><i class="fas fa-kidney"></i> Kidneys</button>
-					<button class="topic-btn" data-prompt="Tell me about bones and the skeletal system."><i class="fas fa-bone"></i> Bones & Skeleton</button>
-					<button class="topic-btn" data-prompt="How do muscles work?"><i class="fas fa-dumbbell"></i> Muscles</button>
+					<button class="topic-btn" data-prompt="How does the heart work?"><i class="fas fa-heartbeat"></i>
+						Heart & Circulation</button>
+					<button class="topic-btn" data-prompt="How do the lungs work?"><i class="fas fa-lungs"></i> Lungs &
+						Breathing</button>
+					<button class="topic-btn" data-prompt="How does the brain work?"><i class="fas fa-brain"></i> Brain
+						& Nerves</button>
+					<button class="topic-btn" data-prompt="Explain digestion and gut health."><i
+							class="fas fa-stomach"></i> Digestive System</button>
+					<button class="topic-btn" data-prompt="Explain the immune system."><i
+							class="fas fa-shield-virus"></i> Immune System</button>
+					<button class="topic-btn" data-prompt="How do the kidneys work?"><i class="fas fa-kidney"></i>
+						Kidneys</button>
+					<button class="topic-btn" data-prompt="Tell me about bones and the skeletal system."><i
+							class="fas fa-bone"></i> Bones & Skeleton</button>
+					<button class="topic-btn" data-prompt="How do muscles work?"><i class="fas fa-dumbbell"></i>
+						Muscles</button>
 
 					<div class="topic-group-label">Common Symptoms</div>
-					<button class="topic-btn" data-prompt="What causes fever and how to treat it?"><i class="fas fa-thermometer-half"></i> Fever</button>
-					<button class="topic-btn" data-prompt="What causes headaches?"><i class="fas fa-head-side-virus"></i> Headache</button>
-					<button class="topic-btn" data-prompt="What causes cough?"><i class="fas fa-lungs-virus"></i> Cough</button>
-					<button class="topic-btn" data-prompt="I have stomach pain, what could it be?"><i class="fas fa-stomach"></i> Stomach Pain</button>
-					<button class="topic-btn" data-prompt="What causes back pain?"><i class="fas fa-back"></i> Back Pain</button>
-					<button class="topic-btn" data-prompt="I feel dizzy and lightheaded"><i class="fas fa-dizzy"></i> Dizziness</button>
-					<button class="topic-btn" data-prompt="I feel very tired and fatigued"><i class="fas fa-battery-quarter"></i> Fatigue</button>
+					<button class="topic-btn" data-prompt="What causes fever and how to treat it?"><i
+							class="fas fa-thermometer-half"></i> Fever</button>
+					<button class="topic-btn" data-prompt="What causes headaches?"><i
+							class="fas fa-head-side-virus"></i> Headache</button>
+					<button class="topic-btn" data-prompt="What causes cough?"><i class="fas fa-lungs-virus"></i>
+						Cough</button>
+					<button class="topic-btn" data-prompt="I have stomach pain, what could it be?"><i
+							class="fas fa-stomach"></i> Stomach Pain</button>
+					<button class="topic-btn" data-prompt="What causes back pain?"><i class="fas fa-back"></i> Back
+						Pain</button>
+					<button class="topic-btn" data-prompt="I feel dizzy and lightheaded"><i class="fas fa-dizzy"></i>
+						Dizziness</button>
+					<button class="topic-btn" data-prompt="I feel very tired and fatigued"><i
+							class="fas fa-battery-quarter"></i> Fatigue</button>
 
 					<div class="topic-group-label">Diseases & Conditions</div>
-					<button class="topic-btn" data-prompt="What is diabetes and how to manage it?"><i class="fas fa-tint"></i> Diabetes</button>
-					<button class="topic-btn" data-prompt="Explain blood pressure and hypertension."><i class="fas fa-heart-circle-exclamation"></i> Hypertension</button>
-					<button class="topic-btn" data-prompt="Explain asthma symptoms and management."><i class="fas fa-wind"></i> Asthma</button>
-					<button class="topic-btn" data-prompt="Tell me about heart disease"><i class="fas fa-heart-crack"></i> Heart Disease</button>
-					<button class="topic-btn" data-prompt="What is thyroid disease?"><i class="fas fa-disease"></i> Thyroid</button>
-					<button class="topic-btn" data-prompt="Tell me about allergies"><i class="fas fa-allergies"></i> Allergies</button>
-					<button class="topic-btn" data-prompt="What is COVID-19?"><i class="fas fa-virus"></i> COVID-19</button>
+					<button class="topic-btn" data-prompt="What is diabetes and how to manage it?"><i
+							class="fas fa-tint"></i> Diabetes</button>
+					<button class="topic-btn" data-prompt="Explain blood pressure and hypertension."><i
+							class="fas fa-heart-circle-exclamation"></i> Hypertension</button>
+					<button class="topic-btn" data-prompt="Explain asthma symptoms and management."><i
+							class="fas fa-wind"></i> Asthma</button>
+					<button class="topic-btn" data-prompt="Tell me about heart disease"><i
+							class="fas fa-heart-crack"></i> Heart Disease</button>
+					<button class="topic-btn" data-prompt="What is thyroid disease?"><i class="fas fa-disease"></i>
+						Thyroid</button>
+					<button class="topic-btn" data-prompt="Tell me about allergies"><i class="fas fa-allergies"></i>
+						Allergies</button>
+					<button class="topic-btn" data-prompt="What is COVID-19?"><i class="fas fa-virus"></i>
+						COVID-19</button>
 
 					<div class="topic-group-label">Mental Health</div>
-					<button class="topic-btn" data-prompt="Tell me about stress and anxiety"><i class="fas fa-cloud-rain"></i> Stress & Anxiety</button>
-					<button class="topic-btn" data-prompt="What is depression?"><i class="fas fa-sad-tear"></i> Depression</button>
+					<button class="topic-btn" data-prompt="Tell me about stress and anxiety"><i
+							class="fas fa-cloud-rain"></i> Stress & Anxiety</button>
+					<button class="topic-btn" data-prompt="What is depression?"><i class="fas fa-sad-tear"></i>
+						Depression</button>
 					<button class="topic-btn" data-prompt="What is PTSD?"><i class="fas fa-bolt"></i> PTSD</button>
 					<button class="topic-btn" data-prompt="What is ADHD?"><i class="fas fa-lightbulb"></i> ADHD</button>
 
 					<div class="topic-group-label">Wellness & Prevention</div>
-					<button class="topic-btn" data-prompt="Tell me about vitamins and minerals."><i class="fas fa-apple-whole"></i> Nutrition</button>
-					<button class="topic-btn" data-prompt="Tips for better sleep"><i class="fas fa-moon"></i> Sleep</button>
-					<button class="topic-btn" data-prompt="Benefits of exercise"><i class="fas fa-person-running"></i> Exercise</button>
-					<button class="topic-btn" data-prompt="How to stay healthy?"><i class="fas fa-spa"></i> Healthy Lifestyle</button>
-					<button class="topic-btn" data-prompt="Tell me about vaccines"><i class="fas fa-syringe"></i> Vaccines</button>
-					<button class="topic-btn" data-prompt="Recommended health screenings"><i class="fas fa-clipboard-check"></i> Screenings</button>
+					<button class="topic-btn" data-prompt="Tell me about vitamins and minerals."><i
+							class="fas fa-apple-whole"></i> Nutrition</button>
+					<button class="topic-btn" data-prompt="Tips for better sleep"><i class="fas fa-moon"></i>
+						Sleep</button>
+					<button class="topic-btn" data-prompt="Benefits of exercise"><i class="fas fa-person-running"></i>
+						Exercise</button>
+					<button class="topic-btn" data-prompt="How to stay healthy?"><i class="fas fa-spa"></i> Healthy
+						Lifestyle</button>
+					<button class="topic-btn" data-prompt="Tell me about vaccines"><i class="fas fa-syringe"></i>
+						Vaccines</button>
+					<button class="topic-btn" data-prompt="Recommended health screenings"><i
+							class="fas fa-clipboard-check"></i> Screenings</button>
 
 					<div class="topic-group-label">First Aid & Emergency</div>
-					<button class="topic-btn" data-prompt="How to do CPR?"><i class="fas fa-hand-holding-medical"></i> CPR</button>
-					<button class="topic-btn" data-prompt="First aid for burns"><i class="fas fa-fire"></i> Burns</button>
-					<button class="topic-btn" data-prompt="What to do if someone is choking?"><i class="fas fa-circle-exclamation"></i> Choking</button>
-					<button class="topic-btn" data-prompt="What are signs of a stroke?"><i class="fas fa-triangle-exclamation"></i> Stroke Signs</button>
+					<button class="topic-btn" data-prompt="How to do CPR?"><i class="fas fa-hand-holding-medical"></i>
+						CPR</button>
+					<button class="topic-btn" data-prompt="First aid for burns"><i class="fas fa-fire"></i>
+						Burns</button>
+					<button class="topic-btn" data-prompt="What to do if someone is choking?"><i
+							class="fas fa-circle-exclamation"></i> Choking</button>
+					<button class="topic-btn" data-prompt="What are signs of a stroke?"><i
+							class="fas fa-triangle-exclamation"></i> Stroke Signs</button>
 
 					<div class="topic-group-label">Clinical & Patient Info</div>
-					<button class="topic-btn" data-prompt="What are normal vital signs?"><i class="fas fa-chart-line"></i> Vital Signs</button>
-					<button class="topic-btn" data-prompt="What blood tests should I know about?"><i class="fas fa-vial"></i> Blood Tests</button>
-					<button class="topic-btn" data-prompt="Explain different types of medical imaging"><i class="fas fa-x-ray"></i> Imaging (MRI, CT)</button>
-					<button class="topic-btn" data-prompt="What are my rights as a patient?"><i class="fas fa-scale-balanced"></i> Patient Rights</button>
-					<button class="topic-btn" data-prompt="What happens during a hospital stay?"><i class="fas fa-hospital"></i> Hospital Stay</button>
-					<button class="topic-btn" data-prompt="Should I go to ER or urgent care?"><i class="fas fa-truck-medical"></i> ER vs Urgent Care</button>
+					<button class="topic-btn" data-prompt="What are normal vital signs?"><i
+							class="fas fa-chart-line"></i> Vital Signs</button>
+					<button class="topic-btn" data-prompt="What blood tests should I know about?"><i
+							class="fas fa-vial"></i> Blood Tests</button>
+					<button class="topic-btn" data-prompt="Explain different types of medical imaging"><i
+							class="fas fa-x-ray"></i> Imaging (MRI, CT)</button>
+					<button class="topic-btn" data-prompt="What are my rights as a patient?"><i
+							class="fas fa-scale-balanced"></i> Patient Rights</button>
+					<button class="topic-btn" data-prompt="What happens during a hospital stay?"><i
+							class="fas fa-hospital"></i> Hospital Stay</button>
+					<button class="topic-btn" data-prompt="Should I go to ER or urgent care?"><i
+							class="fas fa-truck-medical"></i> ER vs Urgent Care</button>
 				</div>
 			</aside>
 
-			<!-- Center: Chat -->
+			<!-- ── Center: Chat ── -->
 			<main class="chat-center">
-				<div class="chat-header">
-					<div class="status">
-						<span class="status-dot"></span>
-						Medical Assistant — Online
+				<div class="chat-status-bar">
+					<div class="status-left">
+						<div class="status-avatar"><i class="fas fa-user-doctor"></i></div>
+						<div class="status-info">
+							<h3>Dr. MedAssist</h3>
+							<p>Online — Ready to help</p>
+						</div>
 					</div>
 					<div class="mode-toggles">
-						<label><input type="checkbox" id="mode-detailed"> Detailed</label>
-						<label><input type="checkbox" id="mode-bullets"> Bullets</label>
-						<label><input type="checkbox" id="mode-followup"> Follow-up</label>
+						<label class="mode-toggle"><input type="checkbox" id="mode-detailed"> Detailed</label>
+						<label class="mode-toggle"><input type="checkbox" id="mode-bullets"> Bullets</label>
+						<label class="mode-toggle"><input type="checkbox" id="mode-followup"> Follow-up</label>
 					</div>
 				</div>
 
 				<div class="chat-window" id="chat-window">
-					<div class="message bot">
-						<div class="bubble">Hello! I can help with symptoms, diseases, body systems, medications, nutrition, mental health, first aid, and clinical questions. Ask anything in your own words.</div>
+					<!-- Welcome Card -->
+					<div class="welcome-card">
+						<div class="welcome-header">
+							<div class="welcome-icon"><i class="fas fa-stethoscope"></i></div>
+							<div>
+								<h2>Welcome to MedAssist</h2>
+								<p>Your personal health assistant</p>
+							</div>
+						</div>
+						<div class="welcome-body">
+							I can help you understand <strong>symptoms</strong>, learn about <strong>diseases</strong>,
+							explore <strong>body systems</strong>, get <strong>nutrition</strong> advice, <strong>first
+								aid</strong> instructions, and much more. Just type your question below!
+						</div>
+						<div class="welcome-tags">
+							<span class="welcome-tag">Symptoms</span>
+							<span class="welcome-tag">Diseases</span>
+							<span class="welcome-tag">Body Systems</span>
+							<span class="welcome-tag">Nutrition</span>
+							<span class="welcome-tag">Mental Health</span>
+							<span class="welcome-tag">First Aid</span>
+							<span class="welcome-tag">Medications</span>
+						</div>
 					</div>
 				</div>
 
+				<!-- Typing Indicator -->
 				<div class="typing" id="typing-indicator">
-					<span>Typing</span>
-					<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+					<div class="typing-avatar"><i class="fas fa-user-doctor"></i></div>
+					<div class="typing-dots">
+						<div class="typing-dot"></div>
+						<div class="typing-dot"></div>
+						<div class="typing-dot"></div>
+					</div>
 				</div>
 
+				<!-- Quick Chips -->
 				<div class="quick-chips">
-					<button class="chip" data-prompt="What does chest pain mean?"><i class="fas fa-heart-pulse" style="font-size:10px"></i> Chest pain</button>
-					<button class="chip" data-prompt="How to lower fever?"><i class="fas fa-thermometer" style="font-size:10px"></i> Fever</button>
-					<button class="chip" data-prompt="Tell me about stress and anxiety"><i class="fas fa-cloud" style="font-size:10px"></i> Stress</button>
-					<button class="chip" data-prompt="How to build a healthy diet?"><i class="fas fa-carrot" style="font-size:10px"></i> Diet</button>
-					<button class="chip" data-prompt="What causes cough?"><i class="fas fa-lungs" style="font-size:10px"></i> Cough</button>
-					<button class="chip" data-prompt="How much water should I drink?"><i class="fas fa-glass-water" style="font-size:10px"></i> Hydration</button>
-					<button class="chip" data-prompt="I am not feeling well"><i class="fas fa-face-frown" style="font-size:10px"></i> Feeling sick</button>
-					<button class="chip" data-prompt="When should I see a doctor?"><i class="fas fa-user-doctor" style="font-size:10px"></i> See a doctor?</button>
+					<button class="chip" data-prompt="What does chest pain mean?"><i class="fas fa-heart-pulse"></i>
+						Chest pain</button>
+					<button class="chip" data-prompt="How to lower fever?"><i class="fas fa-thermometer"></i>
+						Fever</button>
+					<button class="chip" data-prompt="Tell me about stress and anxiety"><i class="fas fa-cloud"></i>
+						Stress</button>
+					<button class="chip" data-prompt="How to build a healthy diet?"><i class="fas fa-carrot"></i>
+						Diet</button>
+					<button class="chip" data-prompt="What causes cough?"><i class="fas fa-lungs"></i> Cough</button>
+					<button class="chip" data-prompt="How much water should I drink?"><i class="fas fa-glass-water"></i>
+						Hydration</button>
+					<button class="chip" data-prompt="I am not feeling well"><i class="fas fa-face-frown"></i> Feeling
+						sick</button>
+					<button class="chip" data-prompt="When should I see a doctor?"><i class="fas fa-user-doctor"></i>
+						See a doctor?</button>
 				</div>
 
+				<!-- Input Bar -->
 				<div class="chat-input-bar">
-					<input id="chat-input" type="text" placeholder="Ask a health question..." autocomplete="off" />
-					<button class="send-btn" id="send-btn"><i class="fas fa-arrow-up"></i></button>
+					<div class="input-wrap">
+						<i class="fas fa-comment-medical"></i>
+						<input id="chat-input" class="chat-input" type="text" placeholder="Describe your symptoms..."
+							autocomplete="off">
+					</div>
+					<button class="send-btn" id="send-btn" title="Send message">
+						<i class="fas fa-paper-plane"></i>
+					</button>
 				</div>
 			</main>
 
-			<!-- Right Sidebar: Tools & Stats -->
+			<!-- ── Right Sidebar ── -->
 			<aside class="sidebar-right">
+				<!-- Session Stats -->
 				<div class="right-card">
-					<div class="right-card-title">Session Tools</div>
-					<div class="tool-btn-row">
-						<button class="tool-btn" id="clear-chat"><i class="fas fa-trash-can"></i> Clear</button>
-						<button class="tool-btn" id="export-chat"><i class="fas fa-download"></i> Export</button>
-						<button class="tool-btn" id="copy-chat"><i class="fas fa-copy"></i> Copy</button>
-					</div>
-				</div>
-
-				<div class="right-card">
-					<div class="right-card-title">Conversation Stats</div>
+					<div class="right-card-title"><i class="fas fa-chart-bar"></i> Session Stats</div>
 					<div class="stats-grid">
 						<div class="stat-item">
-							<span class="stat-number" id="stat-messages">1</span>
+							<span class="stat-number" id="stat-messages">0</span>
 							<div class="stat-label">Messages</div>
 						</div>
 						<div class="stat-item">
@@ -682,20 +1281,55 @@
 					</div>
 				</div>
 
-
-
+				<!-- Health Tips -->
 				<div class="right-card">
-					<div class="right-card-title">How to use</div>
-					<p style="font-size:0.8rem;color:var(--muted);line-height:1.5;">
-						Type any health question or click a topic on the left. Use quick chips below the chat for common queries. Toggle Detailed/Bullets modes above the chat.
+					<div class="right-card-title"><i class="fas fa-lightbulb"></i> Health Tips</div>
+					<div class="tip-list">
+						<div class="tip-item">
+							<i class="fas fa-check-circle"></i>
+							<span>Drink 8–10 glasses of water daily to stay hydrated</span>
+						</div>
+						<div class="tip-item">
+							<i class="fas fa-check-circle"></i>
+							<span>Get 7–9 hours of sleep every night for recovery</span>
+						</div>
+						<div class="tip-item">
+							<i class="fas fa-check-circle"></i>
+							<span>Exercise 30 minutes, 5 days a week</span>
+						</div>
+						<div class="tip-item">
+							<i class="fas fa-check-circle"></i>
+							<span>Wash hands frequently for 20+ seconds</span>
+						</div>
+						<div class="tip-item">
+							<i class="fas fa-check-circle"></i>
+							<span>Eat 5 servings of fruits & vegetables daily</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- How to Use -->
+				<div class="right-card">
+					<div class="right-card-title"><i class="fas fa-circle-info"></i> How to Use</div>
+					<p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.55;">
+						Type any health question or click a topic on the left. Use quick chips for common queries.
+						Toggle <strong>Detailed</strong> or <strong>Bullets</strong> mode for different response styles.
 					</p>
 				</div>
 
+				<!-- Emergency -->
 				<div class="emergency-card">
 					<div class="right-card-title"><i class="fas fa-triangle-exclamation"></i> Emergency</div>
-					<p>Severe chest pain, difficulty breathing, stroke signs, or uncontrolled bleeding — call emergency services immediately.</p>
+					<div class="emergency-contacts">
+						<div class="emergency-item"><span>Ambulance</span><strong>108</strong></div>
+						<div class="emergency-item"><span>Fire Dept</span><strong>101</strong></div>
+						<div class="emergency-item"><span>Police</span><strong>100</strong></div>
+					</div>
+					<p class="emergency-note">If you experience severe chest pain, difficulty breathing, or uncontrolled
+						bleeding — call emergency immediately.</p>
 				</div>
 
+				<!-- Keyboard -->
 				<div class="keyboard-hint">
 					Press <kbd>Enter</kbd> to send — <kbd>/</kbd> to focus input
 				</div>
@@ -703,9 +1337,10 @@
 		</div>
 	</div>
 
+	<!-- ═══════════════════════════════════════════
+	     JAVASCRIPT — All chatbot logic preserved
+	     ═══════════════════════════════════════════ -->
 	<script>
-		const rootEl = document.documentElement;
-		const themeToggleBtn = document.getElementById('theme-toggle');
 		const chatWindow = document.getElementById('chat-window');
 		const chatInput = document.getElementById('chat-input');
 		const sendBtn = document.getElementById('send-btn');
@@ -715,18 +1350,7 @@
 		const topicSearch = document.getElementById('topic-search');
 		const topicList = document.getElementById('topic-list');
 
-		const messages = [{ role: 'bot', text: 'Hello! I can help with symptoms, diseases, body systems, medications, nutrition, mental health, first aid, and clinical questions. Ask anything in your own words.' }];
-
-		function applyTheme(theme) {
-			rootEl.setAttribute('data-theme', theme);
-			localStorage.setItem('mk-theme', theme);
-			themeToggleBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-		}
-
-		function initTheme() {
-			const saved = localStorage.getItem('mk-theme');
-			applyTheme(saved || 'light');
-		}
+		const messages = [];
 
 		function escapeHtml(text) {
 			const div = document.createElement('div');
@@ -734,13 +1358,40 @@
 			return div.innerHTML;
 		}
 
+		function getTimeString() {
+			return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		}
+
 		function addMessage(role, text) {
 			const wrapper = document.createElement('div');
 			wrapper.className = `message ${role}`;
+
+			// Avatar
+			const avatar = document.createElement('div');
+			avatar.className = 'msg-avatar';
+			if (role === 'bot') {
+				avatar.innerHTML = '<i class="fas fa-user-doctor"></i>';
+			} else {
+				avatar.innerHTML = '<i class="fas fa-user"></i>';
+			}
+
+			// Bubble + time container
+			const bubbleWrap = document.createElement('div');
+
 			const bubble = document.createElement('div');
 			bubble.className = 'bubble';
 			bubble.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
-			wrapper.appendChild(bubble);
+
+			const time = document.createElement('div');
+			time.className = 'msg-time';
+			time.textContent = getTimeString();
+
+			bubbleWrap.appendChild(bubble);
+			bubbleWrap.appendChild(time);
+
+			wrapper.appendChild(avatar);
+			wrapper.appendChild(bubbleWrap);
+
 			chatWindow.appendChild(wrapper);
 			chatWindow.scrollTop = chatWindow.scrollHeight;
 			messages.push({ role, text });
@@ -774,6 +1425,7 @@
 			addMessage('user', raw);
 			chatInput.value = '';
 			typingIndicator.classList.add('active');
+			chatWindow.scrollTop = chatWindow.scrollHeight;
 
 			try {
 				const response = await fetch('/api/chat', {
@@ -796,7 +1448,7 @@
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
-			a.download = 'chat-transcript.txt';
+			a.download = 'medassist-transcript.txt';
 			a.click();
 			URL.revokeObjectURL(url);
 		}
@@ -805,6 +1457,9 @@
 			const lastBot = [...messages].reverse().find(m => m.role === 'bot');
 			if (!lastBot) return;
 			navigator.clipboard.writeText(lastBot.text);
+			const btn = document.getElementById('copy-chat');
+			btn.innerHTML = '<i class="fas fa-check"></i>';
+			setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
 		}
 
 		function clearChat() {
@@ -854,6 +1509,7 @@
 			}
 		});
 
+		// Event Listeners
 		sendBtn.addEventListener('click', sendMessage);
 		chatInput.addEventListener('keypress', (e) => {
 			if (e.key === 'Enter') sendMessage();
@@ -861,17 +1517,14 @@
 		document.getElementById('export-chat').addEventListener('click', exportChat);
 		document.getElementById('copy-chat').addEventListener('click', copyLatestReply);
 		document.getElementById('clear-chat').addEventListener('click', clearChat);
-		themeToggleBtn.addEventListener('click', () => {
-			const current = rootEl.getAttribute('data-theme') || 'light';
-			applyTheme(current === 'dark' ? 'light' : 'dark');
-		});
-
 		topicSearch.addEventListener('input', (e) => filterTopics(e.target.value));
 
 		bindPromptButtons('.chip');
 		bindPromptButtons('.topic-btn', true);
 
-		initTheme();
+		// Focus input on load
+		chatInput.focus();
 	</script>
 </body>
+
 </html>
