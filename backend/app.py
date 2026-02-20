@@ -312,13 +312,14 @@ def health_tracker():
 # COMMUNITY
 # ============================================
 
-@app.route('/community')
-@auth.login_required
-def community():
-    """Community page (protected)"""
-    user_id = session.get('user_id')
-    user = db.get_user_by_id(user_id)
-    return render_template('community.html', user=user)
+## Community page removed - Community button now points to Report Issue
+# @app.route('/community')
+# @auth.login_required
+# def community():
+#     """Community page (protected)"""
+#     user_id = session.get('user_id')
+#     user = db.get_user_by_id(user_id)
+#     return render_template('community.html', user=user)
 
 
 # ============================================
