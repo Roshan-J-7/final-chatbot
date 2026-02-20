@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Tracker - MedAssist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0891b2;
+            --primary-dark: #0e7490;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #1A1A1A;
+            --text-gray: #666666;
+            --text-light: #8B8B8B;
+            --border: #E0E0E0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0 1.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(8, 145, 178, 0.05);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* HEALTH ENTRY FORM */
+        .entry-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            padding: 0.85rem 2rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+        }
+
+        /* SUMMARY CARDS */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .summary-icon.weight {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .summary-icon.calories {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+        }
+
+        .summary-icon.sleep {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .summary-icon.entries {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .summary-unit {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* CHARTS */
+        .charts-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+
+        /* HISTORY TABLE */
+        .history-section {
+            margin-bottom: 2rem;
+        }
+
+        .table-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background: var(--bg);
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 0.75rem;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .data-table tr:hover {
+            background: rgba(8, 145, 178, 0.02);
+        }
+
+        .btn-delete {
+            padding: 0.4rem 0.75rem;
+            background: transparent;
+            border: 1px solid var(--danger);
+            border-radius: 6px;
+            color: var(--danger);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .alert.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="logo-text">MedAssist</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="/dashboard" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/chat" class="nav-item">
+                    <i class="fas fa-comment-medical"></i>
+                    <span>Chat Assistant</span>
+                </a>
+                <a href="/health-tracker" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Health Tracker</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="/profile" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    {% if user.profile_image_path %}
+                        <img src="{{ user.profile_image_path }}" alt="{{ user.name }}">
+                    {% else %}
+                        {{ user.name[0].upper() }}
+                    {% endif %}
+                </div>
+                <div class="user-details">
+                    <div class="user-name">{{ user.name }}</div>
+                    <div class="user-email">{{ user.email }}</div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="window.location.href='/logout'">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-chart-line"></i>
+                Health Tracker
+            </h1>
+            <p class="page-subtitle">Track and monitor your daily health metrics</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alert-success" class="alert success"></div>
+        <div id="alert-error" class="alert error"></div>
+
+        <!-- HEALTH ENTRY FORM -->
+        <div class="entry-card">
+            <h2 class="form-title">
+                <i class="fas fa-plus-circle"></i>
+                Add Health Entry
+            </h2>
+            <form id="health-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" id="date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Weight (kg)</label>
+                        <input type="number" step="0.1" id="weight" class="form-input" placeholder="70.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Blood Pressure</label>
+                        <input type="text" id="blood_pressure" class="form-input" placeholder="120/80">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Heart Rate (bpm)</label>
+                        <input type="number" id="heart_rate" class="form-input" placeholder="72">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Calories</label>
+                        <input type="number" id="calories" class="form-input" placeholder="2000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Water Intake (L)</label>
+                        <input type="number" step="0.1" id="water_intake" class="form-input" placeholder="2.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sleep Hours</label>
+                        <input type="number" step="0.5" id="sleep_hours" class="form-input" placeholder="8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea id="notes" class="form-input form-textarea" placeholder="Any observations..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i>
+                    Save Entry
+                </button>
+            </form>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-icon weight">
+                    <i class="fas fa-weight"></i>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-label">Latest Weight</div>
+                    <div class="summary-value" id="latest-weight">--<span class="summary-unit">kg</span></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon calories">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-label">Avg Calories</div>
+                    <div class="summary-value" id="avg-calories">--<span class="summary-unit">kcal</span></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon sleep">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-label">Avg Sleep</div>
+                    <div class="summary-value" id="avg-sleep">--<span class="summary-unit">hrs</span></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon entries">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-label">Total Entries</div>
+                    <div class="summary-value" id="total-entries">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="charts-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-area"></i>
+                Trends & Analytics
+            </h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Weight Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Calories Intake</h3>
+                    <div class="chart-container">
+                        <canvas id="caloriesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Sleep Hours</h3>
+                    <div class="chart-container">
+                        <canvas id="sleepChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY TABLE -->
+        <div class="history-section">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Health History
+            </h2>
+            <div class="table-card">
+                <table class="data-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Weight</th>
+                            <th>BP</th>
+                            <th>Heart Rate</th>
+                            <th>Calories</th>
+                            <th>Water</th>
+                            <th>Sleep</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="8" class="empty-state">
+                                <i class="fas fa-folder-open"></i>
+                                <p>No health entries yet. Add your first entry above!</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+
+        let weightChart, caloriesChart, sleepChart;
+
+        // Load all data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSummary();
+            loadChartData();
+            loadHistory();
+        });
+
+        // Show alert message
+        function showAlert(type, message) {
+            const alertEl = document.getElementById(`alert-${type}`);
+            alertEl.textContent = message;
+            alertEl.classList.add('show');
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+            }, 5000);
+        }
+
+        // Submit health entry form
+        document.getElementById('health-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                date_created: document.getElementById('date').value,
+                weight: document.getElementById('weight').value || null,
+                blood_pressure: document.getElementById('blood_pressure').value || null,
+                heart_rate: document.getElementById('heart_rate').value || null,
+                calories: document.getElementById('calories').value || null,
+                water_intake: document.getElementById('water_intake').value || null,
+                sleep_hours: document.getElementById('sleep_hours').value || null,
+                notes: document.getElementById('notes').value || null
+            };
+
+            try {
+                const response = await fetch('/api/health-tracker/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('success', 'Health entry added successfully!');
+                    // Reset form
+                    document.getElementById('health-form').reset();
+                    document.getElementById('date').valueAsDate = new Date();
+                    // Reload data
+                    loadSummary();
+                    loadChartData();
+                    loadHistory();
+                } else {
+                    showAlert('error', data.message || 'Failed to add entry');
+                }
+            } catch (error) {
+                showAlert('error', 'Error connecting to server');
+            }
+        });
+
+        // Load summary statistics
+        async function loadSummary() {
+            try {
+                const response = await fetch('/api/health-tracker/summary');
+                const data = await response.json();
+
+                if (data.success) {
+                    const summary = data.summary;
+                    document.getElementById('latest-weight').innerHTML = 
+                        summary.latest_weight ? `${summary.latest_weight}<span class="summary-unit">kg</span>` : '--<span class="summary-unit">kg</span>';
+                    document.getElementById('avg-calories').innerHTML = 
+                        summary.avg_calories ? `${summary.avg_calories}<span class="summary-unit">kcal</span>` : '--<span class="summary-unit">kcal</span>';
+                    document.getElementById('avg-sleep').innerHTML = 
+                        summary.avg_sleep ? `${summary.avg_sleep}<span class="summary-unit">hrs</span>` : '--<span class="summary-unit">hrs</span>';
+                    document.getElementById('total-entries').textContent = summary.total_entries;
+                }
+            } catch (error) {
+                console.error('Error loading summary:', error);
+            }
+        }
+
+        // Load chart data
+        async function loadChartData() {
+            try {
+                const response = await fetch('/api/health-tracker/chart-data?days=30');
+                const data = await response.json();
+
+                if (data.success) {
+                    const chartData = data.data;
+                    renderCharts(chartData);
+                }
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+            }
+        }
+
+        // Render charts
+        function renderCharts(data) {
+            const dates = data.dates || [];
+            const weights = data.weights || [];
+            const calories = data.calories || [];
+            const sleep = data.sleep || [];
+
+            // Weight Chart
+            const weightCtx = document.getElementById('weightChart').getContext('2d');
+            if (weightChart) weightChart.destroy();
+            weightChart = new Chart(weightCtx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: weights,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Calories Chart
+            const caloriesCtx = document.getElementById('caloriesChart').getContext('2d');
+            if (caloriesChart) caloriesChart.destroy();
+            caloriesChart = new Chart(caloriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Calories',
+                        data: calories,
+                        backgroundColor: 'rgba(249, 115, 22, 0.6)',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Sleep Chart
+            const sleepCtx = document.getElementById('sleepChart').getContext('2d');
+            if (sleepChart) sleepChart.destroy();
+            sleepChart = new Chart(sleepCtx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Sleep (hours)',
+                        data: sleep,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Load history table
+        async function loadHistory() {
+            try {
+                const response = await fetch('/api/health-tracker/entries');
+                const data = await response.json();
+
+                if (data.success) {
+                    const tbody = document.getElementById('history-tbody');
+                    
+                    if (data.entries.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="8" class="empty-state">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>No health entries yet. Add your first entry above!</p>
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        tbody.innerHTML = data.entries.map(entry => `
+                            <tr>
+                                <td>${entry.date_created}</td>
+                                <td>${entry.weight || '--'}</td>
+                                <td>${entry.blood_pressure || '--'}</td>
+                                <td>${entry.heart_rate || '--'}</td>
+                                <td>${entry.calories || '--'}</td>
+                                <td>${entry.water_intake || '--'}</td>
+                                <td>${entry.sleep_hours || '--'}</td>
+                                <td>
+                                    <button class="btn-delete" onclick="deleteEntry(${entry.id})">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        // Delete entry
+        async function deleteEntry(id) {
+            if (!confirm('Are you sure you want to delete this entry?')) return;
+
+            try {
+                const response = await fetch(`/api/health-tracker/delete/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('success', 'Entry deleted successfully');
+                    loadSummary();
+                    loadChartData();
+                    loadHistory();
+                } else {
+                    showAlert('error', data.message || 'Failed to delete entry');
+                }
+            } catch (error) {
+                showAlert('error', 'Error connecting to server');
+            }
+        }
+    </script>
+</body>
+</html>

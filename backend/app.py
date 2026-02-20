@@ -286,6 +286,120 @@ def upload_profile_image():
 
 
 # ============================================
+# HEALTH TRACKER
+# ============================================
+
+@app.route('/health-tracker')
+@auth.login_required
+def health_tracker():
+    """Health Tracker page (protected)"""
+    user_id = session.get('user_id')
+    user = db.get_user_by_id(user_id)
+    return render_template('health_tracker.html', user=user)
+
+
+@app.route('/api/health-tracker/add', methods=['POST'])
+@auth.login_required
+def add_health_entry():
+    """Add a new health tracker entry"""
+    user_id = session.get('user_id')
+    data = request.json
+    
+    # Extract data with validation
+    try:
+        weight = float(data.get('weight')) if data.get('weight') else None
+        blood_pressure = data.get('blood_pressure', '').strip() or None
+        heart_rate = int(data.get('heart_rate')) if data.get('heart_rate') else None
+        calories = int(data.get('calories')) if data.get('calories') else None
+        water_intake = float(data.get('water_intake')) if data.get('water_intake') else None
+        sleep_hours = float(data.get('sleep_hours')) if data.get('sleep_hours') else None
+        notes = data.get('notes', '').strip() or None
+        date_created = data.get('date_created') or None
+        
+        # Add entry to database
+        entry_id = db.add_health_entry(
+            user_id=user_id,
+            weight=weight,
+            blood_pressure=blood_pressure,
+            heart_rate=heart_rate,
+            calories=calories,
+            water_intake=water_intake,
+            sleep_hours=sleep_hours,
+            notes=notes,
+            date_created=date_created
+        )
+        
+        if entry_id:
+            return jsonify({
+                "success": True,
+                "message": "Health entry added successfully",
+                "entry_id": entry_id
+            })
+        else:
+            return jsonify({"success": False, "message": "Failed to add entry"}), 500
+            
+    except (ValueError, TypeError) as e:
+        return jsonify({"success": False, "message": f"Invalid data format: {str(e)}"}), 400
+
+
+@app.route('/api/health-tracker/entries', methods=['GET'])
+@auth.login_required
+def get_health_entries():
+    """Get all health entries for the current user"""
+    user_id = session.get('user_id')
+    limit = request.args.get('limit', type=int)
+    
+    entries = db.get_user_health_entries(user_id, limit)
+    
+    return jsonify({
+        "success": True,
+        "entries": entries
+    })
+
+
+@app.route('/api/health-tracker/summary', methods=['GET'])
+@auth.login_required
+def get_health_summary():
+    """Get health summary statistics"""
+    user_id = session.get('user_id')
+    summary = db.get_health_summary(user_id)
+    
+    return jsonify({
+        "success": True,
+        "summary": summary
+    })
+
+
+@app.route('/api/health-tracker/chart-data', methods=['GET'])
+@auth.login_required
+def get_health_chart_data():
+    """Get health data for charts"""
+    user_id = session.get('user_id')
+    days = request.args.get('days', default=30, type=int)
+    
+    chart_data = db.get_health_chart_data(user_id, days)
+    
+    return jsonify({
+        "success": True,
+        "data": chart_data
+    })
+
+
+@app.route('/api/health-tracker/delete/<int:entry_id>', methods=['DELETE'])
+@auth.login_required
+def delete_health_entry(entry_id):
+    """Delete a health entry"""
+    user_id = session.get('user_id')
+    
+    success = db.delete_health_entry(entry_id, user_id)
+    
+    if success:
+        return jsonify({"success": True, "message": "Entry deleted successfully"})
+    else:
+        return jsonify({"success": False, "message": "Failed to delete entry"}), 500
+
+
+# ============================================
 # CHATBOT API
 # ============================================
 

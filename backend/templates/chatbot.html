@@ -1460,7 +1460,7 @@
 	<script>
 		// User profile image path from backend
 		const userProfileImage = "{{ user.profile_image_path if user and user.profile_image_path else '' }}";
-		const isAuthenticated = {% if user %}true{% else %}false{% endif %};
+		const isAuthenticated = {{ 'true' if user else 'false' }};
 
 		const chatWindow = document.getElementById('chat-window');
 		const chatInput = document.getElementById('chat-input');
@@ -1868,9 +1868,6 @@
 
 		// Navigate back function
 			function navigateBack() {
-				// Check if user is authenticated by checking if user object exists
-				const isAuthenticated = "{{ user }}" !== "";
-				
 				if (isAuthenticated) {
 					// Navigate to dashboard if logged in
 					window.location.href = '/dashboard';

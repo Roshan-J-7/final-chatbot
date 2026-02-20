@@ -71,6 +71,24 @@ def init_database():
         )
     ''')
     
+    # Create health_tracker table for tracking user health metrics
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS health_tracker (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            weight REAL,
+            blood_pressure TEXT,
+            heart_rate INTEGER,
+            calories INTEGER,
+            water_intake REAL,
+            sleep_hours REAL,
+            notes TEXT,
+            date_created DATE DEFAULT CURRENT_DATE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
     conn.commit()
     conn.close()
 
@@ -469,6 +487,195 @@ def generate_chat_title(first_user_message: str) -> str:
         title = title[0].upper() + title[1:]
     
     return title if title else "New Chat"
+
+
+# ============================================
+# HEALTH TRACKER OPERATIONS
+# ============================================
+
+def add_health_entry(user_id: int, weight: Optional[float] = None, 
+                    blood_pressure: Optional[str] = None, 
+                    heart_rate: Optional[int] = None,
+                    calories: Optional[int] = None, 
+                    water_intake: Optional[float] = None,
+                    sleep_hours: Optional[float] = None, 
+                    notes: Optional[str] = None,
+                    date_created: Optional[str] = None) -> Optional[int]:
+    """
+    Add a new health tracker entry
+    Returns entry ID if successful, None otherwise
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        if date_created:
+            cursor.execute(
+                '''INSERT INTO health_tracker 
+                   (user_id, weight, blood_pressure, heart_rate, calories, 
+                    water_intake, sleep_hours, notes, date_created) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (user_id, weight, blood_pressure, heart_rate, calories, 
+                 water_intake, sleep_hours, notes, date_created)
+            )
+        else:
+            cursor.execute(
+                '''INSERT INTO health_tracker 
+                   (user_id, weight, blood_pressure, heart_rate, calories, 
+                    water_intake, sleep_hours, notes) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                (user_id, weight, blood_pressure, heart_rate, calories, 
+                 water_intake, sleep_hours, notes)
+            )
+        
+        entry_id = cursor.lastrowid
+        conn.commit()
+        conn.close()
+        return entry_id
+    except sqlite3.Error as e:
+        print(f"Error adding health entry: {e}")
+        return None
+
+
+def get_user_health_entries(user_id: int, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    """
+    Get all health entries for a user, ordered by date (newest first)
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    if limit:
+        cursor.execute(
+            '''SELECT * FROM health_tracker 
+               WHERE user_id = ? 
+               ORDER BY date_created DESC, created_at DESC 
+               LIMIT ?''',
+            (user_id, limit)
+        )
+    else:
+        cursor.execute(
+            '''SELECT * FROM health_tracker 
+               WHERE user_id = ? 
+               ORDER BY date_created DESC, created_at DESC''',
+            (user_id,)
+        )
+    
+    entries = cursor.fetchall()
+    conn.close()
+    return [dict(entry) for entry in entries]
+
+
+def get_health_summary(user_id: int) -> Dict[str, Any]:
+    """
+    Get health summary statistics for a user
+    Returns latest weight, average calories, average sleep, and total entries
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get latest weight
+    cursor.execute(
+        '''SELECT weight FROM health_tracker 
+           WHERE user_id = ? AND weight IS NOT NULL 
+           ORDER BY date_created DESC, created_at DESC 
+           LIMIT 1''',
+        (user_id,)
+    )
+    latest_weight_row = cursor.fetchone()
+    latest_weight = latest_weight_row[0] if latest_weight_row else None
+    
+    # Get average calories
+    cursor.execute(
+        '''SELECT AVG(calories) FROM health_tracker 
+           WHERE user_id = ? AND calories IS NOT NULL''',
+        (user_id,)
+    )
+    avg_calories_row = cursor.fetchone()
+    avg_calories = round(avg_calories_row[0], 1) if avg_calories_row[0] else None
+    
+    # Get average sleep hours
+    cursor.execute(
+        '''SELECT AVG(sleep_hours) FROM health_tracker 
+           WHERE user_id = ? AND sleep_hours IS NOT NULL''',
+        (user_id,)
+    )
+    avg_sleep_row = cursor.fetchone()
+    avg_sleep = round(avg_sleep_row[0], 1) if avg_sleep_row[0] else None
+    
+    # Get total entries count
+    cursor.execute(
+        'SELECT COUNT(*) FROM health_tracker WHERE user_id = ?',
+        (user_id,)
+    )
+    total_entries = cursor.fetchone()[0]
+    
+    conn.close()
+    
+    return {
+        'latest_weight': latest_weight,
+        'avg_calories': avg_calories,
+        'avg_sleep': avg_sleep,
+        'total_entries': total_entries
+    }
+
+
+def get_health_chart_data(user_id: int, days: int = 30) -> Dict[str, Any]:
+    """
+    Get health data for charts (last N days)
+    Returns data formatted for Chart.js
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute(
+        '''SELECT date_created, weight, calories, sleep_hours 
+           FROM health_tracker 
+           WHERE user_id = ? 
+           ORDER BY date_created ASC 
+           LIMIT ?''',
+        (user_id, days)
+    )
+    
+    entries = cursor.fetchall()
+    conn.close()
+    
+    dates = []
+    weights = []
+    calories_list = []
+    sleep_list = []
+    
+    for entry in entries:
+        dates.append(entry[0])
+        weights.append(entry[1] if entry[1] is not None else None)
+        calories_list.append(entry[2] if entry[2] is not None else None)
+        sleep_list.append(entry[3] if entry[3] is not None else None)
+    
+    return {
+        'dates': dates,
+        'weights': weights,
+        'calories': calories_list,
+        'sleep': sleep_list
+    }
+
+
+def delete_health_entry(entry_id: int, user_id: int) -> bool:
+    """
+    Delete a health entry (only if it belongs to the user)
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'DELETE FROM health_tracker WHERE id = ? AND user_id = ?',
+            (entry_id, user_id)
+        )
+        conn.commit()
+        success = cursor.rowcount > 0
+        conn.close()
+        return success
+    except sqlite3.Error as e:
+        print(f"Error deleting health entry: {e}")
+        return False
 
 
 # Initialize database on module import
