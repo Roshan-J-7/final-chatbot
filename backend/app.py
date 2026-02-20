@@ -8,6 +8,10 @@ app.secret_key = 'medical_kiosk_secret_key_2026'
 
 @app.route('/')
 def home():
+    return render_template('index.html')
+
+@app.route('/chat')
+def chat_page():
     return render_template('chatbot.html')
 
 @app.route('/api/chat', methods=['POST'])

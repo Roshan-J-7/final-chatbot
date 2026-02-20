@@ -73,106 +73,7 @@
 			height: 100vh;
 		}
 
-		/* ═══════════════════════════════════════════
-		   HEADER
-		   ═══════════════════════════════════════════ */
-		.header {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding: 0 1.5rem;
-			height: 64px;
-			background: var(--surface);
-			border-bottom: 1px solid var(--border);
-			flex-shrink: 0;
-			position: relative;
-			z-index: 100;
-		}
 
-		.header::after {
-			content: '';
-			position: absolute;
-			bottom: -1px;
-			left: 0;
-			right: 0;
-			height: 3px;
-			background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
-			opacity: 0.6;
-		}
-
-		.brand {
-			display: flex;
-			align-items: center;
-			gap: 0.75rem;
-		}
-
-		.brand-logo {
-			width: 42px;
-			height: 42px;
-			border-radius: 12px;
-			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: white;
-			font-size: 18px;
-			box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
-		}
-
-		.brand-text h1 {
-			font-size: 1.15rem;
-			font-weight: 700;
-			color: var(--text);
-			letter-spacing: -0.02em;
-		}
-
-		.brand-text p {
-			font-size: 0.72rem;
-			color: var(--text-muted);
-			font-weight: 500;
-			margin-top: 1px;
-		}
-
-		.header-actions {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-		}
-
-		.header-btn {
-			height: 38px;
-			padding: 0 0.85rem;
-			border-radius: var(--radius-xs);
-			border: 1px solid var(--border);
-			background: var(--surface);
-			color: var(--text-secondary);
-			font-size: 0.8rem;
-			font-weight: 600;
-			font-family: inherit;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			gap: 0.4rem;
-			transition: all var(--transition);
-		}
-
-		.header-btn:hover {
-			border-color: var(--primary);
-			color: var(--primary);
-			background: var(--primary-soft);
-		}
-
-		.header-btn.profile {
-			background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-			color: white;
-			border: none;
-			box-shadow: 0 2px 8px rgba(8, 145, 178, 0.25);
-		}
-
-		.header-btn.profile:hover {
-			box-shadow: 0 4px 16px rgba(8, 145, 178, 0.35);
-			transform: translateY(-1px);
-		}
 
 		/* ═══════════════════════════════════════════
 		   MAIN LAYOUT
@@ -1039,33 +940,6 @@
 
 <body>
 	<div class="app">
-		<!-- ═══════ HEADER ═══════ -->
-		<header class="header">
-			<div class="brand">
-				<div class="brand-logo">
-					<i class="fas fa-heartbeat"></i>
-				</div>
-				<div class="brand-text">
-					<h1>MedAssist</h1>
-					<p>AI-Powered Health Assistant</p>
-				</div>
-			</div>
-			<div class="header-actions">
-				<button class="header-btn" id="clear-chat" title="Clear chat">
-					<i class="fas fa-rotate-right"></i> New Chat
-				</button>
-				<button class="header-btn" id="export-chat" title="Export chat">
-					<i class="fas fa-download"></i> Export
-				</button>
-				<button class="header-btn" id="copy-chat" title="Copy last reply">
-					<i class="fas fa-copy"></i>
-				</button>
-				<button class="header-btn profile">
-					<i class="fas fa-user"></i> Login
-				</button>
-			</div>
-		</header>
-
 		<!-- ═══════ MAIN LAYOUT ═══════ -->
 		<div class="layout">
 
